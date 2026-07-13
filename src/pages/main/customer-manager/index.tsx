@@ -1,13 +1,14 @@
 import { ROUTES } from "@/common/constants";
+import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
+import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
-import FilterComponent from "@/components/layout/FilterComponent";
 import type { FilterField } from "@/components/layout/FilterCustom";
+import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import type { ActionConfirmRef } from "@/components/ui/action-confirm";
-import { ActionConfirm } from "@/components/ui/action-confirm";
 import { StatusTag } from "@/components/ui/status-tag";
-import type { FilterCustomerDto, ICustomer, PaginationDto } from "@/dto";
+import type { PaginationDto } from "@/dto";
+import type { CustomerDto, FilterCustomerDto } from "@/dto/customer.dto";
 import {
   useActivateCustomer,
   useDeactivateCustomer,
@@ -29,8 +30,8 @@ export default function CustomerManagerPage() {
     take: 10,
     where: initFilter,
   });
-  const [selectedRows, setSelectedRows] = useState<ICustomer[]>([]);
-  const [selectedUser, setSelectedUser] = useState<ICustomer | null>(null);
+  const [selectedRows, setSelectedRows] = useState<CustomerDto[]>([]);
+  const [selectedUser, setSelectedUser] = useState<CustomerDto | null>(null);
 
   const activateConfirmRef = useRef<ActionConfirmRef>(null);
   const deactivateConfirmRef = useRef<ActionConfirmRef>(null);
@@ -111,7 +112,7 @@ export default function CustomerManagerPage() {
     },
   ];
 
-  const columns: TableColumn<ICustomer>[] = [
+  const columns: TableColumn<CustomerDto>[] = [
     {
       field: "fullName",
       header: "Tên người dùng",
@@ -135,7 +136,7 @@ export default function CustomerManagerPage() {
       header: "Trạng thái",
       width: 150,
       align: "center",
-      body: (rowData: ICustomer) => (
+      body: (rowData: CustomerDto) => (
         <StatusTag
           severity={rowData.isDeleted ? "danger" : "success"}
           value={rowData.isDeleted ? "Đình chỉ" : "Hoạt động"}
@@ -144,7 +145,7 @@ export default function CustomerManagerPage() {
     },
   ];
 
-  const rowActions: RowAction<ICustomer>[] = [
+  const rowActions: RowAction<CustomerDto>[] = [
     {
       key: "view",
       icon: <Eye className="size-3.5" />,
@@ -184,7 +185,7 @@ export default function CustomerManagerPage() {
 
   return (
     <BaseView>
-      <FilterComponent
+      <FilterCustom
         fields={filterFields}
         filters={filter}
         onFiltersChange={handleFiltersChange}
@@ -192,7 +193,7 @@ export default function CustomerManagerPage() {
         onClear={() => handleSearch(true)}
       />
 
-      <TableCustom<ICustomer>
+      <TableCustom<CustomerDto>
         data={data || []}
         columns={columns}
         loading={isLoading || isLoadingActivate || isLoadingDeactivate}

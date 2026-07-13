@@ -1,13 +1,13 @@
 import { ROUTES } from "@/common/constants";
+import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
+import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
-import FilterComponent from "@/components/layout/FilterComponent";
+import { CommonActions } from "@/components/layout/CommonActions";
 import type { FilterField } from "@/components/layout/FilterCustom";
+import FilterCustom from "@/components/layout/FilterCustom";
+import { RowActions } from "@/components/layout/RowActions";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import type { ActionConfirmRef } from "@/components/ui/action-confirm";
-import { ActionConfirm } from "@/components/ui/action-confirm";
-import { CommonActions } from "@/components/ui/common-actions";
-import { RowActions } from "@/components/ui/row-actions";
 import type { FilterTemplateDto, ITemplate, PaginationDto } from "@/dto";
 import {
   useActivateTemplate,
@@ -246,7 +246,7 @@ export default function TemplateManagerPage() {
 
   return (
     <BaseView>
-      <FilterComponent
+      <FilterCustom
         fields={filterFields}
         filters={filter}
         onFiltersChange={handleFiltersChange}

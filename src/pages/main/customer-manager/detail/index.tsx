@@ -1,18 +1,13 @@
+import { formatDateTime } from "@/common/helpers";
+import BaseView from "@/components/layout/BaseView";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { StatusTag } from "@/components/ui/status-tag";
-import BaseView from "@/components/layout/BaseView";
-import { formatDateTime } from "@/common/helpers";
+import type { CustomerDto } from "@/dto/customer.dto";
 import { useCustomerDetail } from "@/hooks/customer";
-import type { ICustomer } from "@/dto/customer.dto";
-import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, History, IdCard, User } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function DetailCustomerPage() {
   const { id } = useParams();
@@ -80,9 +75,7 @@ export default function DetailCustomerPage() {
                 <InfoItem
                   label="Ngày sinh"
                   value={
-                    data.dateOfBirth
-                      ? formatDateTime(data.dateOfBirth)
-                      : "N/A"
+                    data.dateOfBirth ? formatDateTime(data.dateOfBirth) : "N/A"
                   }
                 />
                 <InfoItem
@@ -131,7 +124,8 @@ export default function DetailCustomerPage() {
             <CardContent>
               {!data.user ? (
                 <div className="py-4 text-center text-sm text-muted-foreground">
-                  Khách hàng này chưa kích hoạt tài khoản hệ thống (User bypass).
+                  Khách hàng này chưa kích hoạt tài khoản hệ thống (User
+                  bypass).
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-x-6 gap-y-6 md:grid-cols-3">
@@ -235,7 +229,7 @@ const providerLabels: Record<string, string> = {
   zaloId: "Zalo",
 };
 
-function getProviderName(user: ICustomer["user"]) {
+function getProviderName(user: CustomerDto["user"]) {
   if (!user) return "N/A";
   for (const [key, label] of Object.entries(providerLabels)) {
     if ((user as any)[key]) return label;
@@ -243,13 +237,7 @@ function getProviderName(user: ICustomer["user"]) {
   return "Local (Email/Pass)";
 }
 
-function InfoItem({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
+function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
       <span className="text-sm text-muted-foreground">{label}</span>

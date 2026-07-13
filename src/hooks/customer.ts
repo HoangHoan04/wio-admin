@@ -1,5 +1,5 @@
 import type { PageResponse, PaginationDto, SuccessResponse } from "@/dto";
-import type { FilterCustomerDto, ICustomer } from "@/dto/customer.dto";
+import type { CustomerDto, FilterCustomerDto } from "@/dto/customer.dto";
 import rootApiService from "@/services/api.service";
 import { API_ENDPOINTS } from "@/services/endpoint";
 import { useToast } from "@/store/toastStore";
@@ -8,13 +8,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export const usePaginationCustomer = (
   params: PaginationDto<FilterCustomerDto>,
 ) => {
-  const { data, isLoading, refetch, error } = useQuery<PageResponse<ICustomer>>(
-    {
-      queryKey: [API_ENDPOINTS.CUSTOMER.PAGINATION, params],
-      queryFn: () =>
-        rootApiService.post(API_ENDPOINTS.CUSTOMER.PAGINATION, params),
-    },
-  );
+  const { data, isLoading, refetch, error } = useQuery<
+    PageResponse<CustomerDto>
+  >({
+    queryKey: [API_ENDPOINTS.CUSTOMER.PAGINATION, params],
+    queryFn: () =>
+      rootApiService.post(API_ENDPOINTS.CUSTOMER.PAGINATION, params),
+  });
 
   return {
     data: data?.data || [],
@@ -27,14 +27,14 @@ export const usePaginationCustomer = (
 
 export const useCustomerDetail = (id: string | undefined | null) => {
   const { data, isLoading, refetch, error } = useQuery<
-    SuccessResponse<ICustomer>
+    SuccessResponse<CustomerDto>
   >({
     queryKey: [API_ENDPOINTS.CUSTOMER.FIND_BY_ID, id],
     queryFn: async () => {
       const res = await rootApiService.post(API_ENDPOINTS.CUSTOMER.FIND_BY_ID, {
         id,
       });
-      return res as SuccessResponse<ICustomer>;
+      return res as SuccessResponse<CustomerDto>;
     },
     enabled: !!id,
   });

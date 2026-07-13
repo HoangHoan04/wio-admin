@@ -14,7 +14,15 @@ interface ActionItem {
     | "ghost"
     | "destructive"
     | "link";
-  size?: "default" | "xs" | "sm" | "lg" | "icon" | "icon-xs" | "icon-sm" | "icon-lg";
+  size?:
+    | "default"
+    | "xs"
+    | "sm"
+    | "lg"
+    | "icon"
+    | "icon-xs"
+    | "icon-sm"
+    | "icon-lg";
   className?: string;
 }
 

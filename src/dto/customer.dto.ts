@@ -1,6 +1,6 @@
 import type { BaseDto } from "./common";
 
-export interface ICustomer extends BaseDto {
+export interface CustomerDto extends BaseDto {
   userId: string;
   code: string;
   fullName: string;
@@ -8,10 +8,10 @@ export interface ICustomer extends BaseDto {
   phone?: string;
   gender?: string;
   dateOfBirth?: string;
-  user?: IUser;
+  user?: UserDto;
 }
 
-export interface IUser extends BaseDto {
+export interface UserDto extends BaseDto {
   fullName?: string;
   email: string;
   phone?: string;

@@ -1,14 +1,14 @@
+import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
+import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
-import FilterComponent from "@/components/layout/FilterComponent";
 import type { FilterField } from "@/components/layout/FilterCustom";
+import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import type { ActionConfirmRef } from "@/components/ui/action-confirm";
-import { ActionConfirm } from "@/components/ui/action-confirm";
 import { StatusTag } from "@/components/ui/status-tag";
 import type {
   FilterMusicBackgroundDto,
-  IMusicBackground,
+  MusicBackgroundDto,
   PaginationDto,
 } from "@/dto";
 import {
@@ -29,8 +29,8 @@ export default function MusicBackgroundManagerPage() {
     take: 10,
     where: initFilter,
   });
-  const [selectedRows, setSelectedRows] = useState<IMusicBackground[]>([]);
-  const [selectedMusic, setSelectedMusic] = useState<IMusicBackground | null>(
+  const [selectedRows, setSelectedRows] = useState<MusicBackgroundDto[]>([]);
+  const [selectedMusic, setSelectedMusic] = useState<MusicBackgroundDto | null>(
     null,
   );
 
@@ -97,7 +97,7 @@ export default function MusicBackgroundManagerPage() {
     },
   ];
 
-  const columns: TableColumn<IMusicBackground>[] = [
+  const columns: TableColumn<MusicBackgroundDto>[] = [
     {
       field: "name",
       header: "Tên nhạc",
@@ -121,7 +121,7 @@ export default function MusicBackgroundManagerPage() {
       header: "Trạng thái xử lý",
       width: 140,
       align: "center",
-      body: (rowData: IMusicBackground) => {
+      body: (rowData: MusicBackgroundDto) => {
         const map: Record<
           string,
           { severity: "success" | "warning" | "info"; label: string }
@@ -143,7 +143,7 @@ export default function MusicBackgroundManagerPage() {
       header: "Kích hoạt",
       width: 100,
       align: "center",
-      body: (rowData: IMusicBackground) => (
+      body: (rowData: MusicBackgroundDto) => (
         <StatusTag
           severity={rowData.isActive ? "success" : "secondary"}
           value={rowData.isActive ? "Có" : "Không"}
@@ -155,11 +155,11 @@ export default function MusicBackgroundManagerPage() {
       header: "Lượt sử dụng",
       width: 120,
       align: "center",
-      body: (rowData: IMusicBackground) => rowData.usageCount ?? 0,
+      body: (rowData: MusicBackgroundDto) => rowData.usageCount ?? 0,
     },
   ];
 
-  const rowActions: RowAction<IMusicBackground>[] = [
+  const rowActions: RowAction<MusicBackgroundDto>[] = [
     {
       key: "delete",
       icon: <Trash2 className="size-3.5" />,
@@ -174,7 +174,7 @@ export default function MusicBackgroundManagerPage() {
 
   return (
     <BaseView>
-      <FilterComponent
+      <FilterCustom
         fields={filterFields}
         filters={filter}
         onFiltersChange={handleFiltersChange}
@@ -182,7 +182,7 @@ export default function MusicBackgroundManagerPage() {
         onClear={() => handleSearch(true)}
       />
 
-      <TableCustom<IMusicBackground>
+      <TableCustom<MusicBackgroundDto>
         data={data || []}
         columns={columns}
         loading={isLoading || isLoadingDelete}

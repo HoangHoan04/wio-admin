@@ -1,6 +1,6 @@
 import BaseView from "@/components/layout/BaseView";
-import FilterComponent from "@/components/layout/FilterComponent";
 import type { FilterField } from "@/components/layout/FilterCustom";
+import FilterCustom from "@/components/layout/FilterCustom";
 import type { TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
 import type { ActionLogDto, ActionLogFilterDto, PaginationDto } from "@/dto";
@@ -109,7 +109,7 @@ export default function AuditLogPage() {
 
   return (
     <BaseView>
-      <FilterComponent
+      <FilterCustom
         fields={filterFields}
         filters={filter}
         onFiltersChange={handleFiltersChange}

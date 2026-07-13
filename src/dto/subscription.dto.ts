@@ -1,12 +1,12 @@
-import type { BaseDto, FilterItemText, FilterItemSelect } from "./common";
-import type { IWedding } from "./wedding.dto";
-import type { IUser } from "./user.dto";
+import type { BaseDto, FilterItemSelect, FilterItemText } from "./common";
+import type { UserDto } from "./customer.dto";
+import type { WeddingDto } from "./wedding.dto";
 
-export interface ISubscription extends BaseDto {
+export interface SubscriptionDto extends BaseDto {
   weddingId: string;
-  wedding?: IWedding;
+  wedding?: WeddingDto;
   userId: string;
-  user?: IUser;
+  user?: UserDto;
   planName: string;
   status: string; // ACTIVE, EXPIRED, CANCELLED, PENDING
   startDate: Date;

@@ -15,9 +15,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { menuItems } from "@/config/menu";
-import useDashboardStore from "@/store/dashboardStore";
-import { getAllRoutes, tokenCache } from "@/utils";
 import { authService } from "@/services";
+import useDashboardStore from "@/store/dashboardStore";
+import { useToast } from "@/store/toastStore";
+import { getAllRoutes, tokenCache } from "@/utils";
 import {
   ChevronRight,
   Clock,
@@ -34,7 +35,6 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/store/toastStore";
 
 export const AppNavbar: React.FC = () => {
   const navigate = useNavigate();

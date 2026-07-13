@@ -1,6 +1,6 @@
 import type { BaseDto, FilterItemBoolean, FilterItemText } from "./common";
 
-export interface IMusicBackground extends BaseDto {
+export interface MusicBackgroundDto extends BaseDto {
   name: string;
   author?: string;
   duration?: string;

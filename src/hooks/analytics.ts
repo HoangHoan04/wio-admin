@@ -13,8 +13,7 @@ export interface SystemStats {
 export const useSystemStats = () => {
   const { data, isLoading, refetch, error } = useQuery<SystemStats>({
     queryKey: [API_ENDPOINTS.ANALYTICS.SYSTEM_STATS],
-    queryFn: () =>
-      rootApiService.post(API_ENDPOINTS.ANALYTICS.SYSTEM_STATS),
+    queryFn: () => rootApiService.post(API_ENDPOINTS.ANALYTICS.SYSTEM_STATS),
   });
 
   return {

@@ -1,12 +1,12 @@
+import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
+import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
-import FilterComponent from "@/components/layout/FilterComponent";
 import type { FilterField } from "@/components/layout/FilterCustom";
+import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import type { ActionConfirmRef } from "@/components/ui/action-confirm";
-import { ActionConfirm } from "@/components/ui/action-confirm";
 import { StatusTag } from "@/components/ui/status-tag";
-import type { FilterWishDto, IWish, PaginationDto } from "@/dto";
+import type { FilterWishDto, PaginationDto, WishDto } from "@/dto";
 import {
   useApproveWish,
   useDeleteWish,
@@ -27,8 +27,8 @@ export default function WishManagerPage() {
     take: 10,
     where: initFilter,
   });
-  const [selectedRows, setSelectedRows] = useState<IWish[]>([]);
-  const [selectedWish, setSelectedWish] = useState<IWish | null>(null);
+  const [selectedRows, setSelectedRows] = useState<WishDto[]>([]);
+  const [selectedWish, setSelectedWish] = useState<WishDto | null>(null);
   const [actionType, setActionType] = useState<
     "approve" | "reject" | "pin" | "unpin" | "delete" | null
   >(null);
@@ -76,7 +76,7 @@ export default function WishManagerPage() {
   };
 
   const askConfirm = (
-    record: IWish,
+    record: WishDto,
     action: "approve" | "reject" | "pin" | "unpin" | "delete",
   ) => {
     setSelectedWish(record);
@@ -106,7 +106,7 @@ export default function WishManagerPage() {
     },
   ];
 
-  const columns: TableColumn<IWish>[] = [
+  const columns: TableColumn<WishDto>[] = [
     {
       field: "guestName",
       header: "Tên khách mời",
@@ -117,7 +117,7 @@ export default function WishManagerPage() {
       field: "content",
       header: "Nội dung",
       width: 300,
-      body: (rowData: IWish) => (
+      body: (rowData: WishDto) => (
         <div className="max-w-75 truncate">{rowData.content}</div>
       ),
     },
@@ -126,7 +126,7 @@ export default function WishManagerPage() {
       header: "Trạng thái",
       width: 120,
       align: "center",
-      body: (rowData: IWish) => {
+      body: (rowData: WishDto) => {
         const map: Record<
           string,
           { severity: "success" | "warning" | "danger" | "info"; label: string }
@@ -151,7 +151,7 @@ export default function WishManagerPage() {
     },
   ];
 
-  const rowActions: RowAction<IWish>[] = [
+  const rowActions: RowAction<WishDto>[] = [
     {
       key: "approve",
       icon: <CheckCircle className="size-3.5" />,
@@ -228,7 +228,7 @@ export default function WishManagerPage() {
 
   return (
     <BaseView>
-      <FilterComponent
+      <FilterCustom
         fields={filterFields}
         filters={filter}
         onFiltersChange={handleFiltersChange}
@@ -236,7 +236,7 @@ export default function WishManagerPage() {
         onClear={() => handleSearch(true)}
       />
 
-      <TableCustom<IWish>
+      <TableCustom<WishDto>
         data={data || []}
         columns={columns}
         loading={

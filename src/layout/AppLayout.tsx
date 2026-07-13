@@ -37,8 +37,7 @@ export const AppLayout: React.FC = () => {
     if (settings.dynamicTitle) {
       const path = location.pathname;
       const route = getRouteByPath(path);
-      const title =
-        route?.label || "Admin Dashboard";
+      const title = route?.label || "Admin Dashboard";
 
       document.title = title;
     }

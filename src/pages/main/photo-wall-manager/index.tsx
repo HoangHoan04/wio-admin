@@ -1,12 +1,12 @@
+import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
+import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
-import FilterComponent from "@/components/layout/FilterComponent";
 import type { FilterField } from "@/components/layout/FilterCustom";
+import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import type { ActionConfirmRef } from "@/components/ui/action-confirm";
-import { ActionConfirm } from "@/components/ui/action-confirm";
 import { StatusTag } from "@/components/ui/status-tag";
-import type { FilterPhotoWallDto, IPhotoWall, PaginationDto } from "@/dto";
+import type { FilterPhotoWallDto, PaginationDto, PhotoWallDto } from "@/dto";
 import {
   useApprovePhotoWall,
   useDeletePhotoWall,
@@ -27,8 +27,8 @@ export default function PhotoWallManagerPage() {
     take: 10,
     where: initFilter,
   });
-  const [selectedRows, setSelectedRows] = useState<IPhotoWall[]>([]);
-  const [selectedPhoto, setSelectedPhoto] = useState<IPhotoWall | null>(null);
+  const [selectedRows, setSelectedRows] = useState<PhotoWallDto[]>([]);
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoWallDto | null>(null);
   const [actionType, setActionType] = useState<
     "approve" | "reject" | "delete" | null
   >(null);
@@ -76,7 +76,7 @@ export default function PhotoWallManagerPage() {
   };
 
   const askConfirm = (
-    record: IPhotoWall,
+    record: PhotoWallDto,
     action: "approve" | "reject" | "delete",
   ) => {
     setSelectedPhoto(record);
@@ -106,7 +106,7 @@ export default function PhotoWallManagerPage() {
     },
   ];
 
-  const columns: TableColumn<IPhotoWall>[] = [
+  const columns: TableColumn<PhotoWallDto>[] = [
     {
       field: "guestName",
       header: "Tên khách mời",
@@ -117,7 +117,7 @@ export default function PhotoWallManagerPage() {
       field: "message",
       header: "Lời nhắn",
       width: 250,
-      body: (rowData: IPhotoWall) => (
+      body: (rowData: PhotoWallDto) => (
         <div className="max-w-62.5 truncate">{rowData.message || "-"}</div>
       ),
     },
@@ -126,7 +126,7 @@ export default function PhotoWallManagerPage() {
       header: "Trạng thái",
       width: 120,
       align: "center",
-      body: (rowData: IPhotoWall) => {
+      body: (rowData: PhotoWallDto) => {
         const map: Record<
           string,
           { severity: "success" | "warning" | "danger"; label: string }
@@ -144,7 +144,7 @@ export default function PhotoWallManagerPage() {
     },
   ];
 
-  const rowActions: RowAction<IPhotoWall>[] = [
+  const rowActions: RowAction<PhotoWallDto>[] = [
     {
       key: "approve",
       icon: <CheckCircle className="size-3.5" />,
@@ -195,7 +195,7 @@ export default function PhotoWallManagerPage() {
 
   return (
     <BaseView>
-      <FilterComponent
+      <FilterCustom
         fields={filterFields}
         filters={filter}
         onFiltersChange={handleFiltersChange}
@@ -203,7 +203,7 @@ export default function PhotoWallManagerPage() {
         onClear={() => handleSearch(true)}
       />
 
-      <TableCustom<IPhotoWall>
+      <TableCustom<PhotoWallDto>
         data={data || []}
         columns={columns}
         loading={

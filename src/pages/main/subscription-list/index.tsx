@@ -1,16 +1,16 @@
 import { ROUTES } from "@/common/constants";
+import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
+import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
-import FilterComponent from "@/components/layout/FilterComponent";
 import type { FilterField } from "@/components/layout/FilterCustom";
+import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import type { ActionConfirmRef } from "@/components/ui/action-confirm";
-import { ActionConfirm } from "@/components/ui/action-confirm";
 import { StatusTag } from "@/components/ui/status-tag";
 import type {
   FilterSubscriptionDto,
-  ISubscription,
   PaginationDto,
+  SubscriptionDto,
 } from "@/dto";
 import {
   useDeleteSubscription,
@@ -32,9 +32,9 @@ export default function SubscriptionListPage() {
     take: 10,
     where: initFilter,
   });
-  const [selectedRows, setSelectedRows] = useState<ISubscription[]>([]);
+  const [selectedRows, setSelectedRows] = useState<SubscriptionDto[]>([]);
   const [selectedSubscription, setSelectedSubscription] =
-    useState<ISubscription | null>(null);
+    useState<SubscriptionDto | null>(null);
 
   const deleteConfirmRef = useRef<ActionConfirmRef>(null);
 
@@ -94,7 +94,7 @@ export default function SubscriptionListPage() {
     },
   ];
 
-  const columns: TableColumn<ISubscription>[] = [
+  const columns: TableColumn<SubscriptionDto>[] = [
     {
       field: "planName",
       header: "Gói dịch vụ",
@@ -105,7 +105,7 @@ export default function SubscriptionListPage() {
       field: "user",
       header: "Người dùng",
       width: 200,
-      body: (rowData: ISubscription) =>
+      body: (rowData: SubscriptionDto) =>
         rowData.user?.fullName || rowData.userId,
     },
 
@@ -133,7 +133,7 @@ export default function SubscriptionListPage() {
       header: "Trạng thái",
       width: 130,
       align: "center",
-      body: (rowData: ISubscription) => {
+      body: (rowData: SubscriptionDto) => {
         const map: Record<
           string,
           { severity: "success" | "warning" | "danger" | "info"; label: string }
@@ -152,7 +152,7 @@ export default function SubscriptionListPage() {
     },
   ];
 
-  const rowActions: RowAction<ISubscription>[] = [
+  const rowActions: RowAction<SubscriptionDto>[] = [
     {
       key: "view",
       icon: <Eye className="size-3.5" />,
@@ -180,7 +180,7 @@ export default function SubscriptionListPage() {
 
   return (
     <BaseView>
-      <FilterComponent
+      <FilterCustom
         fields={filterFields}
         filters={filter}
         onFiltersChange={handleFiltersChange}
@@ -188,7 +188,7 @@ export default function SubscriptionListPage() {
         onClear={() => handleSearch(true)}
       />
 
-      <TableCustom<ISubscription>
+      <TableCustom<SubscriptionDto>
         data={data || []}
         columns={columns}
         loading={isLoading || isLoadingDelete}

@@ -1,6 +1,6 @@
 import { FilterItemSelect, FilterItemText, type BaseDto } from "./common";
 
-export interface IWedding extends BaseDto {
+export interface WeddingDto extends BaseDto {
   userId: string;
   templateId?: string;
   slug: string;

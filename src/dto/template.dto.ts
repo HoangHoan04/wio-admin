@@ -1,6 +1,6 @@
 import type { BaseDto, FilterItemBoolean, FilterItemText } from "./common";
 
-export interface ITemplate extends BaseDto {
+export interface TemplateDto extends BaseDto {
   name: string;
   description: string;
   tags?: string[];
