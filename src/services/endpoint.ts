@@ -14,6 +14,7 @@ export const API_ENDPOINTS = {
     ME: "/api/admin/auth/me",
     UPDATE_PASSWORD: "/api/admin/auth/update-password",
     CHANGE_PASSWORD: "/api/admin/auth/change-password",
+    CLEAN_TOKENS: "/api/admin/auth/clean-tokens",
   },
 
   ACTION_LOG: "/api/admin/action-log/pagination",
