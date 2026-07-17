@@ -46,7 +46,7 @@ export interface FormField {
   required?: boolean;
   placeholder?: string;
   maxLength?: number;
-  options?: { id: string; name: string; value?: any; node?: any }[];
+  options?: { id: string; name: string; value?: string; node?: ReactNode }[];
   col?: 4 | 6 | 8 | 12 | 24;
   gridColumn?: string;
   tabFields?: FormField[][];
@@ -94,7 +94,7 @@ export interface FormField {
 
 export interface FormCustomProps {
   title?: string;
-  fields: any[];
+  fields: FormField[];
   loading?: boolean;
   initialValues?: Record<string, any>;
   onSubmit?: (values: any) => void;

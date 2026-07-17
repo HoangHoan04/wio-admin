@@ -68,7 +68,7 @@ export const usePublishWedding = () => {
         timeout: 3000,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",
@@ -103,7 +103,7 @@ export const useUnpublishWedding = () => {
           timeout: 3000,
         });
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         showToast({
           type: "error",
           message: error?.message || "Có lỗi xảy ra",
@@ -138,7 +138,7 @@ export const useDeleteWedding = () => {
         timeout: 3000,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",
@@ -177,7 +177,7 @@ export const useForceResetSlug = () => {
         timeout: 3000,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",

@@ -1,13 +1,8 @@
 import BaseView from "@/components/layout/BaseView";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { useSystemStats } from "@/hooks/analytics";
-import { Heart, Users, CreditCard, Layout } from "lucide-react";
+import { CreditCard, Heart, Layout, Users } from "lucide-react";
 
 export default function AnalyticsPage() {
   const { data, isLoading } = useSystemStats();
@@ -23,10 +18,30 @@ export default function AnalyticsPage() {
   }
 
   const stats = [
-    { label: "Tổng số đám cưới", value: data?.totalWeddings ?? 0, icon: Heart, color: "text-pink-500" },
-    { label: "Tổng số người dùng", value: data?.totalUsers ?? 0, icon: Users, color: "text-blue-500" },
-    { label: "Tổng số subscription", value: data?.totalSubscriptions ?? 0, icon: CreditCard, color: "text-green-500" },
-    { label: "Tổng số template", value: data?.totalTemplates ?? 0, icon: Layout, color: "text-purple-500" },
+    {
+      label: "Tổng số đám cưới",
+      value: data?.totalWeddings ?? 0,
+      icon: Heart,
+      color: "text-pink-500",
+    },
+    {
+      label: "Tổng số người dùng",
+      value: data?.totalUsers ?? 0,
+      icon: Users,
+      color: "text-blue-500",
+    },
+    {
+      label: "Tổng số subscription",
+      value: data?.totalSubscriptions ?? 0,
+      icon: CreditCard,
+      color: "text-green-500",
+    },
+    {
+      label: "Tổng số template",
+      value: data?.totalTemplates ?? 0,
+      icon: Layout,
+      color: "text-purple-500",
+    },
   ];
 
   return (

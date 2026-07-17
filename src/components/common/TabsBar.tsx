@@ -79,7 +79,7 @@ export const TabsBar: React.FC = () => {
   useEffect(() => {
     if (!containerRef.current) return;
     const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         setContainerWidth(entry.contentRect.width);
       }
     });
@@ -122,8 +122,6 @@ export const TabsBar: React.FC = () => {
     window.addEventListener("click", handleClose);
     return () => window.removeEventListener("click", handleClose);
   }, []);
-
-  if (!settings.showTabs) return null;
 
   const togglePinTab = (id: string) => {
     if (pinnedTabs.includes(id)) {
@@ -300,7 +298,7 @@ export const TabsBar: React.FC = () => {
       return { visibleTabs: sortedTabs, overflowTabs: [] };
     }
 
-    let visible = sortedTabs.slice(0, maxVisibleCount);
+    const visible = sortedTabs.slice(0, maxVisibleCount);
     let overflow = sortedTabs.slice(maxVisibleCount);
 
     const activeIndex = sortedTabs.findIndex((t) => t.id === activeTabId);
@@ -313,6 +311,8 @@ export const TabsBar: React.FC = () => {
 
     return { visibleTabs: visible, overflowTabs: overflow };
   }, [sortedTabs, containerWidth, tabWidth, activeTabId]);
+
+  if (!settings.showTabs) return null;
 
   return (
     <div className="flex items-center justify-between border-b border-border bg-muted/30 px-4 h-12 select-none relative">
@@ -327,7 +327,7 @@ export const TabsBar: React.FC = () => {
           const Icon = route?.icon || LayoutDashboard;
           const title = route?.label ? route.label : tab.label;
 
-          let tabClass = "";
+          let tabClass;
           if (settings.tabStyle === "chrome") {
             tabClass = cn(
               "relative px-5 py-2 text-xs font-medium cursor-pointer transition-all rounded-t-xl z-10 flex items-center gap-2 border border-b-0",

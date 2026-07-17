@@ -20,7 +20,7 @@ export const AppBreadcrumb: React.FC = () => {
       label: string;
       url: string;
       isLast: boolean;
-      icon?: any;
+      icon?: React.ComponentType<{ className?: string }>;
     }[] = [];
 
     const dashboardRoute = getRouteByPath(ROUTES.MAIN.HOME.path);
@@ -40,7 +40,7 @@ export const AppBreadcrumb: React.FC = () => {
       if (route) {
         breadcrumbList.push({
           label: route.label,
-          url: route.path,
+          url: currentUrl,
           isLast: idx === paths.length - 1,
           icon: route.icon,
         });

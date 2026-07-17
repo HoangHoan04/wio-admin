@@ -16,34 +16,13 @@ function AddTemplatePage({
 }: {
   initData?: TemplateDto;
   isEdit?: boolean;
-  handleUpdate?: (data: any) => void;
+  handleUpdate?: (data: TemplateDto) => void;
   title?: string;
   isLoadingUpdate?: boolean;
   onCancel?: () => void;
 }) {
   const { isLoading, onCreateTemplate } = useCreateTemplate();
   const router = useRouter();
-
-  const transformedInitData = useMemo(() => {
-    const base = {
-      isShow: false,
-      isPremium: false,
-      trialDays: 0,
-      description: "",
-      minPlan: "",
-    };
-    if (!initData) return base;
-    return {
-      ...base,
-      ...initData,
-      tags: Array.isArray(initData.tags)
-        ? initData.tags.join(", ")
-        : initData.tags || "",
-      trialDays: initData.trialDays ?? 0,
-      isShow: initData.isShow ?? false,
-      isPremium: initData.isPremium ?? false,
-    };
-  }, [initData]);
 
   const formFields = useMemo((): FormField[] => {
     return [
@@ -60,11 +39,13 @@ function AddTemplatePage({
         label: "Mã theme",
         type: "select",
         required: true,
-        options: Object.values(enumData.THEME_CODE || {}).map((item: any) => ({
-          id: item.code,
-          name: item.name,
-          value: item.code,
-        })),
+        options: Object.values(enumData.THEME_CODE || {}).map(
+          (item: { code: string; name: string }) => ({
+            id: item.code,
+            name: item.name,
+            value: item.code,
+          }),
+        ),
         placeholder: "Chọn mã theme",
       },
       {
@@ -117,7 +98,7 @@ function AddTemplatePage({
     ];
   }, []);
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: TemplateDto) => {
     if (isEdit && handleUpdate) {
       handleUpdate(values);
     } else {
@@ -135,7 +116,7 @@ function AddTemplatePage({
         title={title}
         showDivider={true}
         fields={formFields}
-        initialValues={transformedInitData}
+        initialValues={initData}
         loading={isLoading || isLoadingUpdate}
         onSubmit={handleSubmit}
         onCancel={onCancel || goBack}

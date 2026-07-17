@@ -50,7 +50,7 @@ const ThemeTransitionOverlay: React.FC<{
       clearTimeout(midTimer);
       clearTimeout(endTimer);
     };
-  }, [active]);
+  }, [active, onComplete, onMidpoint]);
 
   if (!active || !nextTheme) return null;
 
@@ -273,7 +273,13 @@ export const ToggeTheme: React.FC = () => {
   const settings = useDashboardStore((state) => state.settings);
   const updateSettings = useDashboardStore((state) => state.updateSettings);
   const [animating, setAnimating] = useState(false);
-  const pendingThemeRef = useRef<"light" | "dark" | "system" | null>(null);
+  const [pendingTheme, setPendingTheme] = useState<"light" | "dark" | "system" | null>(null);
+  const pendingThemeRef = useRef(pendingTheme);
+
+  useEffect(() => {
+    pendingThemeRef.current = pendingTheme;
+  }, [pendingTheme]);
+
   const cycleTheme = useCallback(() => {
     if (animating) return;
 
@@ -282,7 +288,7 @@ export const ToggeTheme: React.FC = () => {
       dark: "system",
       system: "light",
     };
-    pendingThemeRef.current = nextThemeMap[settings.theme] || "light";
+    setPendingTheme(nextThemeMap[settings.theme] || "light");
     setAnimating(true);
   }, [animating, settings.theme]);
 
@@ -294,14 +300,14 @@ export const ToggeTheme: React.FC = () => {
 
   const handleComplete = useCallback(() => {
     setAnimating(false);
-    pendingThemeRef.current = null;
+    setPendingTheme(null);
   }, []);
 
   return (
     <>
       <ThemeTransitionOverlay
         active={animating}
-        nextTheme={pendingThemeRef.current}
+        nextTheme={pendingTheme}
         onMidpoint={handleMidpoint}
         onComplete={handleComplete}
       />

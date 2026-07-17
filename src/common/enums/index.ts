@@ -6,7 +6,7 @@ export const enumData = {
     LST_PAGESIZE: [10, 20, 50, 100],
     TOTAL: 0,
   },
-  maxSizeUpload: 5 * 1024 * 1024, // 5MB
+  maxSizeUpload: 5 * 1024 * 1024,
 
   GENDER: {
     MALE: { code: "MALE", name: "Nam" },
@@ -96,6 +96,24 @@ export const enumData = {
       code: "RED_DOUBLE_HAPPINESS",
       name: "Song hỷ - Đỏ",
       slug: "song-hy-do",
+    },
+  },
+
+  WEDDING_STATUS: {
+    DRAFT: {
+      code: "DRAFT",
+      name: "Nháp",
+      className: "bg-yellow-100 text-yellow-800",
+    },
+    PUBLISHED: {
+      code: "PUBLISHED",
+      name: "Đã xuất bản",
+      className: "bg-green-100 text-green-800",
+    },
+    ARCHIVED: {
+      code: "ARCHIVED",
+      name: "Đã lưu trữ",
+      className: "bg-gray-100 text-gray-800",
     },
   },
 };

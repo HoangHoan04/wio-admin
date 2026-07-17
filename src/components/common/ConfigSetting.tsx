@@ -509,9 +509,7 @@ export const ConfigSetting: React.FC = () => {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-semibold">
-                    Màu sidebar
-                  </span>
+                  <span className="text-xs font-semibold">Màu sidebar</span>
                   <Select
                     value={settings.sidebarColorType}
                     onValueChange={(val: any) =>
@@ -522,12 +520,8 @@ export const ConfigSetting: React.FC = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="solid">
-                        Màu đơn
-                      </SelectItem>
-                      <SelectItem value="gradient">
-                        Màu gradient
-                      </SelectItem>
+                      <SelectItem value="solid">Màu đơn</SelectItem>
+                      <SelectItem value="gradient">Màu gradient</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -598,14 +592,10 @@ export const ConfigSetting: React.FC = () => {
             <Separator />
 
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-primary">
-                Bố cục
-              </h3>
+              <h3 className="text-sm font-bold text-primary">Bố cục</h3>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Chế độ bố cục
-                </span>
+                <span className="text-xs font-medium">Chế độ bố cục</span>
                 <Select
                   value={settings.layoutMode}
                   onValueChange={(val: any) =>
@@ -626,9 +616,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Vị trí sidebar
-                </span>
+                <span className="text-xs font-medium">Vị trí sidebar</span>
                 <Select
                   value={settings.sidebarPosition}
                   onValueChange={(val: any) =>
@@ -639,20 +627,14 @@ export const ConfigSetting: React.FC = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="left">
-                      Trái
-                    </SelectItem>
-                    <SelectItem value="right">
-                      Phải
-                    </SelectItem>
+                    <SelectItem value="left">Trái</SelectItem>
+                    <SelectItem value="right">Phải</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Vị trí cài đặt
-                </span>
+                <span className="text-xs font-medium">Vị trí cài đặt</span>
                 <Select
                   value={settings.configPosition}
                   onValueChange={(val: any) =>
@@ -663,12 +645,8 @@ export const ConfigSetting: React.FC = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="left">
-                      Trái
-                    </SelectItem>
-                    <SelectItem value="right">
-                      Phải
-                    </SelectItem>
+                    <SelectItem value="left">Trái</SelectItem>
+                    <SelectItem value="right">Phải</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -677,14 +655,10 @@ export const ConfigSetting: React.FC = () => {
             <Separator />
 
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-primary">
-                Sidebar
-              </h3>
+              <h3 className="text-sm font-bold text-primary">Sidebar</h3>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Hiện sidebar
-                </span>
+                <span className="text-xs font-medium">Hiện sidebar</span>
                 <Switch
                   size="sm"
                   checked={settings.showSidebar}
@@ -695,9 +669,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Thu gọn sidebar
-                </span>
+                <span className="text-xs font-medium">Thu gọn sidebar</span>
                 <Switch
                   size="sm"
                   checked={settings.collapseSidebar}
@@ -709,9 +681,7 @@ export const ConfigSetting: React.FC = () => {
 
               <div className="space-y-1.5">
                 <div className="flex justify-between text-xs">
-                  <span className="font-medium">
-                    Chiều rộng sidebar
-                  </span>
+                  <span className="font-medium">Chiều rộng sidebar</span>
                   <span className="text-muted-foreground">
                     {settings.sidebarWidth}px
                   </span>
@@ -728,9 +698,7 @@ export const ConfigSetting: React.FC = () => {
 
               <div className="space-y-1.5">
                 <div className="flex justify-between text-xs">
-                  <span className="font-medium">
-                    Chiều rộng khi thu gọn
-                  </span>
+                  <span className="font-medium">Chiều rộng khi thu gọn</span>
                   <span className="text-muted-foreground">
                     {settings.sidebarCollapsedWidth}px
                   </span>
@@ -746,9 +714,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Menu dạng accordion
-                </span>
+                <span className="text-xs font-medium">Menu dạng accordion</span>
                 <Switch
                   size="sm"
                   checked={settings.accordionMenu}
@@ -762,14 +728,10 @@ export const ConfigSetting: React.FC = () => {
             <Separator />
 
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-primary">
-                Tabs
-              </h3>
+              <h3 className="text-sm font-bold text-primary">Tabs</h3>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Hiện tabs
-                </span>
+                <span className="text-xs font-medium">Hiện tabs</span>
                 <Switch
                   size="sm"
                   checked={settings.showTabs}
@@ -778,9 +740,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Lưu tabs
-                </span>
+                <span className="text-xs font-medium">Lưu tabs</span>
                 <Switch
                   size="sm"
                   checked={settings.persistTabs}
@@ -791,9 +751,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Kéo thả tabs
-                </span>
+                <span className="text-xs font-medium">Kéo thả tabs</span>
                 <Switch
                   size="sm"
                   checked={settings.dragTabs}
@@ -802,9 +760,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Hiện icon tabs
-                </span>
+                <span className="text-xs font-medium">Hiện icon tabs</span>
                 <Switch
                   size="sm"
                   checked={settings.showTabIcons}
@@ -815,9 +771,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Hiện nút phóng to
-                </span>
+                <span className="text-xs font-medium">Hiện nút phóng to</span>
                 <Switch
                   size="sm"
                   checked={settings.showMaximizeTab}
@@ -828,9 +782,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Kiểu tab
-                </span>
+                <span className="text-xs font-medium">Kiểu tab</span>
                 <Select
                   value={settings.tabStyle}
                   onValueChange={(val: any) =>
@@ -841,27 +793,17 @@ export const ConfigSetting: React.FC = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="chrome">
-                      Chrome
-                    </SelectItem>
-                    <SelectItem value="card">
-                      Card
-                    </SelectItem>
-                    <SelectItem value="icon">
-                      Icon
-                    </SelectItem>
-                    <SelectItem value="simple">
-                      Đơn giản
-                    </SelectItem>
+                    <SelectItem value="chrome">Chrome</SelectItem>
+                    <SelectItem value="card">Card</SelectItem>
+                    <SelectItem value="icon">Icon</SelectItem>
+                    <SelectItem value="simple">Đơn giản</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-1.5">
                 <div className="flex justify-between text-xs">
-                  <span className="font-medium">
-                    Số tab tối đa
-                  </span>
+                  <span className="font-medium">Số tab tối đa</span>
                   <span className="text-muted-foreground">
                     {settings.maxTabs}
                   </span>
@@ -878,14 +820,10 @@ export const ConfigSetting: React.FC = () => {
             <Separator />
 
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-primary">
-                Hiệu ứng
-              </h3>
+              <h3 className="text-sm font-bold text-primary">Hiệu ứng</h3>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Thanh tiến trình
-                </span>
+                <span className="text-xs font-medium">Thanh tiến trình</span>
                 <Switch
                   size="sm"
                   checked={settings.pageProgress}
@@ -896,9 +834,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Loader trang
-                </span>
+                <span className="text-xs font-medium">Loader trang</span>
                 <Switch
                   size="sm"
                   checked={settings.pageLoader}
@@ -907,9 +843,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Chuyển trang
-                </span>
+                <span className="text-xs font-medium">Chuyển trang</span>
                 <Switch
                   size="sm"
                   checked={settings.pageTransition}
@@ -920,9 +854,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Hiệu ứng chuyển
-                </span>
+                <span className="text-xs font-medium">Hiệu ứng chuyển</span>
                 <Select
                   value={settings.transitionEffect}
                   onValueChange={(val) =>
@@ -946,14 +878,10 @@ export const ConfigSetting: React.FC = () => {
             <Separator />
 
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-primary">
-                Footer
-              </h3>
+              <h3 className="text-sm font-bold text-primary">Footer</h3>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Hiện footer
-                </span>
+                <span className="text-xs font-medium">Hiện footer</span>
                 <Switch
                   size="sm"
                   checked={settings.showFooter}
@@ -962,9 +890,7 @@ export const ConfigSetting: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium">
-                  Footer cố định
-                </span>
+                <span className="text-xs font-medium">Footer cố định</span>
                 <Switch
                   size="sm"
                   checked={settings.fixedFooter}

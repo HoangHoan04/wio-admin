@@ -11,18 +11,14 @@ export const BackToTop: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    if (!isEnabled) {
-      setIsVisible(false);
-      return;
-    }
-    
-    // Đợi DOM render sau khi chuyển route
+    if (!isEnabled) return;
+
     const timer = setTimeout(() => {
       const scrollContainer =
         document.getElementById("base-view-scroll-container") ||
         document.getElementById("main-content-viewport");
       if (!scrollContainer) return;
-      
+
       const handleScroll = () => {
         const scrollTop = scrollContainer.scrollTop;
         const docHeight =
@@ -32,18 +28,38 @@ export const BackToTop: React.FC = () => {
         setScrollProgress(progress);
         setIsVisible(scrollTop > 200);
       };
-      
+
       scrollContainer.addEventListener("scroll", handleScroll);
       handleScroll();
-      
-      (window as any)._activeScrollContainer = scrollContainer;
-      (window as any)._activeScrollHandler = handleScroll;
+
+      (
+        window as any as {
+          _activeScrollContainer: HTMLElement;
+          _activeScrollHandler: EventListener;
+        }
+      )._activeScrollContainer = scrollContainer;
+      (
+        window as any as {
+          _activeScrollContainer: HTMLElement;
+          _activeScrollHandler: EventListener;
+        }
+      )._activeScrollHandler = handleScroll;
     }, 100);
 
     return () => {
       clearTimeout(timer);
-      const activeContainer = (window as any)._activeScrollContainer;
-      const activeHandler = (window as any)._activeScrollHandler;
+      const activeContainer = (
+        window as any as {
+          _activeScrollContainer: HTMLElement;
+          _activeScrollHandler: EventListener;
+        }
+      )._activeScrollContainer;
+      const activeHandler = (
+        window as any as {
+          _activeScrollContainer: HTMLElement;
+          _activeScrollHandler: EventListener;
+        }
+      )._activeScrollHandler;
       if (activeContainer && activeHandler) {
         activeContainer.removeEventListener("scroll", activeHandler);
       }

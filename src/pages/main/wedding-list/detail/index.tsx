@@ -3,7 +3,6 @@ import BaseView from "@/components/layout/BaseView";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import { StatusTag } from "@/components/ui/status-tag";
 import { useWeddingDetail } from "@/hooks/wedding";
 import {
   ArrowLeft,
@@ -68,19 +67,7 @@ export default function DetailWeddingPage() {
                 <InfoItem label="Chú rể" value={data.groomName || "N/A"} />
                 <InfoItem label="Cô dâu" value={data.brideName || "N/A"} />
                 <InfoItem label="Hashtag" value={data.hashtag || "N/A"} />
-                <InfoItem
-                  label="Trạng thái"
-                  value={
-                    <StatusTag
-                      severity={
-                        data.status === "PUBLISHED" ? "success" : "warning"
-                      }
-                      value={
-                        data.status === "PUBLISHED" ? "Đã xuất bản" : "Bản nháp"
-                      }
-                    />
-                  }
-                />
+                <InfoItem label="Trạng thái" value={data.status || "N/A"} />
                 <InfoItem
                   label="Ngày tạo"
                   value={formatDateTime(data.createdAt)}
@@ -145,7 +132,9 @@ export default function DetailWeddingPage() {
             )}
           </div>
 
-          {(data.musicUrl || data.bankAccountNumber) && (
+          {(data.musicUrl ||
+            data.groomBankAccount ||
+            data.brideBankAccount) && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {data.musicUrl && (
                 <Card>
@@ -168,28 +157,79 @@ export default function DetailWeddingPage() {
                 </Card>
               )}
 
-              {data.bankAccountNumber && (
+              {data.groomBankAccount && (
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Banknote className="size-4" />
-                      Thông tin ngân hàng
+                      Tài khoản chú rể mừng cưới
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 gap-4">
                       <InfoItem
                         label="Số tài khoản"
-                        value={data.bankAccountNumber}
+                        value={data.groomBankAccount}
                       />
                       <InfoItem
                         label="Ngân hàng"
-                        value={data.bankName || "N/A"}
+                        value={data.groomBankName || "N/A"}
                       />
                       <InfoItem
                         label="Chủ tài khoản"
-                        value={data.bankAccountName || "N/A"}
+                        value={data.groomBankOwner || "N/A"}
                       />
+                      {data.groomQrUrl && (
+                        <div className="mt-2">
+                          <span className="text-sm text-muted-foreground block mb-1">
+                            Mã QR
+                          </span>
+                          <img
+                            src={data.groomQrUrl}
+                            alt="QR Groom"
+                            className="w-32 h-32 object-contain border p-1 bg-white"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {data.brideBankAccount && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Banknote className="size-4" />
+                      Tài khoản cô dâu mừng cưới
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 gap-4">
+                      <InfoItem
+                        label="Số tài khoản"
+                        value={data.brideBankAccount}
+                      />
+                      <InfoItem
+                        label="Ngân hàng"
+                        value={data.brideBankName || "N/A"}
+                      />
+                      <InfoItem
+                        label="Chủ tài khoản"
+                        value={data.brideBankOwner || "N/A"}
+                      />
+                      {data.brideQrUrl && (
+                        <div className="mt-2">
+                          <span className="text-sm text-muted-foreground block mb-1">
+                            Mã QR
+                          </span>
+                          <img
+                            src={data.brideQrUrl}
+                            alt="QR Bride"
+                            className="w-32 h-32 object-contain border p-1 bg-white"
+                          />
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

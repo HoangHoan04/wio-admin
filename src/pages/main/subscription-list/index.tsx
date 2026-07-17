@@ -6,7 +6,6 @@ import type { FilterField } from "@/components/layout/FilterCustom";
 import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import { StatusTag } from "@/components/ui/status-tag";
 import type {
   FilterSubscriptionDto,
   PaginationDto,
@@ -52,8 +51,8 @@ export default function SubscriptionListPage() {
     if (isReset) setFilter(initFilter);
   };
 
-  const handleFiltersChange = (newFilters: Record<string, any>) => {
-    setFilter(newFilters as FilterSubscriptionDto);
+  const handleFiltersChange = (newFilters: FilterSubscriptionDto) => {
+    setFilter(newFilters);
   };
 
   const handlePageChange = (page: number, pageSize: number) => {
@@ -133,22 +132,6 @@ export default function SubscriptionListPage() {
       header: "Trạng thái",
       width: 130,
       align: "center",
-      body: (rowData: SubscriptionDto) => {
-        const map: Record<
-          string,
-          { severity: "success" | "warning" | "danger" | "info"; label: string }
-        > = {
-          ACTIVE: { severity: "success", label: "Hoạt động" },
-          EXPIRED: { severity: "danger", label: "Hết hạn" },
-          CANCELLED: { severity: "warning", label: "Đã hủy" },
-          PENDING: { severity: "info", label: "Chờ xử lý" },
-        };
-        const info = map[rowData.status] || {
-          severity: "secondary" as const,
-          label: rowData.status,
-        };
-        return <StatusTag severity={info.severity} value={info.label} />;
-      },
     },
   ];
 

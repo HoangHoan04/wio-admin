@@ -145,9 +145,21 @@ export const defaultSettings: DashboardSettings = {
   icpLink: "https://icp.hoanghoantechnology.ai",
 };
 
+interface PersistedDashboardState {
+  settings: DashboardSettings;
+  openTabs: TabItem[];
+  activeTabId: string;
+}
+
+interface LegacyPersistedState {
+  settings?: Record<string, any>;
+  openTabs?: TabItem[];
+  activeTabId?: string;
+}
+
 export const useDashboardStore = create<DashboardState>()(
-  persist(
-    (set, get) => ({
+  persist<DashboardState, [], [], PersistedDashboardState>(
+    (set) => ({
       settings: defaultSettings,
       openTabs: [
         {
@@ -160,52 +172,45 @@ export const useDashboardStore = create<DashboardState>()(
       isConfigOpen: false,
       isMaximized: false,
 
-      updateSettings: (newSettings) => {
+      updateSettings: (newSettings) =>
         set((state) => ({
           settings: { ...state.settings, ...newSettings },
-        }));
-      },
+        })),
 
       setConfigOpen: (isOpen) => set({ isConfigOpen: isOpen }),
+
       setMaximized: (isMax) => set({ isMaximized: isMax }),
 
       resetSettings: () => set({ settings: defaultSettings }),
 
-      addTab: (tab) => {
-        const { openTabs, settings } = get();
-        const exists = openTabs.find((t) => t.id === tab.id);
-        if (exists) {
-          set({ activeTabId: tab.id });
-          return;
-        }
+      addTab: (tab) =>
+        set((state) => {
+          const exists = state.openTabs.some((t) => t.id === tab.id);
+          if (exists) return { activeTabId: tab.id };
 
-        let updatedTabs = [...openTabs];
-        if (updatedTabs.length >= settings.maxTabs) {
-          if (updatedTabs.length > 1) {
-            updatedTabs.splice(1, 1);
-          } else {
-            updatedTabs.shift();
+          const updated = [...state.openTabs, tab];
+          if (updated.length > state.settings.maxTabs) {
+            updated.shift();
           }
-        }
-        updatedTabs.push(tab);
-        set({ openTabs: updatedTabs, activeTabId: tab.id });
-      },
+          return { openTabs: updated, activeTabId: tab.id };
+        }),
 
-      removeTab: (id) => {
-        const { openTabs, activeTabId } = get();
-        if (openTabs.length <= 1) return;
+      removeTab: (id) =>
+        set((state) => {
+          const { openTabs, activeTabId } = state;
+          if (openTabs.length <= 1) return {};
 
-        const filtered = openTabs.filter((t) => t.id !== id);
-        let nextActive = activeTabId;
+          const filtered = openTabs.filter((t) => t.id !== id);
+          let nextActive = activeTabId;
 
-        if (activeTabId === id) {
-          const index = openTabs.findIndex((t) => t.id === id);
-          const nextTab = filtered[index] || filtered[index - 1];
-          nextActive = nextTab ? nextTab.id : filtered[0].id;
-        }
+          if (activeTabId === id) {
+            const index = openTabs.findIndex((t) => t.id === id);
+            const nextTab = filtered[index] || filtered[index - 1];
+            nextActive = nextTab ? nextTab.id : filtered[0].id;
+          }
 
-        set({ openTabs: filtered, activeTabId: nextActive });
-      },
+          return { openTabs: filtered, activeTabId: nextActive };
+        }),
 
       setActiveTabId: (id) => set({ activeTabId: id }),
 
@@ -226,22 +231,34 @@ export const useDashboardStore = create<DashboardState>()(
     {
       name: "dashboard-store-settings",
       version: 1,
-      migrate: (persistedState: any, version: number) => {
-        if (version === 0) {
-          const s = persistedState?.settings ?? {};
-          persistedState.settings = {
+      migrate: (
+        persistedState: any,
+        version: number,
+      ): PersistedDashboardState => {
+        const state = persistedState as LegacyPersistedState;
+        if (version === 0 && state && state.settings) {
+          const s = state.settings;
+          state.settings = {
             ...s,
             navbarColorLight:
-              s.navbarColorLight ?? s.navbarColorValue ?? "#ffffff",
-            navbarColorDark: s.navbarColorDark ?? "#1c1c1c",
+              (s.navbarColorLight as string) ??
+              (s.navbarColorValue as string) ??
+              "#ffffff",
+            navbarColorDark: (s.navbarColorDark as string) ?? "#1c1c1c",
             sidebarColorLight:
-              s.sidebarColorLight ?? s.sidebarColorValue ?? "#ffffff",
-            sidebarColorDark: s.sidebarColorDark ?? "#1c1c1c",
+              (s.sidebarColorLight as string) ??
+              (s.sidebarColorValue as string) ??
+              "#ffffff",
+            sidebarColorDark: (s.sidebarColorDark as string) ?? "#1c1c1c",
           };
-          delete persistedState.settings.navbarColorValue;
-          delete persistedState.settings.sidebarColorValue;
+          delete state.settings.navbarColorValue;
+          delete state.settings.sidebarColorValue;
         }
-        return persistedState;
+        return {
+          settings: state.settings as any as DashboardSettings,
+          openTabs: state.openTabs ?? [],
+          activeTabId: state.activeTabId ?? "dashboard",
+        };
       },
       partialize: (state) => ({
         settings: state.settings,

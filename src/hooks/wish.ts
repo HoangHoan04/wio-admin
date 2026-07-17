@@ -41,7 +41,7 @@ export const useApproveWish = () => {
         timeout: 3000,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",
@@ -75,7 +75,7 @@ export const useRejectWish = () => {
         timeout: 3000,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",
@@ -109,7 +109,7 @@ export const usePinWish = () => {
         timeout: 3000,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",
@@ -143,7 +143,7 @@ export const useUnpinWish = () => {
         timeout: 3000,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",
@@ -177,7 +177,7 @@ export const useDeleteWish = () => {
         timeout: 3000,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",

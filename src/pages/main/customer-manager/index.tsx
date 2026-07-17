@@ -51,8 +51,8 @@ export default function CustomerManagerPage() {
     if (isReset) setFilter(initFilter);
   };
 
-  const handleFiltersChange = (newFilters: Record<string, any>) => {
-    setFilter(newFilters as FilterCustomerDto);
+  const handleFiltersChange = (newFilters: FilterCustomerDto) => {
+    setFilter(newFilters);
   };
 
   const handlePageChange = (page: number, pageSize: number) => {

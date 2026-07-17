@@ -28,7 +28,9 @@ export const authService = {
   },
 
   getUserInfo: async (): Promise<UserInfoResponseDto> => {
-    const response = await rootApiService.post<any>(API_ENDPOINTS.AUTH.ME);
+    const response = await rootApiService.post<UserInfoResponseDto>(
+      API_ENDPOINTS.AUTH.ME,
+    );
     return response;
   },
 
@@ -39,7 +41,9 @@ export const authService = {
     return response;
   },
 
-  changePassword: async (data: any): Promise<{ message: string }> => {
+  changePassword: async (
+    data: Record<string, any>,
+  ): Promise<{ message: string }> => {
     const response = await rootApiService.post<{ message: string }>(
       API_ENDPOINTS.AUTH.CHANGE_PASSWORD,
       data,

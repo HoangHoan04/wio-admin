@@ -5,7 +5,6 @@ import type { FilterField } from "@/components/layout/FilterCustom";
 import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import { StatusTag } from "@/components/ui/status-tag";
 import type { FilterPhotoWallDto, PaginationDto, PhotoWallDto } from "@/dto";
 import {
   useApprovePhotoWall,
@@ -53,8 +52,8 @@ export default function PhotoWallManagerPage() {
     if (isReset) setFilter(initFilter);
   };
 
-  const handleFiltersChange = (newFilters: Record<string, any>) => {
-    setFilter(newFilters as FilterPhotoWallDto);
+  const handleFiltersChange = (newFilters: FilterPhotoWallDto) => {
+    setFilter(newFilters);
   };
 
   const handlePageChange = (page: number, pageSize: number) => {
@@ -126,21 +125,6 @@ export default function PhotoWallManagerPage() {
       header: "Trạng thái",
       width: 120,
       align: "center",
-      body: (rowData: PhotoWallDto) => {
-        const map: Record<
-          string,
-          { severity: "success" | "warning" | "danger"; label: string }
-        > = {
-          APPROVED: { severity: "success", label: "Đã duyệt" },
-          PENDING: { severity: "warning", label: "Chờ duyệt" },
-          REJECTED: { severity: "danger", label: "Từ chối" },
-        };
-        const info = map[rowData.status] || {
-          severity: "secondary" as const,
-          label: rowData.status,
-        };
-        return <StatusTag severity={info.severity} value={info.label} />;
-      },
     },
   ];
 

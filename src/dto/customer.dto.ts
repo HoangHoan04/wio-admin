@@ -18,6 +18,7 @@ export interface UserDto extends BaseDto {
   customerId?: string;
   isAdmin: boolean;
   role: string;
+  provider: string;
   isActive: boolean;
   lastLogin?: string;
 }

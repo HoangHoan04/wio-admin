@@ -29,7 +29,10 @@ class TokenCache {
       this.cache.accessToken = Cookies.get(COOKIE_KEYS.ACCESS_TOKEN) || null;
       this.cache.refreshToken = Cookies.get(COOKIE_KEYS.REFRESH_TOKEN) || null;
       const userStr = Cookies.get(COOKIE_KEYS.USER);
-      this.cache.user = (userStr && userStr !== "undefined" && userStr !== "null") ? JSON.parse(userStr) : null;
+      this.cache.user =
+        userStr && userStr !== "undefined" && userStr !== "null"
+          ? JSON.parse(userStr)
+          : null;
     } catch (error) {
       this.clear();
       console.error("Failed to load tokens from cookies:", error);

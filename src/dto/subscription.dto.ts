@@ -8,7 +8,7 @@ export interface SubscriptionDto extends BaseDto {
   userId: string;
   user?: UserDto;
   planName: string;
-  status: string; // ACTIVE, EXPIRED, CANCELLED, PENDING
+  status: string;
   startDate: Date;
   endDate: Date;
   price: number;

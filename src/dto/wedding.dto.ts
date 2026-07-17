@@ -1,4 +1,4 @@
-import { FilterItemSelect, FilterItemText, type BaseDto } from "./common";
+import type { BaseDto, FilterItemSelect, FilterItemText } from "./common";
 
 export interface WeddingDto extends BaseDto {
   userId: string;
@@ -9,12 +9,14 @@ export interface WeddingDto extends BaseDto {
   groomFamilyTitle?: string;
   groomFatherName?: string;
   groomMotherName?: string;
+  groomShortName?: string;
   groomPhotoUrl?: string;
   brideName: string;
   brideDob?: string;
   brideFamilyTitle?: string;
   brideFatherName?: string;
   brideMotherName?: string;
+  brideShortName?: string;
   bridePhotoUrl?: string;
   engagementAt?: string;
   engagementVenue?: string;
@@ -38,12 +40,14 @@ export interface WeddingDto extends BaseDto {
   musicUrl?: string;
   musicType?: string;
   musicAutoplay: boolean;
-  bankAccountNumber?: string;
-  bankName?: string;
-  bankAccountName?: string;
-  bankTransferNote?: string;
-  vietqrUrl?: string;
-  status: string;
+  groomBankAccount?: string;
+  groomBankName?: string;
+  groomBankOwner?: string;
+  groomQrUrl?: string;
+  brideBankAccount?: string;
+  brideBankName?: string;
+  brideBankOwner?: string;
+  brideQrUrl?: string;
   publishedAt?: string;
   expiresAt?: string;
 }

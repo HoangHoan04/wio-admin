@@ -66,4 +66,5 @@ function MarkerContent({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { Marker, MarkerIcon, MarkerContent, markerVariants }

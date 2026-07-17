@@ -33,7 +33,7 @@ const isDeepEqual = (a: any, b: any) => {
   if (a === b) return true;
   try {
     return JSON.stringify(a) === JSON.stringify(b);
-  } catch (e) {
+  } catch {
     return false;
   }
 };
@@ -47,190 +47,224 @@ const RequiredLabel = memo(
   ),
 );
 
-const CustomCalendar = memo(({ field, value, onChange, commonProps }: any) => {
-  const { showToast } = useToast();
-  const lastToastRef = useRef<string>("");
-  const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(
-    value ? dayjs(value).format("DD/MM/YYYY") : "",
-  );
+const CustomCalendar = memo(
+  ({
+    field,
+    value,
+    onChange,
+    commonProps,
+  }: {
+    field: FormField;
+    value: any;
+    onChange: (key: string, value: any) => void;
+    commonProps: { style: React.CSSProperties; disabled?: boolean };
+  }) => {
+    const { showToast } = useToast();
+    const lastToastRef = useRef<string>("");
+    const [open, setOpen] = useState(false);
+    const [inputValue, setInputValue] = useState(
+      value != null
+        ? dayjs(value as string | number | Date).format("DD/MM/YYYY")
+        : "",
+    );
 
-  const handleRealtimeInput = (e: React.FormEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement;
-    const inputType = (e as any).nativeEvent?.inputType;
-    if (inputType?.includes("delete") || inputType?.includes("remove")) {
-      return;
-    }
-
-    const val = target.value;
-    const digits = val.replace(/\D/g, "");
-
-    let formatted = "";
-
-    if (digits.length >= 2) {
-      const dayStr = digits.substring(0, 2);
-      const dayNum = parseInt(dayStr, 10);
-
-      if (dayNum > 31 || dayNum === 0) {
-        if (lastToastRef.current !== "day") {
-          showToast({
-            type: "error",
-            title: "Ngày không hợp lệ",
-            message: "Ngày phải nằm trong khoảng từ 01 đến 31",
-          });
-          lastToastRef.current = "day";
-          setTimeout(() => (lastToastRef.current = ""), 2000);
-        }
-        formatted = digits.substring(0, 1);
-        target.value = formatted;
+    const handleRealtimeInput = (e: React.FormEvent<HTMLInputElement>) => {
+      const target = e.target as HTMLInputElement;
+      const inputType = (e.nativeEvent as InputEvent)?.inputType;
+      if (inputType?.includes("delete") || inputType?.includes("remove")) {
         return;
       }
 
-      formatted += dayStr;
-      if (digits.length > 2) {
-        formatted += "/";
-      }
-    } else {
-      formatted = digits;
-    }
+      const val = target.value;
+      const digits = val.replace(/\D/g, "");
 
-    if (digits.length >= 4) {
-      const monthStr = digits.substring(2, 4);
-      const monthNum = parseInt(monthStr, 10);
+      let formatted = "";
 
-      if (monthNum > 12 || monthNum === 0) {
-        if (lastToastRef.current !== "month") {
-          showToast({
-            type: "error",
-            title: "Tháng không hợp lệ",
-            message: "Tháng phải nằm trong khoảng từ 01 đến 12",
-          });
-          lastToastRef.current = "month";
-          setTimeout(() => (lastToastRef.current = ""), 2000);
-        }
-        formatted = formatted.substring(0, 3) + digits.substring(2, 3);
-        target.value = formatted;
-        return;
-      }
+      if (digits.length >= 2) {
+        const dayStr = digits.substring(0, 2);
+        const dayNum = parseInt(dayStr, 10);
 
-      formatted += monthStr;
-      if (digits.length > 4) {
-        formatted += "/";
-      }
-    } else if (digits.length > 2) {
-      formatted += digits.substring(2);
-    }
-
-    if (digits.length >= 5) {
-      const yearStr = digits.substring(4, 8);
-      formatted += yearStr;
-
-      if (yearStr.length === 4) {
-        const yearNum = parseInt(yearStr, 10);
-        const currentYear = new Date().getFullYear();
-
-        if (yearNum > currentYear || yearNum < 1900) {
-          if (lastToastRef.current !== "year") {
+        if (dayNum > 31 || dayNum === 0) {
+          if (lastToastRef.current !== "day") {
             showToast({
               type: "error",
-              title: "Năm không hợp lệ",
-              message: `Năm không được lớn hơn năm hiện tại (${currentYear})`,
+              title: "Ngày không hợp lệ",
+              message: "Ngày phải nằm trong khoảng từ 01 đến 31",
             });
-            lastToastRef.current = "year";
+            lastToastRef.current = "day";
             setTimeout(() => (lastToastRef.current = ""), 2000);
           }
-          formatted = formatted.substring(0, 6) + yearStr.substring(0, 3);
+          formatted = digits.substring(0, 1);
           target.value = formatted;
           return;
         }
 
-        const dayStr = digits.substring(0, 2);
+        formatted += dayStr;
+        if (digits.length > 2) {
+          formatted += "/";
+        }
+      } else {
+        formatted = digits;
+      }
+
+      if (digits.length >= 4) {
         const monthStr = digits.substring(2, 4);
-        const parsedObj = dayjs(`${yearStr}-${monthStr}-${dayStr}`);
-        if (parsedObj.isValid()) {
-          onChange(field.name, parsedObj.toDate());
-          setInputValue(`${dayStr}/${monthStr}/${yearStr}`);
+        const monthNum = parseInt(monthStr, 10);
+
+        if (monthNum > 12 || monthNum === 0) {
+          if (lastToastRef.current !== "month") {
+            showToast({
+              type: "error",
+              title: "Tháng không hợp lệ",
+              message: "Tháng phải nằm trong khoảng từ 01 đến 12",
+            });
+            lastToastRef.current = "month";
+            setTimeout(() => (lastToastRef.current = ""), 2000);
+          }
+          formatted = formatted.substring(0, 3) + digits.substring(2, 3);
+          target.value = formatted;
+          return;
+        }
+
+        formatted += monthStr;
+        if (digits.length > 4) {
+          formatted += "/";
+        }
+      } else if (digits.length > 2) {
+        formatted += digits.substring(2);
+      }
+
+      if (digits.length >= 5) {
+        const yearStr = digits.substring(4, 8);
+        formatted += yearStr;
+
+        if (yearStr.length === 4) {
+          const yearNum = parseInt(yearStr, 10);
+          const currentYear = new Date().getFullYear();
+
+          if (yearNum > currentYear || yearNum < 1900) {
+            if (lastToastRef.current !== "year") {
+              showToast({
+                type: "error",
+                title: "Năm không hợp lệ",
+                message: `Năm không được lớn hơn năm hiện tại (${currentYear})`,
+              });
+              lastToastRef.current = "year";
+              setTimeout(() => (lastToastRef.current = ""), 2000);
+            }
+            formatted = formatted.substring(0, 6) + yearStr.substring(0, 3);
+            target.value = formatted;
+            return;
+          }
+
+          const dayStr = digits.substring(0, 2);
+          const monthStr = digits.substring(2, 4);
+          const parsedObj = dayjs(`${yearStr}-${monthStr}-${dayStr}`);
+          if (parsedObj.isValid()) {
+            onChange(field.name, parsedObj.toDate());
+            setInputValue(`${dayStr}/${monthStr}/${yearStr}`);
+          }
         }
       }
-    }
 
-    target.value = formatted;
-  };
+      target.value = formatted;
+    };
 
-  const handleInputBlur = (e: any) => {
-    const rawValue = e.target?.value;
-    if (!rawValue) return;
+    const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      const rawValue = e.target?.value;
+      if (!rawValue) return;
 
-    const digits = rawValue.replace(/\D/g, "");
+      const digits = rawValue.replace(/\D/g, "");
 
-    if (digits.length === 8) {
-      const d = digits.substring(0, 2);
-      const m = digits.substring(2, 4);
-      const y = digits.substring(4, 8);
+      if (digits.length === 8) {
+        const d = digits.substring(0, 2);
+        const m = digits.substring(2, 4);
+        const y = digits.substring(4, 8);
 
-      const parsed = dayjs(`${y}-${m}-${d}`);
-      if (parsed.isValid()) {
-        onChange(field.name, parsed.toDate());
-        setInputValue(`${d}/${m}/${y}`);
+        const parsed = dayjs(`${y}-${m}-${d}`);
+        if (parsed.isValid()) {
+          onChange(field.name, parsed.toDate());
+          setInputValue(`${d}/${m}/${y}`);
+        }
       }
-    }
-  };
+    };
 
-  const handleSelect = (date: Date | undefined) => {
-    if (date) {
-      onChange(field.name, date);
-      setInputValue(dayjs(date).format("DD/MM/YYYY"));
-      setOpen(false);
-    }
-  };
+    const handleSelect = (date: Date | undefined) => {
+      if (date) {
+        onChange(field.name, date);
+        setInputValue(dayjs(date).format("DD/MM/YYYY"));
+        setOpen(false);
+      }
+    };
 
-  const date = value ? dayjs(value).toDate() : undefined;
+    const date =
+      value != null
+        ? dayjs(value as string | number | Date).toDate()
+        : undefined;
 
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          disabled={commonProps.disabled}
-          className={cn(
-            "w-full justify-start text-left font-normal h-9 px-2.5",
-            !inputValue && "text-muted-foreground",
-          )}
-        >
-          <CalendarIcon className="mr-2 size-4" />
-          {inputValue || field.placeholder || "DD/MM/YYYY"}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <div className="p-2 border-b border-border">
-          <Input
-            value={inputValue}
-            onChange={handleRealtimeInput}
-            onBlur={handleInputBlur}
-            onKeyDown={(e: any) => {
-              if (e.key === "Enter") {
-                handleInputBlur(e);
-              }
-            }}
-            placeholder="DD/MM/YYYY"
-            className="h-8 text-sm"
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            disabled={commonProps.disabled}
+            className={cn(
+              "w-full justify-start text-left font-normal h-9 px-2.5",
+              !inputValue && "text-muted-foreground",
+            )}
+          >
+            <CalendarIcon className="mr-2 size-4" />
+            {inputValue || field.placeholder || "DD/MM/YYYY"}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <div className="p-2 border-b border-border">
+            <Input
+              value={inputValue}
+              onChange={handleRealtimeInput}
+              onBlur={handleInputBlur}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.key === "Enter") {
+                  const syntheticEvent = {
+                    target: e.currentTarget,
+                  } as React.FocusEvent<HTMLInputElement>;
+                  handleInputBlur(syntheticEvent);
+                }
+              }}
+              placeholder="DD/MM/YYYY"
+              className="h-8 text-sm"
+            />
+          </div>
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={handleSelect}
+            disabled={
+              field.disabledDate
+                ? (d: Date) => field.disabledDate!(dayjs(d))
+                : undefined
+            }
           />
-        </div>
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={handleSelect}
-          disabled={field.disabledDate}
-        />
-      </PopoverContent>
-    </Popover>
-  );
-});
+        </PopoverContent>
+      </Popover>
+    );
+  },
+);
 
-const Editor = ({ value, onTextChange, style, placeholder }: any) => {
+const Editor = ({
+  value,
+  onTextChange,
+  style,
+  placeholder,
+}: {
+  value?: string;
+  onTextChange?: (e: { htmlValue: string }) => void;
+  style?: React.CSSProperties;
+  placeholder?: string;
+}) => {
   return (
     <Textarea
-      value={value || ""}
+      value={String(value ?? "")}
       onChange={(e) => onTextChange?.({ htmlValue: e.target.value })}
       style={style}
       placeholder={placeholder}
@@ -242,8 +276,8 @@ interface FieldItemProps {
   field: FormField;
   value: any;
   onChange: (key: string, value: any) => void;
-  setRef: (name: string, el: any) => void;
-  getValues: () => any;
+  setRef: (name: string, el: HTMLElement | null) => void;
+  getValues: () => Record<string, any>;
   allValues?: Record<string, any>;
 }
 
@@ -263,7 +297,27 @@ const FieldItem = memo(
       disabled: field.disabled,
     };
 
-    const handleSetRef = (el: any) => setRef(field.name, el);
+    const handleSetRef = (el: HTMLElement | null) => setRef(field.name, el);
+
+    const selectOptions = useMemo(
+      () =>
+        field.options && field.options.length > 0
+          ? field.options.map((o) => ({
+              label: o.name,
+              value: o.value,
+            }))
+          : [{ label: "Không có lựa chọn", value: "" }],
+      [field.options],
+    );
+
+    const multiselectOptions = useMemo(
+      () =>
+        field.options?.map((o) => ({
+          label: o.name,
+          value: o.value,
+        })) || [],
+      [field.options],
+    );
 
     switch (field.type) {
       case "input":
@@ -271,7 +325,7 @@ const FieldItem = memo(
           <div ref={handleSetRef}>
             <RequiredLabel label={field.label} required={field.required} />
             <Input
-              value={value || ""}
+              value={String(value ?? "")}
               placeholder={field.placeholder}
               onChange={(e) => onChange(field.name, e.target.value)}
               {...commonProps}
@@ -284,7 +338,7 @@ const FieldItem = memo(
             <RequiredLabel label={field.label} required={field.required} />
             <Input
               type="email"
-              value={value || ""}
+              value={String(value ?? "")}
               placeholder={field.placeholder || "example@email.com"}
               onChange={(e) => onChange(field.name, e.target.value)}
               {...commonProps}
@@ -298,7 +352,7 @@ const FieldItem = memo(
             <RequiredLabel label={field.label} required={field.required} />
             <PhoneInput
               country={"vn"}
-              value={value}
+              value={value as string}
               onChange={(phone) => onChange(field.name, phone)}
               inputStyle={{
                 width: "100%",
@@ -331,7 +385,7 @@ const FieldItem = memo(
           <div ref={handleSetRef}>
             <RequiredLabel label={field.label} required={field.required} />
             <Textarea
-              value={value || ""}
+              value={String(value ?? "")}
               placeholder={field.placeholder}
               onChange={(e) => onChange(field.name, e.target.value)}
               rows={4}
@@ -344,8 +398,8 @@ const FieldItem = memo(
           <div ref={handleSetRef}>
             <RequiredLabel label={field.label} required={field.required} />
             <Editor
-              value={value || ""}
-              onTextChange={(e: any) => onChange(field.name, e.htmlValue || "")}
+              value={String(value ?? "")}
+              onTextChange={(e) => onChange(field.name, e.htmlValue || "")}
               style={{ height: "350px" }}
               placeholder={field.placeholder}
             />
@@ -357,7 +411,7 @@ const FieldItem = memo(
             <RequiredLabel label={field.label} required={field.required} />
             <Input
               type="number"
-              value={value ?? ""}
+              value={(value ?? "") as string | number}
               onChange={(e) =>
                 onChange(
                   field.name,
@@ -369,21 +423,11 @@ const FieldItem = memo(
           </div>
         );
       case "select": {
-        const selectOptions = useMemo(
-          () =>
-            field.options && field.options.length > 0
-              ? field.options.map((o) => ({
-                  label: o.name,
-                  value: o.value,
-                }))
-              : [{ label: "Không có lựa chọn", value: "" }],
-          [field.options],
-        );
         return (
           <div ref={handleSetRef}>
             <RequiredLabel label={field.label} required={field.required} />
             <Select
-              value={value ?? ""}
+              value={String(value ?? "")}
               onValueChange={(val) => onChange(field.name, val || undefined)}
               disabled={field.disabled}
             >
@@ -394,7 +438,8 @@ const FieldItem = memo(
               </SelectTrigger>
               <SelectContent>
                 {selectOptions.map((opt) => (
-                  <SelectItem key={String(opt.value)} value={opt.value}>
+                  // ✅ Đã sửa: Ép kiểu String(opt.value) để giải quyết lỗi component nhận 'string | undefined'
+                  <SelectItem key={String(opt.value)} value={String(opt.value)}>
                     {opt.label}
                   </SelectItem>
                 ))}
@@ -404,15 +449,7 @@ const FieldItem = memo(
         );
       }
       case "multiselect": {
-        const multiselectOptions = useMemo(
-          () =>
-            field.options?.map((o) => ({
-              label: o.name,
-              value: o.value,
-            })) || [],
-          [field.options],
-        );
-        const selected = value || [];
+        const selected = (Array.isArray(value) ? value : []) as string[];
 
         const toggleOption = (optValue: string) => {
           const next = selected.includes(optValue)
@@ -443,7 +480,7 @@ const FieldItem = memo(
               <PopoverContent className="w-72 p-2" align="start">
                 <div className="space-y-1">
                   {multiselectOptions.map((opt) => {
-                    const isSelected = selected.includes(opt.value);
+                    const isSelected = selected.includes(String(opt.value));
                     return (
                       <label
                         key={String(opt.value)}
@@ -451,7 +488,9 @@ const FieldItem = memo(
                       >
                         <Checkbox
                           checked={isSelected}
-                          onCheckedChange={() => toggleOption(opt.value)}
+                          onCheckedChange={() =>
+                            toggleOption(String(opt.value))
+                          }
                         />
                         <span>{opt.label}</span>
                       </label>
@@ -495,7 +534,7 @@ const FieldItem = memo(
           >
             <Checkbox
               id={field.name}
-              checked={value || false}
+              checked={(value as boolean) || false}
               onCheckedChange={(checked) => onChange(field.name, checked)}
             />
             <label htmlFor={field.name} className="cursor-pointer select-none">
@@ -509,14 +548,17 @@ const FieldItem = memo(
           <div ref={handleSetRef}>
             <RequiredLabel label={field.label} required={field.required} />
             <RadioGroup
-              value={value}
+              value={value as string | undefined}
               onValueChange={(val) => onChange(field.name, val)}
             >
               <div className="flex flex-wrap gap-3">
                 {field.options?.map((opt) => (
-                  <div key={opt.value} className="flex items-center gap-2">
+                  <div
+                    key={String(opt.value)}
+                    className="flex items-center gap-2"
+                  >
                     <RadioGroupItem
-                      value={opt.value}
+                      value={String(opt.value)}
                       id={`${field.name}_${opt.value}`}
                     />
                     <label
@@ -538,7 +580,7 @@ const FieldItem = memo(
             <FileUploadCustom
               label={field.label}
               required={field.required}
-              initValue={value}
+              initValue={value as string | null | undefined}
               onFileUploaded={(uploadedData) =>
                 onChange(field.name, uploadedData)
               }
@@ -672,30 +714,30 @@ function normalizeValues(
 function useRenderFormCustom(
   fields: FormField[],
   initialValues: Record<string, any> = {},
-  onChangeValue?: (allValues: any) => void,
+  onChangeValue?: (allValues: Record<string, any>) => void,
 ) {
-  const [values, setValues] = useState<Record<string, any>>(initialValues);
-  const [errorField, setErrorField] = useState<string | null>(null);
-  const fieldRefs = useRef<Record<string, any>>({});
-  const { showToast } = useToast();
-
-  useEffect(() => {
+  const [values, setValues] = useState<Record<string, any>>(() => {
     if (initialValues && Object.keys(initialValues).length > 0) {
-      setValues(initialValues);
+      return initialValues;
     }
-  }, [initialValues]);
+    return {};
+  });
+  const [errorField, setErrorField] = useState<string | null>(null);
+  const fieldRefs = useRef<Record<string, HTMLElement>>({});
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (errorField && fieldRefs.current[errorField]) {
       const element = fieldRefs.current[errorField];
       element.scrollIntoView({ behavior: "smooth", block: "center" });
       setTimeout(() => {
-        if (element.focus) {
-          element.focus();
-        } else if (element.querySelector) {
-          const input = element.querySelector("input, textarea, select");
-          input?.focus();
+        if (typeof (element as HTMLElement).focus === "function") {
+          (element as HTMLElement).focus();
         }
+        const input = element.querySelector(
+          "input, textarea, select",
+        ) as HTMLElement | null;
+        input?.focus();
       }, 300);
       setErrorField(null);
     }
@@ -714,8 +756,8 @@ function useRenderFormCustom(
     [onChangeValue],
   );
 
-  const handleSetRef = useCallback((name: string, el: any) => {
-    fieldRefs.current[name] = el;
+  const handleSetRef = useCallback((name: string, el: HTMLElement | null) => {
+    if (el) fieldRefs.current[name] = el;
   }, []);
 
   const getValues = useCallback(
@@ -724,7 +766,8 @@ function useRenderFormCustom(
   );
 
   const setValuesExternal = useCallback(
-    (newValues: any) => setValues((prev) => ({ ...prev, ...newValues })),
+    (newValues: Record<string, any>) =>
+      setValues((prev) => ({ ...prev, ...newValues })),
     [],
   );
 
@@ -764,7 +807,7 @@ function useRenderFormCustom(
       }
 
       if (field.type === "email" && val) {
-        if (!validateEmail(val)) {
+        if (!validateEmail(val as string)) {
           showToast({
             type: "error",
             title: "Lỗi",
@@ -776,7 +819,7 @@ function useRenderFormCustom(
       }
 
       if (field.type === "phoneNumber" && val) {
-        if (val.length < 8) {
+        if (typeof val === "string" && val.length < 8) {
           showToast({
             type: "error",
             title: "Lỗi",

@@ -50,8 +50,8 @@ export default function MusicBackgroundManagerPage() {
     if (isReset) setFilter(initFilter);
   };
 
-  const handleFiltersChange = (newFilters: Record<string, any>) => {
-    setFilter(newFilters as FilterMusicBackgroundDto);
+  const handleFiltersChange = (newFilters: FilterMusicBackgroundDto) => {
+    setFilter(newFilters);
   };
 
   const handlePageChange = (page: number, pageSize: number) => {
@@ -121,22 +121,6 @@ export default function MusicBackgroundManagerPage() {
       header: "Trạng thái xử lý",
       width: 140,
       align: "center",
-      body: (rowData: MusicBackgroundDto) => {
-        const map: Record<
-          string,
-          { severity: "success" | "warning" | "info"; label: string }
-        > = {
-          DONE: { severity: "success", label: "Hoàn thành" },
-          PROCESSING: { severity: "info", label: "Đang xử lý" },
-          PENDING: { severity: "warning", label: "Chờ xử lý" },
-          ERROR: { severity: "danger" as any, label: "Lỗi" },
-        };
-        const info = map[rowData.status] || {
-          severity: "secondary" as const,
-          label: rowData.status,
-        };
-        return <StatusTag severity={info.severity} value={info.label} />;
-      },
     },
     {
       field: "isActive",

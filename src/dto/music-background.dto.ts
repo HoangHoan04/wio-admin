@@ -7,7 +7,7 @@ export interface MusicBackgroundDto extends BaseDto {
   audioUrl?: string;
   fileUrl?: string;
   isActive: boolean;
-  status: "PENDING" | "PROCESSING" | "DONE" | "ERROR";
+  status: string;
   youtubeUrl?: string;
   usageCount?: number;
 }

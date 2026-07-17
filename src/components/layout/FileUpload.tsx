@@ -16,7 +16,7 @@ import {
   PlusCircle,
   Trash2,
 } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 interface UploadFileItem {
   uid: string;
@@ -25,13 +25,19 @@ interface UploadFileItem {
   file?: File;
 }
 
+interface UploadFileDto {
+  id?: string;
+  fileUrl: string;
+  fileName?: string;
+}
+
 interface FileUploadProps {
   label?: string;
   required?: boolean;
   type?: "document" | "image" | "all";
   maxSize?: number;
-  onFileUploaded?: (url: any[] | any | null) => void;
-  initValue?: any[] | any | string | null;
+  onFileUploaded?: (url: UploadFileDto[] | UploadFileDto | null) => void;
+  initValue?: UploadFileDto | UploadFileDto[] | string | null;
   mode?: "single" | "multi";
   style?: React.CSSProperties;
   className?: string;
@@ -53,7 +59,7 @@ const mapInitValueToFileList = (
 
   return targetValues
     .filter(
-      (item): item is any =>
+      (item): item is UploadFileDto =>
         !!item && typeof item === "object" && !!item.fileUrl,
     )
     .map((item) => ({
@@ -63,7 +69,7 @@ const mapInitValueToFileList = (
     }));
 };
 
-const mapFileListToDto = (fileList: UploadFileItem[]): any[] =>
+const mapFileListToDto = (fileList: UploadFileItem[]): UploadFileDto[] =>
   fileList.map((file) => ({
     id: file.uid,
     fileUrl: file.url,
@@ -112,23 +118,12 @@ export default function FileUploadCustom({
   const { showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [fileList, setFileList] = useState<UploadFileItem[]>([]);
+  const [fileList, setFileList] = useState<UploadFileItem[]>(
+    () => mapInitValueToFileList(initValue, mode),
+  );
   const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<UploadFileItem | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-
-  useEffect(() => {
-    const nextFiles = mapInitValueToFileList(initValue, mode);
-    setFileList((prev) => {
-      const currentUrls = prev.map((f) => f.url).join("|");
-      const nextUrls = nextFiles.map((f) => f.url).join("|");
-
-      if (currentUrls !== nextUrls) {
-        return nextFiles;
-      }
-      return prev;
-    });
-  }, [initValue, mode]);
 
   const triggerChange = (newFiles: UploadFileItem[]) => {
     if (onFileUploaded) {
@@ -185,7 +180,7 @@ export default function FileUploadCustom({
           timeout: 2000,
         });
       }
-    } catch (error) {
+    } catch {
       showToast({
         type: "error",
         title: "Lỗi",

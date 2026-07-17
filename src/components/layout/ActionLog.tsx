@@ -1,6 +1,3 @@
-interface ActionLogProps {
-  functionType: string;
-  functionId?: string;
+export default function ActionLog() {
+  return null;
 }
-
-export default function ActionLog({}: ActionLogProps) {}

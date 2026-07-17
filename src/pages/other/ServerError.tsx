@@ -11,7 +11,7 @@ import {
   WifiOff,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface ServerErrorProps {
@@ -58,7 +58,7 @@ export default function ServerError({
     autoRetry ? autoRetrySeconds : null,
   );
   const [elapsed, setElapsed] = useState(0);
-  const errorTimeRef = useRef(new Date());
+  const [errorTime] = useState(() => new Date());
 
   useEffect(() => {
     const goOnline = () => setIsOnline(true);
@@ -73,12 +73,10 @@ export default function ServerError({
 
   useEffect(() => {
     const id = setInterval(() => {
-      setElapsed(
-        Math.floor((Date.now() - errorTimeRef.current.getTime()) / 1000),
-      );
+      setElapsed(Math.floor((Date.now() - errorTime.getTime()) / 1000));
     }, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [errorTime]);
 
   const handleRetry = () => {
     setRetrying(true);
@@ -93,17 +91,25 @@ export default function ServerError({
   useEffect(() => {
     if (countdown === null) return;
     if (countdown <= 0) {
-      handleRetry();
+      setTimeout(() => {
+        setRetrying(true);
+        setCountdown(null);
+        setTimeout(() => {
+          setRetrying(false);
+          if (onReset) onReset();
+          else window.location.reload();
+        }, 900);
+      }, 0);
       return;
     }
     const id = setTimeout(() => setCountdown((c) => (c ?? 1) - 1), 1000);
     return () => clearTimeout(id);
-  }, [countdown]);
+  }, [countdown, onReset]);
 
   const handleCopyDetails = async () => {
     const details = [
       `Mã lỗi: 500 Internal Server Error`,
-      `Thời điểm: ${errorTimeRef.current.toLocaleString("vi-VN")}`,
+      `Thời điểm: ${errorTime.toLocaleString("vi-VN")}`,
       `Đường dẫn: ${typeof window !== "undefined" ? window.location.href : ""}`,
       error?.message ? `Chi tiết: ${error.message}` : null,
       typeof navigator !== "undefined"
@@ -117,7 +123,9 @@ export default function ServerError({
       await navigator.clipboard.writeText(details);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {}
+    } catch {
+      /* empty */
+    }
   };
 
   const handleReport = () => {
@@ -127,7 +135,7 @@ export default function ServerError({
         `Mô tả sự cố:`,
         ``,
         `— Không chỉnh sửa phần dưới —`,
-        `Thời điểm: ${errorTimeRef.current.toLocaleString("vi-VN")}`,
+        `Thời điểm: ${errorTime.toLocaleString("vi-VN")}`,
         `Đường dẫn: ${typeof window !== "undefined" ? window.location.href : ""}`,
         error?.message ? `Chi tiết lỗi: ${error.message}` : ``,
       ].join("\n"),
@@ -362,8 +370,8 @@ export default function ServerError({
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              {$t.occurredAt} {errorTimeRef.current.toLocaleTimeString("vi-VN")}{" "}
-              · {formatAgo(elapsed)} {$t.agoSuffix}
+              {$t.occurredAt} {errorTime.toLocaleTimeString("vi-VN")} ·{" "}
+              {formatAgo(elapsed)} {$t.agoSuffix}
             </span>
           </div>
 

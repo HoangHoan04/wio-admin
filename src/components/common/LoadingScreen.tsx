@@ -5,24 +5,32 @@ import React, { useEffect, useState } from "react";
 
 export const LoadingScreen: React.FC = () => {
   const { isLoading, message } = useLoadingStore();
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(() => isLoading);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (isLoading) {
-      setVisible(true);
-      setProgress(0);
+      const showTimer = setTimeout(() => {
+        setVisible(true);
+        setProgress(0);
+      }, 0);
       const interval = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 100) return 100;
           return prev + 5;
         });
       }, 25);
-      return () => clearInterval(interval);
+      return () => {
+        clearTimeout(showTimer);
+        clearInterval(interval);
+      };
     } else {
-      setProgress(100);
+      const progressTimer = setTimeout(() => setProgress(100), 0);
       const timer = setTimeout(() => setVisible(false), 300);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(progressTimer);
+        clearTimeout(timer);
+      };
     }
   }, [isLoading]);
 
@@ -30,9 +38,8 @@ export const LoadingScreen: React.FC = () => {
 
   return (
     <div
-      className={`fixed inset-0 z-9999 flex flex-col items-center justify-center bg-background/25 backdrop-blur-xs transition-all duration-300 ${
-        isLoading ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className={`fixed inset-0 z-9999 flex flex-col items-center justify-center bg-background/25 backdrop-blur-xs transition-all duration-300 ${isLoading ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
     >
       <div className="flex flex-col items-center gap-4 max-w-xs w-full px-6 animate-in zoom-in-95 duration-200">
         <Loader2 className="size-8 text-primary animate-spin" />

@@ -326,7 +326,7 @@ function ChartLegendContent({
 
 function getPayloadConfigFromPayload(
   config: ChartConfig,
-  payload: unknown,
+  payload: any,
   key: string,
 ) {
   if (typeof payload !== "object" || payload === null) {

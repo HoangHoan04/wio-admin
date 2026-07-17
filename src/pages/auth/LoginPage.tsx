@@ -35,7 +35,10 @@ export default function LoginPage() {
       showToast({
         type: "error",
         timeout: 3000,
-        message: err?.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại.",
+        message:
+          err instanceof Error
+            ? err.message
+            : "Đăng nhập thất bại. Vui lòng kiểm tra lại.",
         title: "Lỗi đăng nhập",
       });
     } finally {
@@ -104,10 +107,11 @@ export default function LoginPage() {
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 placeholder="Nhập email hoặc số điện thoại"
                 type="text"
-                className={`w-full rounded-none! border-t-0! border-r-0! border-b-[1.5px]! border-l-0! bg-transparent! px-0! py-2! shadow-none! h-auto! transition-colors focus-visible:border-indigo-500! focus-visible:ring-0! ${submitted && !form.email
-                  ? "border-red-500!"
-                  : "border-slate-200!"
-                  }`}
+                className={`w-full rounded-none! border-t-0! border-r-0! border-b-[1.5px]! border-l-0! bg-transparent! px-0! py-2! shadow-none! h-auto! transition-colors focus-visible:border-indigo-500! focus-visible:ring-0! ${
+                  submitted && !form.email
+                    ? "border-red-500!"
+                    : "border-slate-200!"
+                }`}
               />
               {submitted && !form.email && (
                 <small className="mt-1 text-[12px] text-red-500">
@@ -128,10 +132,11 @@ export default function LoginPage() {
                   }
                   type={showPassword ? "text" : "password"}
                   placeholder="Vui lòng nhập mật khẩu"
-                  className={`w-full rounded-none! border-t-0! border-r-0! border-b-[1.5px]! border-l-0! bg-transparent! px-0! py-2! shadow-none! h-auto! transition-colors focus-visible:border-indigo-500! focus-visible:ring-0! ${submitted && !form.password
-                    ? "border-red-500!"
-                    : "border-slate-200!"
-                    }`}
+                  className={`w-full rounded-none! border-t-0! border-r-0! border-b-[1.5px]! border-l-0! bg-transparent! px-0! py-2! shadow-none! h-auto! transition-colors focus-visible:border-indigo-500! focus-visible:ring-0! ${
+                    submitted && !form.password
+                      ? "border-red-500!"
+                      : "border-slate-200!"
+                  }`}
                 />
                 <button
                   type="button"

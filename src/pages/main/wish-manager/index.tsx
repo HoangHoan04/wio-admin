@@ -5,7 +5,6 @@ import type { FilterField } from "@/components/layout/FilterCustom";
 import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import { StatusTag } from "@/components/ui/status-tag";
 import type { FilterWishDto, PaginationDto, WishDto } from "@/dto";
 import {
   useApproveWish,
@@ -126,21 +125,6 @@ export default function WishManagerPage() {
       header: "Trạng thái",
       width: 120,
       align: "center",
-      body: (rowData: WishDto) => {
-        const map: Record<
-          string,
-          { severity: "success" | "warning" | "danger" | "info"; label: string }
-        > = {
-          APPROVED: { severity: "success", label: "Đã duyệt" },
-          PENDING: { severity: "warning", label: "Chờ duyệt" },
-          REJECTED: { severity: "danger", label: "Từ chối" },
-        };
-        const info = map[rowData.status] || {
-          severity: "secondary" as const,
-          label: rowData.status,
-        };
-        return <StatusTag severity={info.severity} value={info.label} />;
-      },
     },
     {
       field: "isPinned",

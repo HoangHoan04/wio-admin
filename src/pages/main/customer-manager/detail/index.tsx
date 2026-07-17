@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { StatusTag } from "@/components/ui/status-tag";
-import type { CustomerDto } from "@/dto/customer.dto";
 import { useCustomerDetail } from "@/hooks/customer";
 import { ArrowLeft, History, IdCard, User } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -156,7 +155,7 @@ export default function DetailCustomerPage() {
                   />
                   <InfoItem
                     label="Đăng nhập từ"
-                    value={getProviderName(data.user)}
+                    value={data.user.provider || "Local (Email/Pass)"}
                   />
                   <InfoItem
                     label="Lần đăng nhập cuối"
@@ -221,20 +220,6 @@ export default function DetailCustomerPage() {
   ];
 
   return <BaseView tabs={tabs} />;
-}
-
-const providerLabels: Record<string, string> = {
-  googleId: "Google",
-  facebookId: "Facebook",
-  zaloId: "Zalo",
-};
-
-function getProviderName(user: CustomerDto["user"]) {
-  if (!user) return "N/A";
-  for (const [key, label] of Object.entries(providerLabels)) {
-    if ((user as any)[key]) return label;
-  }
-  return "Local (Email/Pass)";
 }
 
 function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {

@@ -73,7 +73,7 @@ export const useDeleteSubscription = () => {
           timeout: 3000,
         });
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         showToast({
           type: "error",
           message: error?.message || "Có lỗi xảy ra",
@@ -109,7 +109,7 @@ export const useChangePlanSubscription = () => {
           timeout: 3000,
         });
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         showToast({
           type: "error",
           message: error?.message || "Có lỗi xảy ra",

@@ -76,7 +76,7 @@ export const useCreateTemplate = () => {
       });
       router.back();
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",
@@ -112,7 +112,7 @@ export const useUpdateTemplate = () => {
       });
       router.back();
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",
@@ -147,7 +147,7 @@ export const useActivateTemplate = () => {
           timeout: 3000,
         });
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         showToast({
           type: "error",
           message: error?.message || "Có lỗi xảy ra",
@@ -183,7 +183,7 @@ export const useDeactivateTemplate = () => {
           timeout: 3000,
         });
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         showToast({
           type: "error",
           message: error?.message || "Có lỗi xảy ra",
@@ -219,7 +219,7 @@ export const useSetPremiumTemplate = () => {
           timeout: 3000,
         });
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         showToast({
           type: "error",
           message: error?.message || "Có lỗi xảy ra",
@@ -253,7 +253,7 @@ export const useDeleteTemplate = () => {
         timeout: 3000,
       });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: "error",
         message: error?.message || "Có lỗi xảy ra",

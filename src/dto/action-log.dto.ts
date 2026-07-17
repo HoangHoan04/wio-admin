@@ -1,4 +1,4 @@
-import type { BaseDto } from "./common/base.dto";
+import type { BaseDto } from "./common";
 
 export interface ActionLogDto extends BaseDto {
   createdById: string;

@@ -8,7 +8,7 @@ import FilterCustom from "@/components/layout/FilterCustom";
 import { RowActions } from "@/components/layout/RowActions";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
-import type { FilterTemplateDto, ITemplate, PaginationDto } from "@/dto";
+import type { FilterTemplateDto, PaginationDto, TemplateDto } from "@/dto";
 import {
   useActivateTemplate,
   useDeactivateTemplate,
@@ -31,8 +31,8 @@ export default function TemplateManagerPage() {
     take: 10,
     where: initFilter,
   });
-  const [selectedRows, setSelectedRows] = useState<ITemplate[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<ITemplate | null>(
+  const [selectedRows, setSelectedRows] = useState<TemplateDto[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateDto | null>(
     null,
   );
   const [actionType, setActionType] = useState<
@@ -83,7 +83,7 @@ export default function TemplateManagerPage() {
   };
 
   const askConfirm = (
-    record: ITemplate,
+    record: TemplateDto,
     action: "activate" | "deactivate" | "delete",
   ) => {
     setSelectedTemplate(record);
@@ -137,7 +137,7 @@ export default function TemplateManagerPage() {
     },
   ];
 
-  const columns: TableColumn<ITemplate>[] = [
+  const columns: TableColumn<TemplateDto>[] = [
     {
       field: "name",
       header: "Tên template",
@@ -185,7 +185,7 @@ export default function TemplateManagerPage() {
     },
   ];
 
-  const rowActions: RowAction<ITemplate>[] = [
+  const rowActions: RowAction<TemplateDto>[] = [
     {
       key: "view",
       icon: <Eye className="size-3.5" />,
@@ -254,7 +254,7 @@ export default function TemplateManagerPage() {
         onClear={() => handleSearch(true)}
       />
 
-      <TableCustom<ITemplate>
+      <TableCustom<TemplateDto>
         data={data || []}
         columns={columns}
         loading={

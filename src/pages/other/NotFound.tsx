@@ -2,7 +2,7 @@ import { ROUTES } from "@/common/constants";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Send } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PLANETS = [
@@ -92,14 +92,9 @@ const PLANETS = [
 
 export default function NotFound() {
   const navigate = useNavigate();
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const stars = useMemo(() => {
-    return Array.from({ length: 60 }).map(() => {
+  const [stars] = useState(() =>
+    Array.from({ length: 60 }).map(() => {
       const size = Math.random() * 2 + 0.5;
       return {
         width: `${size}px`,
@@ -110,8 +105,8 @@ export default function NotFound() {
         "--delay": `-${(Math.random() * 4).toFixed(1)}s`,
         "--op": `${(Math.random() * 0.5 + 0.3).toFixed(2)}`,
       } as React.CSSProperties;
-    });
-  }, []);
+    }),
+  );
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-[#040408] p-6 text-center overflow-hidden select-none font-sans">
@@ -149,14 +144,13 @@ export default function NotFound() {
       `}</style>
 
       <div className="absolute inset-0 pointer-events-none z-10">
-        {mounted &&
-          stars.map((style, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-white animate-twinkle"
-              style={style}
-            />
-          ))}
+        {stars.map((style, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full bg-white animate-twinkle"
+            style={style}
+          />
+        ))}
       </div>
 
       <div

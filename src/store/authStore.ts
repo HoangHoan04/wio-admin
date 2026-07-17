@@ -34,8 +34,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       );
       set({ user: response.user, isAuthenticated: true });
       window.location.href = HOME_PATH;
-    } catch (error) {
-      throw error;
     } finally {
       set({ isLoading: false });
     }
@@ -58,7 +56,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const response = await authService.getUserInfo();
       set({ user: response.data, isAuthenticated: true });
       tokenCache.setUser(response.data);
-    } catch (error) {
+    } catch {
       get().logout();
     }
   },
@@ -71,7 +69,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const response = await authService.getUserInfo();
         set({ user: response.data, isAuthenticated: true });
         tokenCache.setUser(response.data);
-      } catch (error) {
+      } catch {
         tokenCache.clear();
         set({ user: null, isAuthenticated: false });
         window.location.href = LOGIN_PATH;

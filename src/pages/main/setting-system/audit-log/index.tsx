@@ -31,8 +31,8 @@ export default function AuditLogPage() {
     if (isReset) setFilter(initFilter);
   };
 
-  const handleFiltersChange = (newFilters: Record<string, any>) => {
-    setFilter(newFilters as ActionLogFilterDto);
+  const handleFiltersChange = (newFilters: ActionLogFilterDto) => {
+    setFilter(newFilters);
   };
 
   const handlePageChange = (page: number, pageSize: number) => {

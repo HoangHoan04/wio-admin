@@ -3,7 +3,12 @@ import FullScreen from "@/components/common/FullScreen";
 import ToggeTheme from "@/components/common/ToggeTheme";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -218,7 +223,11 @@ export const AppNavbar: React.FC = () => {
         oldPassword,
         newPassword,
       });
-      showToast({ type: "success", title: "Thành công", message: "Đổi mật khẩu thành công" });
+      showToast({
+        type: "success",
+        title: "Thành công",
+        message: "Đổi mật khẩu thành công",
+      });
       setIsChangePasswordOpen(false);
       setOldPassword("");
       setNewPassword("");
@@ -338,7 +347,10 @@ export const AppNavbar: React.FC = () => {
                 </span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setIsChangePasswordOpen(true)} className="cursor-pointer">
+              <DropdownMenuItem
+                onClick={() => setIsChangePasswordOpen(true)}
+                className="cursor-pointer"
+              >
                 <KeyRound className="mr-2 size-4" />
                 <span>{"Đổi mật khẩu"}</span>
               </DropdownMenuItem>
@@ -600,7 +612,10 @@ export const AppNavbar: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen}>
+      <Dialog
+        open={isChangePasswordOpen}
+        onOpenChange={setIsChangePasswordOpen}
+      >
         <DialogContent className="sm:max-w-md no-override">
           <DialogHeader>
             <DialogTitle>{"Đổi mật khẩu"}</DialogTitle>
@@ -629,7 +644,9 @@ export const AppNavbar: React.FC = () => {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="confirm-password">{"Xác nhận mật khẩu mới"}</Label>
+              <Label htmlFor="confirm-password">
+                {"Xác nhận mật khẩu mới"}
+              </Label>
               <Input
                 id="confirm-password"
                 type="password"

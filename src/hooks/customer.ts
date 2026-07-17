@@ -69,7 +69,7 @@ export const useActivateCustomer = () => {
           timeout: 3000,
         });
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         showToast({
           type: "error",
           message: error?.message || "Có lỗi xảy ra khi kích hoạt tài khoản",
@@ -105,7 +105,7 @@ export const useDeactivateCustomer = () => {
           timeout: 3000,
         });
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         showToast({
           type: "error",
           message: error?.message || "Có lỗi xảy ra khi đình chỉ tài khoản",

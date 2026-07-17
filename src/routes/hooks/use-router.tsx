@@ -15,7 +15,7 @@ export function useRouter() {
       replace: (href: To, options?: NavigateOptions | undefined) =>
         navigate(href, { replace: true, ...options }),
     }),
-    [navigate]
+    [navigate],
   );
 
   return router;

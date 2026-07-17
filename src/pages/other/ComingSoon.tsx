@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Bell, CheckCircle2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Facebook from "@/assets/icons/facebook.svg";
@@ -13,7 +13,7 @@ import { ROUTES } from "@/common/constants";
 const LAUNCH_DATE = new Date("2026-12-31T00:00:00");
 
 function useCountdown(target: Date) {
-  const calc = () => {
+  const calc = React.useCallback(() => {
     const diff = Math.max(0, target.getTime() - Date.now());
     return {
       days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -21,13 +21,13 @@ function useCountdown(target: Date) {
       minutes: Math.floor((diff / (1000 * 60)) % 60),
       seconds: Math.floor((diff / 1000) % 60),
     };
-  };
+  }, [target]);
   const [time, setTime] = useState(calc);
 
   useEffect(() => {
     const id = setInterval(() => setTime(calc()), 1000);
     return () => clearInterval(id);
-  }, [target]);
+  }, [calc]);
 
   return time;
 }

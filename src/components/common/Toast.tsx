@@ -2,7 +2,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { useToastStore, type ToastItem } from "@/store/toastStore";
 import { AlertTriangle, CheckCircle2, Info, X, XCircle } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const toastConfig = {
   success: {
@@ -45,7 +45,7 @@ const ToastCard: React.FC<ToastProps> = ({ toast }) => {
   const [leaving, setLeaving] = useState(false);
   const [progress, setProgress] = useState(100);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const startTimeRef = useRef<number>(Date.now());
+  const startTimeRef = useRef<number>(0);
   const pausedAtRef = useRef<number | null>(null);
   const remainingRef = useRef<number>(toast.timeout);
 
@@ -64,7 +64,13 @@ const ToastCard: React.FC<ToastProps> = ({ toast }) => {
     requestAnimationFrame(() => setVisible(true));
   }, []);
 
-  const startProgress = () => {
+  const handleDismiss = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setLeaving(true);
+    setTimeout(() => dismissToast(toast.id), 320);
+  }, [dismissToast, toast.id]);
+
+  const startProgress = useCallback(() => {
     startTimeRef.current = Date.now();
     intervalRef.current = setInterval(() => {
       const elapsed = Date.now() - startTimeRef.current;
@@ -72,7 +78,7 @@ const ToastCard: React.FC<ToastProps> = ({ toast }) => {
       setProgress(pct);
       if (pct <= 0) handleDismiss();
     }, 16);
-  };
+  }, [handleDismiss]);
 
   const pauseProgress = () => {
     if (intervalRef.current) {
@@ -89,13 +95,7 @@ const ToastCard: React.FC<ToastProps> = ({ toast }) => {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, []);
-
-  const handleDismiss = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setLeaving(true);
-    setTimeout(() => dismissToast(toast.id), 320);
-  };
+  }, [startProgress]);
 
   return (
     <div
