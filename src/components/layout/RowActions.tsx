@@ -9,21 +9,21 @@ interface ActionItem {
   disabled?: boolean;
   loading?: boolean;
   variant?:
-  | "default"
-  | "outline"
-  | "secondary"
-  | "ghost"
-  | "destructive"
-  | "link";
+    | "default"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "destructive"
+    | "link";
   size?:
-  | "default"
-  | "xs"
-  | "sm"
-  | "lg"
-  | "icon"
-  | "icon-xs"
-  | "icon-sm"
-  | "icon-lg";
+    | "default"
+    | "xs"
+    | "sm"
+    | "lg"
+    | "icon"
+    | "icon-xs"
+    | "icon-sm"
+    | "icon-lg";
   className?: string;
 }
 

@@ -273,7 +273,9 @@ export const ToggeTheme: React.FC = () => {
   const settings = useDashboardStore((state) => state.settings);
   const updateSettings = useDashboardStore((state) => state.updateSettings);
   const [animating, setAnimating] = useState(false);
-  const [pendingTheme, setPendingTheme] = useState<"light" | "dark" | "system" | null>(null);
+  const [pendingTheme, setPendingTheme] = useState<
+    "light" | "dark" | "system" | null
+  >(null);
   const pendingThemeRef = useRef(pendingTheme);
 
   useEffect(() => {

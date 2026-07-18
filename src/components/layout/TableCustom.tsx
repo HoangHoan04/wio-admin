@@ -177,20 +177,13 @@ function TableCustom<T extends Record<string, any>>({
     pagination?.pageSize || enumData.PAGE.PAGESIZE,
   );
 
-  // States cho tính năng nâng cao
   const [density, setDensity] = useState<"small" | "normal" | "large">(size);
   const [draggedField, setDraggedField] = useState<string | null>(null);
   const [showConfig, setShowConfig] = useState(false);
-
-  // Load / Save Column Order & Visibility
   const [columnOrder, setColumnOrder] = useState<string[]>(() => {
     const saved = localStorage.getItem(`${id}_column_order`);
     if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // ignore
-      }
+      return JSON.parse(saved);
     }
     return initialColumns.map((c) => c.field);
   });
@@ -200,11 +193,7 @@ function TableCustom<T extends Record<string, any>>({
   >(() => {
     const saved = localStorage.getItem(`${id}_column_visibility`);
     if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // ignore
-      }
+      return JSON.parse(saved);
     }
     const initialMap: Record<string, boolean> = {};
     initialColumns.forEach((c) => {
@@ -213,7 +202,6 @@ function TableCustom<T extends Record<string, any>>({
     return initialMap;
   });
 
-  // State cho kích thước cột (Resize)
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
   const resizingRef = useRef<{
     field: string;
@@ -221,9 +209,9 @@ function TableCustom<T extends Record<string, any>>({
     startWidth: number;
   } | null>(null);
 
-  // Sync columnOrder & visibleColumnsMap when initialColumns change
   useEffect(() => {
     const currentFields = initialColumns.map((c) => c.field);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setColumnOrder((prev) => {
       const filteredPrev = prev.filter((f) => currentFields.includes(f));
       const added = currentFields.filter((f) => !prev.includes(f));
@@ -246,11 +234,11 @@ function TableCustom<T extends Record<string, any>>({
 
   useEffect(() => {
     if (pagination) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRows(pagination.pageSize);
     }
   }, [pagination]);
 
-  // Click outside to close column configuration dropdown
   const configRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -274,7 +262,6 @@ function TableCustom<T extends Record<string, any>>({
     onPageChange?.(1, newSize);
   };
 
-  // Toggle Visibility
   const toggleColumnVisibility = (field: string) => {
     const nextMap = {
       ...visibleColumnsMap,
@@ -284,7 +271,6 @@ function TableCustom<T extends Record<string, any>>({
     localStorage.setItem(`${id}_column_visibility`, JSON.stringify(nextMap));
   };
 
-  // Reorder Logic (HTML5 Drag & Drop)
   const handleDragStart = (e: React.DragEvent, field: string) => {
     setDraggedField(field);
     e.dataTransfer.effectAllowed = "move";
@@ -311,7 +297,6 @@ function TableCustom<T extends Record<string, any>>({
     setDraggedField(null);
   };
 
-  // Resize Logic
   const handleResizeStart = (
     e: React.MouseEvent,
     field: string,
@@ -332,7 +317,7 @@ function TableCustom<T extends Record<string, any>>({
     if (!resizingRef.current) return;
     const { field, startX, startWidth } = resizingRef.current;
     const deltaX = e.clientX - startX;
-    const newWidth = Math.max(50, startWidth + deltaX); // Tối thiểu 50px
+    const newWidth = Math.max(50, startWidth + deltaX);
     setColumnWidths((prev) => ({
       ...prev,
       [field]: newWidth,
@@ -345,7 +330,6 @@ function TableCustom<T extends Record<string, any>>({
     document.removeEventListener("mouseup", handleResizeEnd);
   };
 
-  // Sắp xếp các cột dựa trên columnOrder và visibleColumnsMap
   const visibleColumns = useMemo(() => {
     const colMap = new Map(initialColumns.map((c) => [c.field, c]));
     const ordered = columnOrder
@@ -354,7 +338,6 @@ function TableCustom<T extends Record<string, any>>({
         (col): col is TableColumn<T> => !!col && visibleColumnsMap[col.field],
       );
 
-    // Thêm bất kỳ cột nào mới trong initialColumns chưa có trong columnOrder
     initialColumns.forEach((c) => {
       if (!columnOrder.includes(c.field) && visibleColumnsMap[c.field]) {
         ordered.push(c);
@@ -364,7 +347,6 @@ function TableCustom<T extends Record<string, any>>({
     return ordered;
   }, [initialColumns, columnOrder, visibleColumnsMap]);
 
-  // Cắt lát dữ liệu phía client khi số dòng data lớn hơn pageSize
   const displayData = useMemo(() => {
     if (pagination && data.length > rows) {
       const start = (pagination.current - 1) * rows;
@@ -374,12 +356,11 @@ function TableCustom<T extends Record<string, any>>({
     return data;
   }, [data, pagination, rows]);
 
-  // Tính toán vị trí left cho các cột frozen (Sticky left)
   const leftStickyOffsets = useMemo(() => {
     const offsets: Record<string, number> = {};
     let currentOffset = 0;
-    if (enableSelection) currentOffset += 48; // Checkbox column is 48px wide
-    if (showIndexList) currentOffset += 56; // STT column is 56px wide
+    if (enableSelection) currentOffset += 48;
+    if (showIndexList) currentOffset += 56;
 
     visibleColumns.forEach((col) => {
       if (col.frozen && col.alignFrozen !== "right") {
@@ -578,7 +559,6 @@ function TableCustom<T extends Record<string, any>>({
     }
   };
 
-  // Density padding classes
   const densityCellPadding = (() => {
     switch (density) {
       case "small":
@@ -593,7 +573,6 @@ function TableCustom<T extends Record<string, any>>({
 
   return (
     <div className="w-full text-sm text-foreground" style={style}>
-      {/* TOOLBAR */}
       <div
         className={cn(
           "flex items-center gap-3 mb-3 p-1 flex-wrap justify-between",
@@ -607,7 +586,6 @@ function TableCustom<T extends Record<string, any>>({
         <div className="flex items-center gap-2">
           {toolbar?.show && toolbar.rightContent}
 
-          {/* DENSITY SELECTOR */}
           <div className="flex items-center gap-1 bg-muted/65 p-0.5 rounded-lg border border-border">
             <Button
               variant={density === "small" ? "secondary" : "ghost"}
@@ -638,7 +616,6 @@ function TableCustom<T extends Record<string, any>>({
             </Button>
           </div>
 
-          {/* REFRESH BUTTON */}
           {toolbar?.show && toolbar.showRefreshButton && (
             <Button
               variant="outline"
@@ -652,7 +629,6 @@ function TableCustom<T extends Record<string, any>>({
             </Button>
           )}
 
-          {/* COLUMN CONFIG COG */}
           <div className="relative" ref={configRef}>
             <Button
               variant="outline"
@@ -690,7 +666,6 @@ function TableCustom<T extends Record<string, any>>({
         </div>
       </div>
 
-      {/* TABLE WRAPPER */}
       <div className="w-full overflow-x-auto rounded-xl border border-border bg-card text-card-foreground shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)]">
         <table
           className={cn(
@@ -701,7 +676,6 @@ function TableCustom<T extends Record<string, any>>({
         >
           <thead>
             <tr className="border-b border-border bg-muted/65">
-              {/* Checkbox Header */}
               {enableSelection && (
                 <th
                   className={cn(
@@ -729,7 +703,6 @@ function TableCustom<T extends Record<string, any>>({
                 </th>
               )}
 
-              {/* STT Header */}
               {showIndexList && (
                 <th
                   className={cn(
@@ -746,7 +719,6 @@ function TableCustom<T extends Record<string, any>>({
                 </th>
               )}
 
-              {/* Data Headers */}
               {visibleColumns.map((col) => {
                 const isLeftFrozen = col.frozen && col.alignFrozen !== "right";
                 const width =
@@ -813,7 +785,6 @@ function TableCustom<T extends Record<string, any>>({
                       </div>
                     </div>
 
-                    {/* Resize Handle */}
                     {col.resizable !== false && (
                       <div
                         onMouseDown={(e) =>
@@ -827,7 +798,6 @@ function TableCustom<T extends Record<string, any>>({
                 );
               })}
 
-              {/* Actions Header */}
               {rowActions.length > 0 && (
                 <th
                   style={{
@@ -897,7 +867,6 @@ function TableCustom<T extends Record<string, any>>({
                     stripedRows && rowIndex % 2 === 1 && "bg-muted/15",
                   )}
                 >
-                  {/* Checkbox Cell */}
                   {enableSelection && (
                     <td
                       className={cn(
@@ -924,7 +893,6 @@ function TableCustom<T extends Record<string, any>>({
                     </td>
                   )}
 
-                  {/* STT Cell */}
                   {showIndexList && (
                     <td
                       className={cn(
@@ -943,7 +911,6 @@ function TableCustom<T extends Record<string, any>>({
                     </td>
                   )}
 
-                  {/* Data Cells */}
                   {visibleColumns.map((col) => {
                     const isLeftFrozen =
                       col.frozen && col.alignFrozen !== "right";
@@ -973,7 +940,6 @@ function TableCustom<T extends Record<string, any>>({
                     );
                   })}
 
-                  {/* Actions Cell */}
                   {rowActions.length > 0 && (
                     <td
                       style={{
@@ -1055,7 +1021,6 @@ function TableCustom<T extends Record<string, any>>({
         </table>
       </div>
 
-      {/* PAGINATION */}
       {pagination && !loading && data.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 px-1">
           <div className="text-xs text-muted-foreground font-medium">

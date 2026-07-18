@@ -438,7 +438,6 @@ const FieldItem = memo(
               </SelectTrigger>
               <SelectContent>
                 {selectOptions.map((opt) => (
-                  // ✅ Đã sửa: Ép kiểu String(opt.value) để giải quyết lỗi component nhận 'string | undefined'
                   <SelectItem key={String(opt.value)} value={String(opt.value)}>
                     {opt.label}
                   </SelectItem>

@@ -19,14 +19,12 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      // Hạ cấp từ 'error' xuống 'warn' (chỉ cảnh báo, không chặn) hoặc 'off' (tắt hẳn)
       "@typescript-eslint/no-explicit-any": "off",
-
-      // Sửa luôn lỗi khai báo biến không dùng (cho phép biến có dấu gạch dưới _ ở đầu)
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
+      "react-refresh/only-export-components": "off",
     },
   },
 ]);

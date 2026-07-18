@@ -84,7 +84,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 }));
 
-// Selector tiện dùng, tránh re-render thừa khi component chỉ cần 1 field
 export const useUser = () => useAuthStore((s) => s.user);
 export const useIsAuthenticated = () => useAuthStore((s) => s.isAuthenticated);
 export const useIsAuthLoading = () => useAuthStore((s) => s.isLoading);

@@ -11,11 +11,8 @@ const severityStyles: Record<string, string> = {
 };
 
 interface StatusTagProps {
-  /** Preset severity — used only when `color` is not provided */
   severity?: string;
-  /** Raw CSS color value (e.g. "#c5a059" or "rgb(...)"). Overrides severity. */
   color?: string;
-  /** Custom Tailwind className (e.g. from enum.className). Overrides both severity and color. */
   colorClass?: string;
   value?: string;
   className?: string;
@@ -28,14 +25,14 @@ export function StatusTag({
   value,
   className,
 }: StatusTagProps) {
-  // Priority: colorClass > color > severity preset
   const resolvedClass = colorClass
     ? colorClass
-    : severityStyles[severity] ?? severityStyles.secondary;
+    : (severityStyles[severity] ?? severityStyles.secondary);
 
-  const inlineStyle = !colorClass && color
-    ? { color, borderColor: color, backgroundColor: `${color}1a` }
-    : undefined;
+  const inlineStyle =
+    !colorClass && color
+      ? { color, borderColor: color, backgroundColor: `${color}1a` }
+      : undefined;
 
   return (
     <span

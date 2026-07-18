@@ -64,7 +64,7 @@ export const AppNavbar: React.FC = () => {
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch (e) {
+      } catch {
         return [];
       }
     }
@@ -131,6 +131,7 @@ export const AppNavbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setActiveIndex(0);
   }, [searchQuery, isSearchOpen]);
 

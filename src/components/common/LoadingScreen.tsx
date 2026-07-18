@@ -38,8 +38,9 @@ export const LoadingScreen: React.FC = () => {
 
   return (
     <div
-      className={`fixed inset-0 z-9999 flex flex-col items-center justify-center bg-background/25 backdrop-blur-xs transition-all duration-300 ${isLoading ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
+      className={`fixed inset-0 z-9999 flex flex-col items-center justify-center bg-background/25 backdrop-blur-xs transition-all duration-300 ${
+        isLoading ? "opacity-100" : "opacity-0 pointer-events-none"
+      }`}
     >
       <div className="flex flex-col items-center gap-4 max-w-xs w-full px-6 animate-in zoom-in-95 duration-200">
         <Loader2 className="size-8 text-primary animate-spin" />

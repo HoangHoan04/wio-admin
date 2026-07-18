@@ -118,8 +118,8 @@ export default function FileUploadCustom({
   const { showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [fileList, setFileList] = useState<UploadFileItem[]>(
-    () => mapInitValueToFileList(initValue, mode),
+  const [fileList, setFileList] = useState<UploadFileItem[]>(() =>
+    mapInitValueToFileList(initValue, mode),
   );
   const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<UploadFileItem | null>(null);
