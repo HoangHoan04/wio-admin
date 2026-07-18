@@ -14,21 +14,19 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface ServerErrorProps {
-  error?: Error | null;
-  onReset?: () => void;
-  autoRetry?: boolean;
-  autoRetrySeconds?: number;
-  supportEmail?: string;
-}
-
 export default function ServerError({
   error,
   onReset,
   autoRetry = false,
   autoRetrySeconds = 15,
-  supportEmail = "support@apetechs.vn",
-}: ServerErrorProps = {}) {
+  supportEmail = "tiemcuoitanthoi@hoanghoantech.vn",
+}: {
+  error?: Error | null;
+  onReset?: () => void;
+  autoRetry?: boolean;
+  autoRetrySeconds?: number;
+  supportEmail?: string;
+} = {}) {
   const navigate = useNavigate();
   const $t = {
     title: "Máy chủ đang gặp sự cố",
@@ -123,9 +121,7 @@ export default function ServerError({
       await navigator.clipboard.writeText(details);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* empty */
-    }
+    } catch { /* empty */ }
   };
 
   const handleReport = () => {
@@ -345,7 +341,7 @@ export default function ServerError({
           </svg>
 
           <p className="text-center text-sm text-[#7c8798] font-mono">
-            // hệ thống mất kết nối tạm thời
+            hệ thống mất kết nối tạm thời
           </p>
         </div>
       </div>

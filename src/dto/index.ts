@@ -1,6 +1,7 @@
 export * from "./action-log.dto";
 export * from "./auth.dto";
 export * from "./common";
+export * from "./guest.dto";
 export * from "./moderation.dto";
 export * from "./music-background.dto";
 export * from "./subscription.dto";

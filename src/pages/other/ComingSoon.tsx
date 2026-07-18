@@ -48,18 +48,16 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
   );
 }
 
-interface ComingSoonProps {
-  title?: string;
-  description?: string;
-  launchDate?: Date;
-  backgroundImageUrl?: string;
-}
-
 export default function ComingSoon({
   description,
   launchDate = LAUNCH_DATE,
   backgroundImageUrl,
-}: ComingSoonProps = {}) {
+}: {
+  title?: string;
+  description?: string;
+  launchDate?: Date;
+  backgroundImageUrl?: string;
+} = {}) {
   const navigate = useNavigate();
   const { days, hours, minutes, seconds } = useCountdown(launchDate);
   const [email, setEmail] = useState("");

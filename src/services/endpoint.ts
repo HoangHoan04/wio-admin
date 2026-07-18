@@ -72,11 +72,23 @@ export const API_ENDPOINTS = {
     CHANGE_PASSWORD: "/api/admin/customer/change-password",
   },
 
+  GUEST: {
+    PAGINATION: "/api/admin/guest/pagination",
+    FIND_BY_ID: "/api/admin/guest/find-by-id",
+    STATS: "/api/admin/guest/stats",
+    DELETE: "/api/admin/guest/delete",
+  },
+
   SUBSCRIPTION: {
     PAGINATION: "/api/admin/subscription/pagination",
     DELETE: "/api/admin/subscription/delete",
     FIND_BY_ID: "/api/admin/subscription/find-by-id",
     CHANGE_PLAN: "/api/admin/subscription/change-plan",
+  },
+
+  TABLE: {
+    PAGINATION: "/api/user/table/pagination",
+    DELETE: "/api/user/table/delete",
   },
 
   ANALYTICS: {

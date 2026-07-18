@@ -4,6 +4,7 @@ import LoginPage from "@/pages/auth/LoginPage";
 import AnalyticsPage from "@/pages/main/analytics";
 import CustomerManagerPage from "@/pages/main/customer-manager";
 import DetailCustomerPage from "@/pages/main/customer-manager/detail";
+import GuestManagerPage from "@/pages/main/guest-manager";
 import HomePage from "@/pages/main/home";
 import MusicBackgroundManagerPage from "@/pages/main/music-background-manager";
 import PhotoWallManagerPage from "@/pages/main/photo-wall-manager";
@@ -92,6 +93,10 @@ export default function AppRoutes() {
                   .path
               }
               element={<MusicBackgroundManagerPage />}
+            />
+            <Route
+              path={ROUTES.MAIN.WEDDING_MANAGER.children.GUEST_MANAGER.path}
+              element={<GuestManagerPage />}
             />
             <Route
               path={

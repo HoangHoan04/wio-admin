@@ -211,7 +211,6 @@ function TableCustom<T extends Record<string, any>>({
 
   useEffect(() => {
     const currentFields = initialColumns.map((c) => c.field);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setColumnOrder((prev) => {
       const filteredPrev = prev.filter((f) => currentFields.includes(f));
       const added = currentFields.filter((f) => !prev.includes(f));
@@ -234,7 +233,6 @@ function TableCustom<T extends Record<string, any>>({
 
   useEffect(() => {
     if (pagination) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRows(pagination.pageSize);
     }
   }, [pagination]);

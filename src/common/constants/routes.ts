@@ -102,6 +102,12 @@ export const ROUTES = {
           path: "/music-background-manager",
           children: {},
         },
+        GUEST_MANAGER: {
+          key: "GUEST_MANAGER",
+          label: "Quản lý khách mờ",
+          path: "/guest-manager",
+          children: {},
+        },
       },
     },
 
