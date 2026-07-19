@@ -580,9 +580,13 @@ const FieldItem = memo(
               label={field.label}
               required={field.required}
               initValue={value as string | null | undefined}
-              onFileUploaded={(uploadedData) =>
-                onChange(field.name, uploadedData)
-              }
+              onFileUploaded={(uploadedData) => {
+                if (field.isSingle && uploadedData && !Array.isArray(uploadedData)) {
+                  onChange(field.name, uploadedData.fileUrl);
+                } else {
+                  onChange(field.name, uploadedData);
+                }
+              }}
               type={field.type === "image" ? "image" : field.fileType || "all"}
               mode={field.isSingle ? "single" : "multi"}
               maxSize={field.maxSize || 10}

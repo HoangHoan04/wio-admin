@@ -6,7 +6,12 @@ import type {
   SuccessResponse,
   UpdateTemplateDto,
 } from "@/dto";
-import type { SetPremiumTemplateDto, TemplateDto } from "@/dto/template.dto";
+import type {
+  SetIsDeletedTemplateDto,
+  SetIsShowTemplateDto,
+  SetPremiumTemplateDto,
+  TemplateDto,
+} from "@/dto/template.dto";
 import { useRouter } from "@/routes/hooks/use-router";
 import rootApiService from "@/services/api.service";
 import { API_ENDPOINTS } from "@/services/endpoint";
@@ -125,77 +130,6 @@ export const useUpdateTemplate = () => {
   return { onUpdateTemplate, isLoading };
 };
 
-export const useActivateTemplate = () => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  const { mutateAsync: onActivateTemplate, isPending: isLoading } = useMutation(
-    {
-      mutationFn: (id: string) =>
-        rootApiService.post(API_ENDPOINTS.TEMPLATE.ACTIVATE, {
-          id,
-        }) as Promise<SuccessResponse>,
-
-      onSuccess: (res: SuccessResponse) => {
-        queryClient.invalidateQueries({
-          queryKey: [API_ENDPOINTS.TEMPLATE.PAGINATION],
-        });
-        showToast({
-          type: "success",
-          message: res.message || "Kích hoạt template thành công",
-          title: "Thành công",
-          timeout: 3000,
-        });
-      },
-      onError: (error: Error) => {
-        showToast({
-          type: "error",
-          message: error?.message || "Có lỗi xảy ra",
-          title: "Lỗi",
-          timeout: 3000,
-        });
-      },
-    },
-  );
-
-  return { onActivateTemplate, isLoading };
-};
-
-export const useDeactivateTemplate = () => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  const { mutateAsync: onDeactivateTemplate, isPending: isLoading } =
-    useMutation({
-      mutationFn: (id: string) =>
-        rootApiService.post(API_ENDPOINTS.TEMPLATE.DEACTIVATE, {
-          id,
-        }) as Promise<SuccessResponse>,
-
-      onSuccess: (res: SuccessResponse) => {
-        queryClient.invalidateQueries({
-          queryKey: [API_ENDPOINTS.TEMPLATE.PAGINATION],
-        });
-        showToast({
-          type: "success",
-          message: res.message || "Vô hiệu hóa template thành công",
-          title: "Thành công",
-          timeout: 3000,
-        });
-      },
-      onError: (error: Error) => {
-        showToast({
-          type: "error",
-          message: error?.message || "Có lỗi xảy ra",
-          title: "Lỗi",
-          timeout: 3000,
-        });
-      },
-    });
-
-  return { onDeactivateTemplate, isLoading };
-};
-
 export const useSetPremiumTemplate = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -232,36 +166,74 @@ export const useSetPremiumTemplate = () => {
   return { onSetPremiumTemplate, isLoading };
 };
 
-export const useDeleteTemplate = () => {
+export const useSetIsShowTemplate = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const { mutateAsync: onDeleteTemplate, isPending: isLoading } = useMutation({
-    mutationFn: (id: string) =>
-      rootApiService.post(API_ENDPOINTS.TEMPLATE.DELETE, {
-        id,
-      }) as Promise<SuccessResponse>,
+  const { mutateAsync: onSetIsShowTemplate, isPending: isLoading } =
+    useMutation({
+      mutationFn: (data: SetIsShowTemplateDto) =>
+        rootApiService.post(
+          API_ENDPOINTS.TEMPLATE.SET_IS_SHOW,
+          data,
+        ) as Promise<SuccessResponse>,
 
-    onSuccess: (res: SuccessResponse) => {
-      queryClient.invalidateQueries({
-        queryKey: [API_ENDPOINTS.TEMPLATE.PAGINATION],
-      });
-      showToast({
-        type: "success",
-        message: res.message || "Xóa template thành công",
-        title: "Thành công",
-        timeout: 3000,
-      });
-    },
-    onError: (error: Error) => {
-      showToast({
-        type: "error",
-        message: error?.message || "Có lỗi xảy ra",
-        title: "Lỗi",
-        timeout: 3000,
-      });
-    },
-  });
+      onSuccess: (res: SuccessResponse) => {
+        queryClient.invalidateQueries({
+          queryKey: [API_ENDPOINTS.TEMPLATE.PAGINATION],
+        });
+        showToast({
+          type: "success",
+          message: res.message || "Cập nhật trạng thái hiển thị thành công",
+          title: "Thành công",
+          timeout: 3000,
+        });
+      },
+      onError: (error: Error) => {
+        showToast({
+          type: "error",
+          message: error?.message || "Có lỗi xảy ra",
+          title: "Lỗi",
+          timeout: 3000,
+        });
+      },
+    });
 
-  return { onDeleteTemplate, isLoading };
+  return { onSetIsShowTemplate, isLoading };
+};
+
+export const useSetIsDeletedTemplate = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  const { mutateAsync: onSetIsDeletedTemplate, isPending: isLoading } =
+    useMutation({
+      mutationFn: (data: SetIsDeletedTemplateDto) =>
+        rootApiService.post(
+          API_ENDPOINTS.TEMPLATE.SET_IS_DELETED,
+          data,
+        ) as Promise<SuccessResponse>,
+
+      onSuccess: (res: SuccessResponse) => {
+        queryClient.invalidateQueries({
+          queryKey: [API_ENDPOINTS.TEMPLATE.PAGINATION],
+        });
+        showToast({
+          type: "success",
+          message: res.message || "Cập nhật trạng thái thành công",
+          title: "Thành công",
+          timeout: 3000,
+        });
+      },
+      onError: (error: Error) => {
+        showToast({
+          type: "error",
+          message: error?.message || "Có lỗi xảy ra",
+          title: "Lỗi",
+          timeout: 3000,
+        });
+      },
+    });
+
+  return { onSetIsDeletedTemplate, isLoading };
 };

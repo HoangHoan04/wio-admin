@@ -26,16 +26,19 @@ export interface FilterItemText {
   value: string;
   compare?: TOperatorText;
 }
+
 export interface FilterItemNumber {
   type: "NUMBER";
   value: number | undefined;
   compare?: TOperatorNumber;
 }
+
 export interface FilterItemDate {
   type: "DATE";
   value: Date | undefined;
   compare?: TOperatorDate;
 }
+
 export interface FilterItemBoolean {
   type: "BOOLEAN";
   value?: boolean | "";
@@ -52,12 +55,12 @@ export type OrderOption<T = unknown> = {
   [k in keyof T]?: "ASC" | "DESC" | "";
 };
 
-export interface PageResponse<T = unknown> {
+export interface PageResponse<T = any> {
   data: T[];
   total: number;
 }
 
-export interface SuccessResponse<T = unknown> {
+export interface SuccessResponse<T = any> {
   message: string;
   data: T;
 }

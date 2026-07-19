@@ -1,4 +1,4 @@
-import type { BaseDto, FilterItemSelect, FilterItemText } from "./common";
+import type { BaseDto } from "./common";
 import type { WeddingDto } from "./wedding.dto";
 
 export interface WishDto extends BaseDto {
@@ -11,8 +11,8 @@ export interface WishDto extends BaseDto {
 }
 
 export interface FilterWishDto {
-  guestName?: FilterItemText;
-  status?: FilterItemSelect;
+  guestName?: string;
+  status?: string;
 }
 
 export interface PhotoWallDto extends BaseDto {
@@ -25,6 +25,6 @@ export interface PhotoWallDto extends BaseDto {
 }
 
 export interface FilterPhotoWallDto {
-  guestName?: FilterItemText;
-  status?: FilterItemSelect;
+  guestName?: string;
+  status?: string;
 }

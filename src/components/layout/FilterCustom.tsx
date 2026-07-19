@@ -1,5 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxTrigger,
+  ComboboxValue,
+  useComboboxAnchor,
+} from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -7,13 +16,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -85,6 +87,82 @@ const getColClass = (col?: number) => {
 
 function getOptionLabel(opt: FilterOption): string {
   return opt.label || opt.name || opt.code || "";
+}
+
+const optionValueToString = (value: any): string => {
+  if (value === null || value === undefined) return "";
+  return String(value);
+};
+
+const findOptionByStringValue = (
+  options: FilterOption[],
+  value: string,
+): FilterOption | undefined => {
+  return options.find((opt) => optionValueToString(opt.value) === value);
+};
+
+const getSelectedLabel = (
+  field: FilterField,
+  filters: Record<string, any>,
+): string => {
+  const value = filters[field.key];
+  if (value === undefined || value === null || value === "") {
+    return field.placeholder || "Chọn...";
+  }
+  const options = field.options || [];
+  const selected = options.find(
+    (opt) => optionValueToString(opt.value) === optionValueToString(value),
+  );
+  return selected ? getOptionLabel(selected) : String(value);
+};
+
+interface FilterSelectProps {
+  field: FilterField;
+  filters: Record<string, any>;
+  onChange: (value: any) => void;
+}
+
+function FilterSelect({ field, filters, onChange }: FilterSelectProps) {
+  const anchorRef = useComboboxAnchor();
+
+  return (
+    <Combobox
+      value={optionValueToString(filters[field.key])}
+      onValueChange={(val) => {
+        const strValue = String(val || "");
+        if (!strValue) {
+          onChange(undefined);
+          return;
+        }
+        const selected = findOptionByStringValue(field.options || [], strValue);
+        onChange(selected ? selected.value : strValue);
+      }}
+      disabled={field.disabled}
+    >
+      <div ref={anchorRef} className="w-full">
+        <ComboboxTrigger
+          className={cn(
+            "flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-2.5 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50",
+            !filters[field.key] && "text-muted-foreground",
+          )}
+        >
+          <ComboboxValue>{getSelectedLabel(field, filters)}</ComboboxValue>
+        </ComboboxTrigger>
+      </div>
+      <ComboboxContent anchor={anchorRef} className="min-w-0 w-[--anchor-width]">
+        <ComboboxList>
+          {(field.options || []).map((opt) => (
+            <ComboboxItem
+              key={String(opt.value)}
+              value={optionValueToString(opt.value)}
+            >
+              {getOptionLabel(opt)}
+            </ComboboxItem>
+          ))}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  );
 }
 
 export default function FilterCustom({
@@ -332,26 +410,11 @@ export default function FilterCustom({
                 )}
 
                 {field.type === "select" && (
-                  <Select
-                    value={filters[field.key] ?? ""}
-                    onValueChange={(val) =>
-                      handleFilterChange(field.key, val || undefined)
-                    }
-                    disabled={field.disabled}
-                  >
-                    <SelectTrigger className="w-full h-9">
-                      <SelectValue
-                        placeholder={field.placeholder || "Chọn..."}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {(field.options || []).map((opt) => (
-                        <SelectItem key={String(opt.value)} value={opt.value}>
-                          {getOptionLabel(opt)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FilterSelect
+                    field={field}
+                    filters={filters}
+                    onChange={(value) => handleFilterChange(field.key, value)}
+                  />
                 )}
 
                 {field.type === "multiSelect" && renderMultiSelect(field)}

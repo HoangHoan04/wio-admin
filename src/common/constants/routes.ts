@@ -104,7 +104,7 @@ export const ROUTES = {
         },
         GUEST_MANAGER: {
           key: "GUEST_MANAGER",
-          label: "Quản lý khách mờ",
+          label: "Quản lý khách mời",
           path: "/guest-manager",
           children: {},
         },

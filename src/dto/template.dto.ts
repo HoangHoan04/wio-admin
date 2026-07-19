@@ -1,4 +1,4 @@
-import type { BaseDto, FilterItemBoolean, FilterItemText } from "./common";
+import type { BaseDto } from "./common";
 
 export interface TemplateDto extends BaseDto {
   name: string;
@@ -36,10 +36,21 @@ export interface SetPremiumTemplateDto {
   isPremium: boolean;
 }
 
+export interface SetIsShowTemplateDto {
+  id: string;
+  isShow: boolean;
+}
+
+export interface SetIsDeletedTemplateDto {
+  id: string;
+  isDeleted: boolean;
+}
+
 export interface FilterTemplateDto {
-  name?: string | FilterItemText;
-  themeCode?: string | FilterItemText;
-  isShow?: boolean | FilterItemBoolean;
-  isPremium?: boolean | FilterItemBoolean;
+  name?: string;
+  themeCode?: string;
+  isShow?: boolean;
+  isPremium?: boolean;
+  isDeleted?: boolean;
   minPlan?: string;
 }

@@ -1,4 +1,4 @@
-import type { BaseDto, FilterItemSelect, FilterItemText } from "./common";
+import type { BaseDto } from "./common";
 import type { UserDto } from "./customer.dto";
 import type { WeddingDto } from "./wedding.dto";
 
@@ -15,6 +15,6 @@ export interface SubscriptionDto extends BaseDto {
 }
 
 export interface FilterSubscriptionDto {
-  planName?: FilterItemText;
-  status?: FilterItemSelect;
+  planName?: string;
+  status?: string;
 }

@@ -8,6 +8,12 @@ export const enumData = {
   },
   maxSizeUpload: 5 * 1024 * 1024,
 
+  STATUS_FILTER: {
+    ACTIVE: { code: "ACTIVE", name: "Đang hoạt động", value: false },
+    INACTIVE: { code: "INACTIVE", name: "Ngưng hoạt động", value: true },
+    ALL: { code: "ALL", name: "Tất cả", value: null },
+  },
+
   GENDER: {
     MALE: { code: "MALE", name: "Nam" },
     FEMALE: { code: "FEMALE", name: "Nữ" },
@@ -15,34 +21,82 @@ export const enumData = {
   },
 
   ACTION_TYPE: {
-    CREATE: { code: "CREATE", name: "Thêm mới", type: "ThemMoi" },
-    DELETE: { code: "DELETE", name: "Xoá bỏ", type: "XoaBo" },
-    UPDATE: { code: "UPDATE", name: "Cập nhật", type: "CapNhat" },
-    SYNC: { code: "SYNC", name: "Đồng bộ", type: "DongBo" },
-    EDIT: { code: "EDIT", name: "Chỉnh sửa", type: "ChinhSua" },
-    APPROVE: { code: "APPROVE", name: "Duyệt", type: "Duyet" },
-    SEND_APPROVE: { code: "SEND_APPROVE", name: "Gửi duyệt", type: "GuiDuyet" },
-    REJECT: { code: "REJECT", name: "Từ chối", type: "TuChoi" },
-    CANCEL: { code: "CANCEL", name: "Huỷ", type: "Huy" },
+    CREATE: {
+      code: "CREATE",
+      name: "Thêm mới",
+      type: "ThemMoi",
+      color: "green",
+    },
+    DELETE: { code: "DELETE", name: "Xoá bỏ", type: "XoaBo", color: "red" },
+    UPDATE: {
+      code: "UPDATE",
+      name: "Cập nhật",
+      type: "CapNhat",
+      color: "yellow",
+    },
+    SYNC: { code: "SYNC", name: "Đồng bộ", type: "DongBo", color: "blue" },
+    EDIT: {
+      code: "EDIT",
+      name: "Chỉnh sửa",
+      type: "ChinhSua",
+      color: "orange",
+    },
+    APPROVE: { code: "APPROVE", name: "Duyệt", type: "Duyet", color: "green" },
+    SEND_APPROVE: {
+      code: "SEND_APPROVE",
+      name: "Gửi duyệt",
+      type: "GuiDuyet",
+      color: "blue",
+    },
+    REJECT: { code: "REJECT", name: "Từ chối", type: "TuChoi", color: "red" },
+    CANCEL: { code: "CANCEL", name: "Huỷ", type: "Huy", color: "gray" },
     IMPORT_EXCEL: {
       code: "IMPORT_EXCEL",
       name: "Nhập excel",
       type: "NhapExcel",
+      color: "purple",
     },
-    ACTIVATE: { code: "ACTIVATE", name: "Kích hoạt", type: "KichHoat" },
+    ACTIVATE: {
+      code: "ACTIVATE",
+      name: "Kích hoạt",
+      type: "KichHoat",
+      color: "green",
+    },
     DEACTIVATE: {
       code: "DEACTIVATE",
       name: "Ngưng hoạt động",
       type: "NgungHoatDong",
+      color: "gray",
     },
-    RESTORE: { code: "RESTORE", name: "Khôi phục", type: "KhoiPhuc" },
-    LOGIN: { code: "LOGIN", name: "Đăng nhập", type: "DangNhap" },
-    LOGOUT: { code: "LOGOUT", name: "Đăng xuất", type: "DangXuat" },
-    REGISTER: { code: "REGISTER", name: "Đăng ký", type: "DangKy" },
+    RESTORE: {
+      code: "RESTORE",
+      name: "Khôi phục",
+      type: "KhoiPhuc",
+      color: "blue",
+    },
+    LOGIN: {
+      code: "LOGIN",
+      name: "Đăng nhập",
+      type: "DangNhap",
+      color: "green",
+    },
+    LOGOUT: {
+      code: "LOGOUT",
+      name: "Đăng xuất",
+      type: "DangXuat",
+      color: "red",
+    },
+    REGISTER: {
+      code: "REGISTER",
+      name: "Đăng ký",
+      type: "DangKy",
+      color: "blue",
+    },
     UPLOAD_FILE: {
       code: "UPLOAD_FILE",
       name: "Tải file lên",
       type: "TaiFileLen",
+      color: "purple",
     },
   },
 
@@ -100,20 +154,59 @@ export const enumData = {
   },
 
   WEDDING_STATUS: {
-    DRAFT: {
-      code: "DRAFT",
-      name: "Nháp",
-      className: "bg-yellow-100 text-yellow-800",
-    },
-    PUBLISHED: {
-      code: "PUBLISHED",
-      name: "Đã xuất bản",
-      className: "bg-green-100 text-green-800",
-    },
-    ARCHIVED: {
-      code: "ARCHIVED",
-      name: "Đã lưu trữ",
-      className: "bg-gray-100 text-gray-800",
-    },
+    DRAFT: { code: "DRAFT", name: "Nháp", color: "gray" },
+    PUBLISHED: { code: "PUBLISHED", name: "Đã xuất bản", color: "green" },
+    ARCHIVED: { code: "ARCHIVED", name: "Đã lưu trữ", color: "blue" },
+  },
+
+  MUSIC_TYPE: {
+    UPLOAD: { code: "UPLOAD", name: "Tải lên" },
+    YOUTUBE: { code: "YOUTUBE", name: "YouTube" },
+    SPOTIFY: { code: "SPOTIFY", name: "Spotify" },
+  },
+
+  GUEST_SIDE: {
+    GROOM: { code: "GROOM", name: "Bên chú rể" },
+    BRIDE: { code: "BRIDE", name: "Bên cô dâu" },
+    BOTH: { code: "BOTH", name: "Cả hai bên" },
+  },
+
+  RSVP_STATUS: {
+    PENDING: { code: "PENDING", name: "Chưa phản hồi" },
+    ATTENDING: { code: "ATTENDING", name: "Tham dự" },
+    DECLINED: { code: "DECLINED", name: "Từ chối" },
+  },
+
+  NOTIF_CHANNEL: {
+    ZALO: { code: "ZALO", name: "Zalo" },
+    SMS: { code: "SMS", name: "SMS" },
+    EMAIL: { code: "EMAIL", name: "Email" },
+  },
+
+  NOTIF_TYPE: {
+    INVITE: { code: "INVITE", name: "Lời mời" },
+    REMINDER: { code: "REMINDER", name: "Nhắc nhở" },
+    THANK_YOU: { code: "THANK_YOU", name: "Cảm ơn" },
+    RSVP_CONFIRM: { code: "RSVP_CONFIRM", name: "Xác nhận RSVP" },
+  },
+
+  NOTIF_STATUS: {
+    PENDING: { code: "PENDING", name: "Chờ gửi" },
+    SENT: { code: "SENT", name: "Đã gửi" },
+    FAILED: { code: "FAILED", name: "Gửi thất bại" },
+    CANCELLED: { code: "CANCELLED", name: "Đã hủy" },
+  },
+
+  SUB_STATUS: {
+    ACTIVE: { code: "ACTIVE", name: "Đang hoạt động" },
+    EXPIRED: { code: "EXPIRED", name: "Hết hạn" },
+    CANCELLED: { code: "CANCELLED", name: "Đã hủy" },
+  },
+
+  MUSIC_PROCESS_STATUS: {
+    PENDING: { code: "PENDING", name: "Chờ xử lý" },
+    PROCESSING: { code: "PROCESSING", name: "Đang xử lý" },
+    COMPLETED: { code: "COMPLETED", name: "Hoàn tất" },
+    FAILED: { code: "FAILED", name: "Thất bại" },
   },
 };

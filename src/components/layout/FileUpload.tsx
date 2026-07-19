@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useUploadFile } from "@/hooks/upload-file";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/store/toastStore";
 import {
@@ -87,21 +88,6 @@ const getAcceptType = (type: FileUploadProps["type"]): string => {
   }
 };
 
-const useUploadSingle = () => {
-  const onUpload = async (formData: FormData) => {
-    const file = formData.get("file") as File;
-    console.log("Hook Fake - Nhận file từ FormData:", file?.name);
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    return {
-      id: `mock-${Date.now()}`,
-      fileUrl: "https://picsum.photos/200",
-    };
-  };
-
-  return { onUpload };
-};
 export default function FileUploadCustom({
   label,
   required = false,
@@ -114,14 +100,13 @@ export default function FileUploadCustom({
   mode = "single",
   disabled = false,
 }: FileUploadProps) {
-  const { onUpload } = useUploadSingle();
+  const { uploadFile, isLoading } = useUploadFile();
   const { showToast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [fileList, setFileList] = useState<UploadFileItem[]>(() =>
     mapInitValueToFileList(initValue, mode),
   );
-  const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState<UploadFileItem | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
@@ -147,16 +132,12 @@ export default function FileUploadCustom({
     }
 
     try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await onUpload(formData);
+      const response = await uploadFile(file, type);
 
       if (response) {
         const newItem: UploadFileItem = {
-          uid: response.id || `new-${Date.now()}`,
-          name: file.name,
+          uid: `new-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          name: response.fileName || file.name,
           url: response.fileUrl,
           file: file,
         };
@@ -187,7 +168,6 @@ export default function FileUploadCustom({
         message: "Tải lên tệp tin thất bại.",
       });
     } finally {
-      setLoading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
@@ -281,9 +261,9 @@ export default function FileUploadCustom({
               accept={getAcceptType(type)}
               className="hidden"
               onChange={onFileChange}
-              disabled={loading}
+              disabled={isLoading}
             />
-            {loading ? (
+            {isLoading ? (
               <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
             ) : (
               <>

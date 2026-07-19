@@ -1,6 +1,5 @@
 import { ROUTES } from "@/common/constants";
-import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
-import { ActionConfirm } from "@/components/layout/ActionConfirm";
+import { enumData } from "@/common/enums";
 import BaseView from "@/components/layout/BaseView";
 import type { FilterField } from "@/components/layout/FilterCustom";
 import FilterCustom from "@/components/layout/FilterCustom";
@@ -9,45 +8,12 @@ import TableCustom from "@/components/layout/TableCustom";
 import { StatusTag } from "@/components/ui/status-tag";
 import type { PaginationDto } from "@/dto";
 import type { FilterGuestDto, GuestDto } from "@/dto/guest.dto";
-import { useDeleteGuest, usePaginationGuest } from "@/hooks/guest";
+import { usePaginationGuest } from "@/hooks/guest";
 import { useRouter } from "@/routes/hooks";
-import { Eye, Trash2 } from "lucide-react";
-import { useRef, useState } from "react";
+import { Eye } from "lucide-react";
+import { useState } from "react";
 
 const initFilter: FilterGuestDto = {};
-
-const sideLabel = (side?: string) => {
-  switch (side) {
-    case "GROOM":
-      return "Bên chú rể";
-    case "BRIDE":
-      return "Bên cô dâu";
-    default:
-      return "Cả hai";
-  }
-};
-
-const rsvpSeverity = (status?: string) => {
-  switch (status) {
-    case "ATTENDING":
-      return "success";
-    case "DECLINED":
-      return "danger";
-    default:
-      return "warning";
-  }
-};
-
-const rsvpLabel = (status?: string) => {
-  switch (status) {
-    case "ATTENDING":
-      return "Tham dự";
-    case "DECLINED":
-      return "Từ chối";
-    default:
-      return "Chưa phản hồi";
-  }
-};
 
 export default function GuestManagerPage() {
   const router = useRouter();
@@ -58,12 +24,8 @@ export default function GuestManagerPage() {
     where: initFilter,
   });
   const [selectedRows, setSelectedRows] = useState<GuestDto[]>([]);
-  const [selectedGuest, setSelectedGuest] = useState<GuestDto | null>(null);
-
-  const deleteConfirmRef = useRef<ActionConfirmRef>(null);
 
   const { data, isLoading, refetch, total } = usePaginationGuest(pagination);
-  const { onDeleteGuest, isLoading: isLoadingDelete } = useDeleteGuest();
 
   const handleSearch = (isReset?: boolean) => {
     setPagination((prev) => ({
@@ -86,13 +48,6 @@ export default function GuestManagerPage() {
     }));
   };
 
-  const handleDelete = async () => {
-    if (!selectedGuest) return;
-    await onDeleteGuest(selectedGuest.id);
-    await refetch();
-    setSelectedGuest(null);
-  };
-
   const filterFields: FilterField[] = [
     {
       key: "fullName",
@@ -102,24 +57,10 @@ export default function GuestManagerPage() {
       col: 6,
     },
     {
-      key: "phone",
-      label: "Số điện thoại",
-      type: "input",
-      placeholder: "Nhập SĐT",
-      col: 6,
-    },
-    {
-      key: "email",
-      label: "Email",
-      type: "input",
-      placeholder: "Nhập email",
-      col: 6,
-    },
-    {
       key: "invitationCode",
-      label: "Mã mờ",
+      label: "Mã mời",
       type: "input",
-      placeholder: "Nhập mã mờ",
+      placeholder: "Nhập mã mời",
       col: 6,
     },
     {
@@ -127,11 +68,10 @@ export default function GuestManagerPage() {
       label: "Trạng thái RSVP",
       type: "select",
       placeholder: "Chọn trạng thái",
-      options: [
-        { label: "Chưa phản hồi", value: "PENDING" },
-        { label: "Tham dự", value: "ATTENDING" },
-        { label: "Từ chối", value: "DECLINED" },
-      ],
+      options: Object.values(enumData.RSVP_STATUS).map((status) => ({
+        label: status.name,
+        value: status.code,
+      })),
       col: 6,
     },
     {
@@ -139,11 +79,10 @@ export default function GuestManagerPage() {
       label: "Khách của ai",
       type: "select",
       placeholder: "Chọn bên",
-      options: [
-        { label: "Bên chú rể", value: "GROOM" },
-        { label: "Bên cô dâu", value: "BRIDE" },
-        { label: "Cả hai", value: "BOTH" },
-      ],
+      options: Object.values(enumData.GUEST_SIDE).map((side) => ({
+        label: side.name,
+        value: side.code,
+      })),
       col: 6,
     },
   ];
@@ -155,21 +94,10 @@ export default function GuestManagerPage() {
       width: 200,
       sortable: true,
     },
-    {
-      field: "phone",
-      header: "Số điện thoại",
-      width: 150,
-      sortable: true,
-    },
-    {
-      field: "email",
-      header: "Email",
-      width: 200,
-      sortable: true,
-    },
+
     {
       field: "invitationCode",
-      header: "Mã mờ",
+      header: "Mã mời",
       width: 120,
       sortable: true,
     },
@@ -177,19 +105,12 @@ export default function GuestManagerPage() {
       field: "side",
       header: "Bên",
       width: 120,
-      body: (rowData: GuestDto) => sideLabel(rowData.side),
     },
     {
       field: "rsvpStatus",
       header: "RSVP",
       width: 130,
       align: "center",
-      body: (rowData: GuestDto) => (
-        <StatusTag
-          severity={rsvpSeverity(rowData.rsvpStatus)}
-          value={rsvpLabel(rowData.rsvpStatus)}
-        />
-      ),
     },
     {
       field: "attendingCount",
@@ -225,16 +146,6 @@ export default function GuestManagerPage() {
           ),
         ),
     },
-    {
-      key: "delete",
-      icon: <Trash2 className="size-3.5" />,
-      tooltip: "Xóa",
-      severity: "danger",
-      onClick: (record) => {
-        setSelectedGuest(record);
-        deleteConfirmRef.current?.show();
-      },
-    },
   ];
 
   return (
@@ -250,7 +161,7 @@ export default function GuestManagerPage() {
       <TableCustom<GuestDto>
         data={data || []}
         columns={columns}
-        loading={isLoading || isLoadingDelete}
+        loading={isLoading}
         enableSelection={true}
         selectedRows={selectedRows}
         onSelectionChange={setSelectedRows}
@@ -272,16 +183,6 @@ export default function GuestManagerPage() {
           showRefreshButton: true,
           onRefresh: refetch,
         }}
-      />
-
-      <ActionConfirm
-        ref={deleteConfirmRef}
-        title="Xác nhận xóa khách mờ"
-        confirmText="Xóa"
-        cancelText="Hủy"
-        variant="destructive"
-        onConfirm={handleDelete}
-        message="Bạn có chắc chắn muốn xóa khách mờnày không?"
       />
     </BaseView>
   );

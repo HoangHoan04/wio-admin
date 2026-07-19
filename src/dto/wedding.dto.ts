@@ -1,4 +1,4 @@
-import type { BaseDto, FilterItemSelect, FilterItemText } from "./common";
+import type { BaseDto } from "./common";
 
 export interface WeddingDto extends BaseDto {
   userId: string;
@@ -59,9 +59,10 @@ export interface AdminForceResetSlugDto {
 }
 
 export interface FilterWeddingDto {
-  userId?: FilterItemText;
-  slug?: FilterItemText;
-  groomName?: FilterItemText;
-  brideName?: FilterItemText;
-  status?: FilterItemSelect;
+  userId?: string;
+  templateId?: string;
+  slug?: string;
+  groomName?: string;
+  brideName?: string;
+  status?: string;
 }

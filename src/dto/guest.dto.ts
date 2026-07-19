@@ -4,8 +4,6 @@ export interface GuestDto extends BaseDto {
   weddingId: string;
   tableId?: string;
   fullName: string;
-  phone?: string;
-  email?: string;
   salutation?: string;
   side: string;
   isVip: boolean;
@@ -24,8 +22,6 @@ export interface FilterGuestDto {
   weddingId?: string;
   tableId?: string;
   fullName?: string;
-  phone?: string;
-  email?: string;
   salutation?: string;
   side?: string;
   isVip?: boolean;

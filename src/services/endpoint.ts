@@ -23,6 +23,7 @@ export const API_ENDPOINTS = {
     IMAGE: "/api/upload/upload-file/upload-image",
     AUDIO: "/api/upload/upload-file/upload-audio",
     DOCUMENT: "/api/upload/upload-file/upload-document",
+    SINGLE: "/api/upload/upload-file/upload-single",
     BULK_IMAGES: "/api/upload/upload-file/upload-multi",
   },
 
@@ -40,11 +41,10 @@ export const API_ENDPOINTS = {
     PAGINATION: "/api/admin/template/pagination",
     CREATE: "/api/admin/template/create",
     UPDATE: "/api/admin/template/update",
-    DELETE: "/api/admin/template/delete",
     FIND_BY_ID: "/api/admin/template/find-by-id",
-    ACTIVATE: "/api/admin/template/activate",
-    DEACTIVATE: "/api/admin/template/deactivate",
     SET_PREMIUM: "/api/admin/template/set-premium",
+    SET_IS_SHOW: "/api/admin/template/set-is-show",
+    SET_IS_DELETED: "/api/admin/template/set-is-deleted",
   },
 
   WISH: {
