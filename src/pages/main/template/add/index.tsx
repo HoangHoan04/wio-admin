@@ -76,7 +76,7 @@ function AddTemplatePage({
       {
         name: "tags",
         label: "Tags",
-        type: "input",
+        type: "tags",
         placeholder: "Nhập tags, phân cách bằng dấu phẩy",
         gridColumn: "span 3",
       },
@@ -86,6 +86,13 @@ function AddTemplatePage({
         type: "textarea",
         required: true,
         placeholder: "Nhập mô tả",
+        gridColumn: "span 3",
+      },
+      {
+        name: "features",
+        label: "Tính năng nổi bật",
+        type: "features",
+        placeholder: "Nhập từng tính năng trên một dòng",
         gridColumn: "span 3",
       },
       {

@@ -41,6 +41,9 @@ export interface FormField {
     | "timeRangePicker"
     | "email"
     | "phoneNumber"
+    | "tags"
+    | "json"
+    | "features"
     | "custom";
   formatString?: string;
   required?: boolean;

@@ -393,6 +393,57 @@ const FieldItem = memo(
             />
           </div>
         );
+      case "tags": {
+        const display = Array.isArray(value)
+          ? value.join(", ")
+          : String(value ?? "");
+        return (
+          <div ref={handleSetRef}>
+            <RequiredLabel label={field.label} required={field.required} />
+            <Input
+              value={display}
+              placeholder={field.placeholder}
+              onChange={(e) => onChange(field.name, e.target.value)}
+              {...commonProps}
+            />
+          </div>
+        );
+      }
+      case "json": {
+        const display =
+          value != null && typeof value === "object"
+            ? JSON.stringify(value, null, 2)
+            : String(value ?? "");
+        return (
+          <div ref={handleSetRef}>
+            <RequiredLabel label={field.label} required={field.required} />
+            <Textarea
+              value={display}
+              placeholder={field.placeholder}
+              onChange={(e) => onChange(field.name, e.target.value)}
+              rows={6}
+              {...commonProps}
+            />
+          </div>
+        );
+      }
+      case "features": {
+        const display = Array.isArray(value)
+          ? value.join("\n")
+          : String(value ?? "");
+        return (
+          <div ref={handleSetRef}>
+            <RequiredLabel label={field.label} required={field.required} />
+            <Textarea
+              value={display}
+              placeholder={field.placeholder}
+              onChange={(e) => onChange(field.name, e.target.value)}
+              rows={6}
+              {...commonProps}
+            />
+          </div>
+        );
+      }
       case "richtext":
         return (
           <div ref={handleSetRef}>
@@ -709,6 +760,48 @@ function normalizeValues(
         result[field.name] = undefined;
       }
     }
+
+    if (field.type === "tags") {
+      const val = result[field.name];
+      if (typeof val === "string") {
+        result[field.name] = val
+          .split(",")
+          .map((v) => v.trim())
+          .filter(Boolean);
+      } else if (!Array.isArray(val)) {
+        result[field.name] = [];
+      }
+    }
+
+    if (field.type === "json") {
+      const val = result[field.name];
+      if (typeof val === "string") {
+        const raw = val.trim();
+        if (!raw) {
+          result[field.name] = null;
+        } else {
+          try {
+            result[field.name] = JSON.parse(raw);
+          } catch {
+            result[field.name] = null;
+          }
+        }
+      } else if (val === undefined) {
+        result[field.name] = null;
+      }
+    }
+
+    if (field.type === "features") {
+      const val = result[field.name];
+      if (typeof val === "string") {
+        result[field.name] = val
+          .split(/\r?\n/)
+          .map((v) => v.trim())
+          .filter(Boolean);
+      } else if (!Array.isArray(val)) {
+        result[field.name] = [];
+      }
+    }
   }
 
   return result;
@@ -827,6 +920,20 @@ function useRenderFormCustom(
             type: "error",
             title: "Lỗi",
             message: "Số điện thoại không hợp lệ",
+          });
+          setErrorField(field.name);
+          return false;
+        }
+      }
+
+      if (field.type === "json" && val && typeof val === "string") {
+        try {
+          JSON.parse(val);
+        } catch {
+          showToast({
+            type: "error",
+            title: "Lỗi",
+            message: `${field.label} không đúng định dạng JSON`,
           });
           setErrorField(field.name);
           return false;

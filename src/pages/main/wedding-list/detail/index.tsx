@@ -12,9 +12,11 @@ import {
   MapPin,
   Music,
   Armchair,
+  MessageCircle,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import WeddingTablesTab from "./WeddingTablesTab";
+import WeddingWishesTab from "./WeddingWishesTab";
 
 export default function DetailWeddingPage() {
   const { id } = useParams();
@@ -258,6 +260,12 @@ export default function DetailWeddingPage() {
       title: "Bàn tiệc",
       icon: <Armchair className="size-3.5" />,
       content: <WeddingTablesTab weddingId={id || ""} />,
+    },
+    {
+      key: "3",
+      title: "Lời chúc",
+      icon: <MessageCircle className="size-3.5" />,
+      content: <WeddingWishesTab weddingId={id || ""} />,
     },
   ];
 

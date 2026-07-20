@@ -17,7 +17,7 @@ import {
   PlusCircle,
   Trash2,
 } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface UploadFileItem {
   uid: string;
@@ -26,16 +26,17 @@ interface UploadFileItem {
   file?: File;
 }
 
-interface UploadFileDto {
+export interface UploadFileDto {
   id?: string;
   fileUrl: string;
   fileName?: string;
+  file?: File;
 }
 
 interface FileUploadProps {
   label?: string;
   required?: boolean;
-  type?: "document" | "image" | "all";
+  type?: "document" | "image" | "audio" | "all";
   maxSize?: number;
   onFileUploaded?: (url: UploadFileDto[] | UploadFileDto | null) => void;
   initValue?: UploadFileDto | UploadFileDto[] | string | null;
@@ -59,15 +60,29 @@ const mapInitValueToFileList = (
         : [];
 
   return targetValues
-    .filter(
-      (item): item is UploadFileDto =>
-        !!item && typeof item === "object" && !!item.fileUrl,
-    )
-    .map((item) => ({
-      uid: item.id || `file-${Date.now()}-${Math.random()}`,
-      name: item.fileName || "file",
-      url: item.fileUrl,
-    }));
+    .map((item, index) => {
+      if (typeof item === "string" && item) {
+        return {
+          uid: `url-${index}-${Date.now()}-${Math.random()}`,
+          name: "file",
+          url: item,
+        };
+      }
+      if (
+        item &&
+        typeof item === "object" &&
+        "fileUrl" in item &&
+        item.fileUrl
+      ) {
+        return {
+          uid: item.id || `file-${index}-${Date.now()}-${Math.random()}`,
+          name: item.fileName || "file",
+          url: item.fileUrl,
+        };
+      }
+      return null;
+    })
+    .filter((item): item is UploadFileItem => !!item);
 };
 
 const mapFileListToDto = (fileList: UploadFileItem[]): UploadFileDto[] =>
@@ -75,6 +90,7 @@ const mapFileListToDto = (fileList: UploadFileItem[]): UploadFileDto[] =>
     id: file.uid,
     fileUrl: file.url,
     fileName: file.name,
+    file: file.file,
   }));
 
 const getAcceptType = (type: FileUploadProps["type"]): string => {
@@ -83,6 +99,8 @@ const getAcceptType = (type: FileUploadProps["type"]): string => {
       return ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt";
     case "image":
       return "image/*";
+    case "audio":
+      return "audio/*";
     default:
       return "*";
   }
@@ -107,6 +125,11 @@ export default function FileUploadCustom({
   const [fileList, setFileList] = useState<UploadFileItem[]>(() =>
     mapInitValueToFileList(initValue, mode),
   );
+
+  useEffect(() => {
+    setFileList(mapInitValueToFileList(initValue, mode));
+  }, [initValue, mode]);
+
   const [previewImage, setPreviewImage] = useState<UploadFileItem | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
@@ -281,7 +304,9 @@ export default function FileUploadCustom({
         <div className="text-xs text-muted-foreground">
           {type === "image"
             ? "Chỉ chấp nhận tệp tin hình ảnh"
-            : "Chỉ chấp nhận tệp tin tài liệu"}{" "}
+            : type === "audio"
+              ? "Chỉ chấp nhận tệp tin âm thanh"
+              : "Chỉ chấp nhận tệp tin tài liệu"}{" "}
           • Tối đa: {maxSize}MB
         </div>
       )}

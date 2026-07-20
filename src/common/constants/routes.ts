@@ -84,12 +84,6 @@ export const ROUTES = {
             },
           },
         },
-        WISH_MANAGER: {
-          key: "WISH_MANAGER",
-          label: "Lời chúc",
-          path: "/wish-manager",
-          children: {},
-        },
         PHOTO_WALL_MANAGER: {
           key: "PHOTO_WALL_MANAGER",
           label: "Photo Wall",

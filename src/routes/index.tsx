@@ -17,7 +17,6 @@ import DetailTemplatePage from "@/pages/main/template/detail";
 import EditTemplatePage from "@/pages/main/template/edit";
 import WeddingListPage from "@/pages/main/wedding-list";
 import DetailWeddingPage from "@/pages/main/wedding-list/detail";
-import WishManagerPage from "@/pages/main/wish-manager";
 import NotFound from "@/pages/other/NotFound";
 import { Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -76,10 +75,6 @@ export default function AppRoutes() {
                   .DETAIL_TEMPLATE.path
               }
               element={<DetailTemplatePage />}
-            />
-            <Route
-              path={ROUTES.MAIN.WEDDING_MANAGER.children.WISH_MANAGER.path}
-              element={<WishManagerPage />}
             />
             <Route
               path={

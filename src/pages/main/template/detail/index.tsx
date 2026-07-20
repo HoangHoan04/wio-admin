@@ -144,8 +144,10 @@ export default function DetailTemplatePage() {
     );
   }
 
-  const features = data.features || {};
-  const hasFeatures = Object.keys(features).length > 0;
+  const features: string[] = Array.isArray(data.features)
+    ? data.features
+    : [];
+  const hasFeatures = features.length > 0;
 
   const tabs = [
     {
@@ -281,13 +283,15 @@ export default function DetailTemplatePage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Heart className="size-4" />
-                  Cấu hình tính năng (features)
+                  Tính năng nổi bật
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <pre className="rounded-lg bg-muted p-4 text-sm overflow-auto max-h-96 border border-border">
-                  <code>{JSON.stringify(features, null, 2)}</code>
-                </pre>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
+                  {features.map((feat, idx) => (
+                    <li key={idx}>{feat}</li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           )}
