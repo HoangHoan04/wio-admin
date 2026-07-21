@@ -9,6 +9,7 @@ import HomePage from "@/pages/main/home";
 import MusicBackgroundManagerPage from "@/pages/main/music-background-manager";
 import PhotoWallManagerPage from "@/pages/main/photo-wall-manager";
 import AuditLogPage from "@/pages/main/setting-system/audit-log";
+import EnvManagerPage from "@/pages/main/setting-system/env-manager";
 import SubscriptionListPage from "@/pages/main/subscription-list";
 import DetailSubscriptionPage from "@/pages/main/subscription-list/detail";
 import TemplateManagerPage from "@/pages/main/template";
@@ -114,6 +115,10 @@ export default function AppRoutes() {
             <Route
               path={ROUTES.MAIN.SETTINGS.children.AUDIT_LOG.path}
               element={<AuditLogPage />}
+            />
+            <Route
+              path={ROUTES.MAIN.SETTINGS.children.ENV_MANAGER.path}
+              element={<EnvManagerPage />}
             />
           </Route>
         </Route>

@@ -39,10 +39,8 @@ lerna-debug.log*
 .env
 .env.local
 .env.*.local
-
-# Không ignore file mẫu cho develop/production
-!.env.development
-!.env.production
+.env.development
+.env.production
 
 # temp directory
 .temp

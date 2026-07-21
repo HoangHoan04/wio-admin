@@ -103,4 +103,10 @@ export const API_ENDPOINTS = {
     UPDATE: "/api/admin/music-background/update",
     DELETE: "/api/admin/music-background/delete",
   },
+
+  ENV_MANAGER: {
+    FILES: "/api/admin/env-manager/files",
+    FILE: (project: string, environment: string) =>
+      `/api/admin/env-manager/files/${project}/${environment}`,
+  },
 };

@@ -1,6 +1,7 @@
 import {
   BarChart3,
   CreditCard,
+  FileCode,
   Heart,
   Home,
   Settings,
@@ -145,6 +146,12 @@ export const ROUTES = {
           key: "AUDIT_LOG",
           label: "Lịch sử hoạt động",
           path: "/settings/audit-log",
+        },
+        ENV_MANAGER: {
+          key: "ENV_MANAGER",
+          label: "Quản lý biến môi trường",
+          icon: FileCode,
+          path: "/settings/env-manager",
         },
       },
     },
