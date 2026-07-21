@@ -23,6 +23,8 @@ interface EnvFileItem {
   content?: string;
 }
 
+const PROJECT_ORDER = ['wio-api', 'wio-admin', 'wio-customer'];
+
 export default function EnvManagerPage() {
   const { showToast } = useToast();
   const [files, setFiles] = useState<EnvFileItem[]>([]);
@@ -100,16 +102,6 @@ export default function EnvManagerPage() {
     fetchFiles();
   }, []);
 
-  const getEnvironmentLabel = (env: string) => {
-    const map: Record<string, string> = {
-      production: "Production",
-      development: "Development",
-      "dev-local": "Dev Local",
-      "prod-local": "Prod Local",
-    };
-    return map[env] || env;
-  };
-
   const getProjectLabel = (project: string) => {
     const map: Record<string, string> = {
       "wio-admin": "WIO Admin",
@@ -119,13 +111,17 @@ export default function EnvManagerPage() {
     return map[project] || project;
   };
 
+  const orderedFiles = [...files].sort(
+    (a, b) => PROJECT_ORDER.indexOf(a.project) - PROJECT_ORDER.indexOf(b.project),
+  );
+
   return (
     <BaseView>
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h1 className="text-lg font-semibold">Quản lý biến môi trường</h1>
           <p className="text-sm text-muted-foreground">
-            Chỉnh sửa file .env của các services trên server.
+            Chỉnh sửa file .env duy nhất của các services trên server.
           </p>
         </div>
         <Button
@@ -147,25 +143,19 @@ export default function EnvManagerPage() {
             <thead>
               <tr className="border-b border-border bg-muted/50">
                 <th className="px-4 py-3 text-left font-medium">Dự án</th>
-                <th className="px-4 py-3 text-left font-medium">Môi trường</th>
                 <th className="px-4 py-3 text-left font-medium">Đường dẫn</th>
                 <th className="px-4 py-3 text-left font-medium">Cập nhật lần cuối</th>
                 <th className="px-4 py-3 text-right font-medium">Thao tác</th>
               </tr>
             </thead>
             <tbody>
-              {files.map((file) => (
+              {orderedFiles.map((file) => (
                 <tr
                   key={`${file.project}-${file.environment}`}
                   className="border-b border-border last:border-b-0 hover:bg-muted/30"
                 >
                   <td className="px-4 py-3 font-medium">
                     {getProjectLabel(file.project)}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                      {getEnvironmentLabel(file.environment)}
-                    </span>
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
                     {file.path}
@@ -200,12 +190,7 @@ export default function EnvManagerPage() {
               Chỉnh sửa env
             </DialogTitle>
             <DialogDescription>
-              {selected && (
-                <span>
-                  {getProjectLabel(selected.project)} -{" "}
-                  {getEnvironmentLabel(selected.environment)}
-                </span>
-              )}
+              {selected && <span>{getProjectLabel(selected.project)}</span>}
             </DialogDescription>
           </DialogHeader>
 
@@ -220,7 +205,8 @@ export default function EnvManagerPage() {
               placeholder="# KEY=VALUE"
             />
             <p className="text-xs text-destructive">
-              Lưu ý: Sau khi sửa, cần rebuild image để áp dụng với admin/customer.
+              Lưu ý: wio-api chỉ cần restart container. wio-admin/wio-customer
+              cần rebuild image vì biến build-time được bake vào static file.
             </p>
           </div>
 
