@@ -59,7 +59,7 @@ jobs:
           context: .
           push: true
           build-args: |
-            VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL || 'https://api-dev.tiemcuoitanthoi.id.vn' }}
+            VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL || (github.ref_name == 'main' || github.ref_name == 'production' && 'https://api.tiemcuoitanthoi.id.vn' || 'https://api-dev.tiemcuoitanthoi.id.vn') }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
