@@ -1,8 +1,9 @@
 import type { BaseDto } from "./common";
+import type { ServicePlanDto } from "./service-plan.dto";
 
 export interface TemplateDto extends BaseDto {
   name: string;
-  description: string;
+  description?: string;
   tags?: string[];
   features?: any;
   thumbnailUrl?: string;
@@ -10,20 +11,21 @@ export interface TemplateDto extends BaseDto {
   themeCode: string;
   isShow: boolean;
   isPremium: boolean;
-  minPlan: string;
+  minPlanId?: string;
+  minPlan?: ServicePlanDto;
   trialDays: number;
 }
 
 export interface CreateTemplateDto {
   name: string;
-  description: string;
+  description?: string;
   tags?: string[];
   features?: any;
   thumbnailUrl?: string;
   themeCode: string;
   isShow: boolean;
   isPremium: boolean;
-  minPlan: string;
+  minPlanId?: string;
   trialDays: number;
 }
 
@@ -52,5 +54,5 @@ export interface FilterTemplateDto {
   isShow?: boolean;
   isPremium?: boolean;
   isDeleted?: boolean;
-  minPlan?: string;
+  minPlanId?: string;
 }

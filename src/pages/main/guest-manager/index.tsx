@@ -126,7 +126,7 @@ export default function GuestManagerPage() {
       body: (rowData: GuestDto) => (
         <StatusTag
           severity={rowData.isVip ? "warning" : "secondary"}
-          value={rowData.isVip ? "VIP" : "—"}
+          value={rowData.isVip ? "VIP" : "Bình thường"}
         />
       ),
     },

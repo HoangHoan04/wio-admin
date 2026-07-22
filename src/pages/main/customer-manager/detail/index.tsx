@@ -1,4 +1,5 @@
 import { formatDateTime } from "@/common/helpers";
+import ActionLog from "@/components/layout/ActionLog";
 import BaseView from "@/components/layout/BaseView";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +8,13 @@ import { StatusTag } from "@/components/ui/status-tag";
 import { useCustomerDetail } from "@/hooks/customer";
 import { ArrowLeft, History, IdCard, User } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+
+// Map role code -> nhãn hiển thị tiếng Việt
+const ROLE_LABEL: Record<string, string> = {
+  COUPLE: "Cặp đôi",
+  ADMIN: "Quản trị viên",
+  STAFF: "Nhân viên",
+};
 
 export default function DetailCustomerPage() {
   const { id } = useParams();
@@ -87,7 +95,7 @@ export default function DetailCustomerPage() {
                     <StatusTag
                       severity={!data.isDeleted ? "success" : "danger"}
                       value={
-                        !data.isDeleted ? "Hoạt động" : "Đã xóa / Đình chỉ"
+                        !data.isDeleted ? "Đang hoạt động" : "Ngưng hoạt động"
                       }
                     />
                   }
@@ -129,7 +137,7 @@ export default function DetailCustomerPage() {
               ) : (
                 <div className="grid grid-cols-1 gap-x-6 gap-y-6 md:grid-cols-3">
                   <InfoItem
-                    label="Vai trò (Role)"
+                    label="Quyền hạn"
                     value={
                       <span
                         className={
@@ -140,6 +148,12 @@ export default function DetailCustomerPage() {
                       >
                         {data.user.isAdmin ? "Admin" : "Customer"}
                       </span>
+                    }
+                  />
+                  <InfoItem
+                    label="Vai trò (Role)"
+                    value={
+                      ROLE_LABEL[data.user.role] || data.user.role || "N/A"
                     }
                   />
                   <InfoItem
@@ -154,8 +168,12 @@ export default function DetailCustomerPage() {
                     }
                   />
                   <InfoItem
-                    label="Đăng nhập từ"
-                    value={data.user.provider || "Local (Email/Pass)"}
+                    label="Email đăng nhập"
+                    value={data.user.email || "N/A"}
+                  />
+                  <InfoItem
+                    label="Số điện thoại đăng nhập"
+                    value={data.user.phone || "N/A"}
                   />
                   <InfoItem
                     label="Lần đăng nhập cuối"
@@ -189,32 +207,11 @@ export default function DetailCustomerPage() {
       title: "Lịch sử thao tác",
       icon: <History className="size-3.5" />,
       content: (
-        <div className="flex flex-col gap-6 p-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                Lịch sử thao tác của người dùng: {data.fullName}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Tính năng đang phát triển...
-              </p>
-            </CardContent>
-          </Card>
-
-          <div className="flex items-center justify-center gap-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate(-1)}
-              className="gap-1.5"
-            >
-              <ArrowLeft className="size-3.5" />
-              Thoát
-            </Button>
-          </div>
-        </div>
+        <ActionLog
+          entityName="CustomerEntity"
+          entityId={data.id}
+          title={`Lịch sử thao tác của người dùng: ${data.fullName}`}
+        />
       ),
     },
   ];

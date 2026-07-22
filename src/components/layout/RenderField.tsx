@@ -802,6 +802,9 @@ function normalizeValues(
         result[field.name] = [];
       }
     }
+    if (field.type === "checkbox") {
+      result[field.name] = result[field.name] === true;
+    }
   }
 
   return result;

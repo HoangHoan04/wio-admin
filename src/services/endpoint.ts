@@ -79,11 +79,27 @@ export const API_ENDPOINTS = {
     DELETE: "/api/admin/guest/delete",
   },
 
+  SERVICE_PLAN: {
+    PAGINATION: "/api/admin/service-plan/pagination",
+    FIND_BY_ID: "/api/admin/service-plan/find-by-id",
+    CREATE: "/api/admin/service-plan/create",
+    UPDATE: "/api/admin/service-plan/update",
+    DELETE: "/api/admin/service-plan/delete",
+    SELECT_BOX: "/api/admin/service-plan/select-box",
+  },
+
   SUBSCRIPTION: {
     PAGINATION: "/api/admin/subscription/pagination",
     DELETE: "/api/admin/subscription/delete",
     FIND_BY_ID: "/api/admin/subscription/find-by-id",
     CHANGE_PLAN: "/api/admin/subscription/change-plan",
+  },
+
+  CONTACT: {
+    PAGINATION: "/api/admin/contact/pagination",
+    FIND_BY_ID: "/api/admin/contact/find-by-id",
+    UPDATE_STATUS: "/api/admin/contact/update-status",
+    DELETE: "/api/admin/contact/delete",
   },
 
   TABLE: {

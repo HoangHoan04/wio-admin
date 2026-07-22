@@ -1,7 +1,14 @@
+import { enumData } from "@/common/enums";
 import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
 import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
+import { CommonActions } from "@/components/layout/CommonActions";
 import FileUploadCustom from "@/components/layout/FileUpload";
+import type { FilterField } from "@/components/layout/FilterCustom";
+import FilterCustom from "@/components/layout/FilterCustom";
+import { RowActions } from "@/components/layout/RowActions";
+import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
+import TableCustom from "@/components/layout/TableCustom";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,10 +19,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { FilterField } from "@/components/layout/FilterCustom";
-import FilterCustom from "@/components/layout/FilterCustom";
-import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
-import TableCustom from "@/components/layout/TableCustom";
 import { StatusTag } from "@/components/ui/status-tag";
 import type {
   FilterMusicBackgroundDto,
@@ -29,7 +32,7 @@ import {
   usePaginationMusicBackground,
   useUpdateMusicBackground,
 } from "@/hooks/music-background";
-import { Edit, Music, Plus, Trash2, Video } from "lucide-react";
+import { Edit, Music, Trash2, Video } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 function getAudioDuration(file: File): Promise<string> {
@@ -108,9 +111,11 @@ function MusicForm({
             }
             onChange("audioUrl", data.fileUrl);
             if (data.file) {
-              getAudioDuration(data.file).then((duration) => {
-                onChange("duration", duration);
-              }).catch(() => {});
+              getAudioDuration(data.file)
+                .then((duration) => {
+                  onChange("duration", duration);
+                })
+                .catch(() => {});
             }
           }}
         />
@@ -129,7 +134,9 @@ export default function MusicBackgroundManagerPage() {
     where: initFilter,
   });
   const [selectedRows, setSelectedRows] = useState<MusicBackgroundDto[]>([]);
-  const [selectedMusic, setSelectedMusic] = useState<MusicBackgroundDto | null>(null);
+  const [selectedMusic, setSelectedMusic] = useState<MusicBackgroundDto | null>(
+    null,
+  );
 
   const [openCreate, setOpenCreate] = useState(false);
   const [openYoutube, setOpenYoutube] = useState(false);
@@ -289,6 +296,17 @@ export default function MusicBackgroundManagerPage() {
       header: "Trạng thái xử lý",
       width: 140,
       align: "center",
+      body: (rowData) => {
+        const status = Object.values(enumData.MUSIC_PROCESS_STATUS).find(
+          (item) => item.code === rowData.status,
+        );
+        return (
+          <StatusTag
+            severity={status?.color || "gray"}
+            value={status?.name || rowData.status}
+          />
+        );
+      },
     },
     {
       field: "isActive",
@@ -332,7 +350,11 @@ export default function MusicBackgroundManagerPage() {
   ];
 
   const loading =
-    isLoading || isLoadingCreate || isLoadingUpdate || isLoadingYoutube || isLoadingDelete;
+    isLoading ||
+    isLoadingCreate ||
+    isLoadingUpdate ||
+    isLoadingYoutube ||
+    isLoadingDelete;
 
   return (
     <BaseView>
@@ -368,30 +390,29 @@ export default function MusicBackgroundManagerPage() {
           align: "between",
           showRefreshButton: true,
           onRefresh: refetch,
-          rightContent: (
-            <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  setForm(emptyForm);
-                  setOpenYoutube(true);
-                }}
-              >
-                <Video className="size-3.5 mr-1.5" />
-                Nhập từ YouTube
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => {
-                  setForm(emptyForm);
-                  setOpenCreate(true);
-                }}
-              >
-                <Plus className="size-3.5 mr-1.5" />
-                Thêm nhạc nền
-              </Button>
-            </div>
+          leftContent: (
+            <>
+              <RowActions
+                actions={[
+                  CommonActions.create(() => {
+                    setForm(emptyForm);
+                    setOpenCreate(true);
+                  }),
+                ]}
+                justify="start"
+                gap="small"
+              />
+              <RowActions
+                actions={[
+                  CommonActions.importYoutube(() => {
+                    setForm(emptyForm);
+                    setOpenYoutube(true);
+                  }),
+                ]}
+                justify="start"
+                gap="small"
+              />
+            </>
           ),
         }}
       />
@@ -416,13 +437,18 @@ export default function MusicBackgroundManagerPage() {
           </DialogHeader>
           <MusicForm
             form={form}
-            onChange={(field, value) => setForm((prev) => ({ ...prev, [field]: value }))}
+            onChange={(field, value) =>
+              setForm((prev) => ({ ...prev, [field]: value }))
+            }
           />
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpenCreate(false)}>
               Hủy
             </Button>
-            <Button onClick={handleCreate} disabled={!form.name.trim() || isLoadingCreate}>
+            <Button
+              onClick={handleCreate}
+              disabled={!form.name.trim() || isLoadingCreate}
+            >
               {isLoadingCreate ? "Đang thêm..." : "Thêm"}
             </Button>
           </DialogFooter>
@@ -439,13 +465,18 @@ export default function MusicBackgroundManagerPage() {
           </DialogHeader>
           <MusicForm
             form={form}
-            onChange={(field, value) => setForm((prev) => ({ ...prev, [field]: value }))}
+            onChange={(field, value) =>
+              setForm((prev) => ({ ...prev, [field]: value }))
+            }
           />
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpenEdit(false)}>
               Hủy
             </Button>
-            <Button onClick={handleEdit} disabled={!form.name.trim() || isLoadingUpdate}>
+            <Button
+              onClick={handleEdit}
+              disabled={!form.name.trim() || isLoadingUpdate}
+            >
               {isLoadingUpdate ? "Đang cập nhật..." : "Cập nhật"}
             </Button>
           </DialogFooter>

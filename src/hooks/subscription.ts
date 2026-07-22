@@ -1,5 +1,6 @@
 import type { PageResponse, PaginationDto, SuccessResponse } from "@/dto";
 import type {
+  AdminChangeSubscriptionPlanDto,
   FilterSubscriptionDto,
   SubscriptionDto,
 } from "@/dto/subscription.dto";
@@ -92,7 +93,7 @@ export const useChangePlanSubscription = () => {
 
   const { mutateAsync: onChangePlanSubscription, isPending: isLoading } =
     useMutation({
-      mutationFn: (data: { id: string; planName: string }) =>
+      mutationFn: (data: AdminChangeSubscriptionPlanDto) =>
         rootApiService.post(
           API_ENDPOINTS.SUBSCRIPTION.CHANGE_PLAN,
           data,
@@ -104,7 +105,7 @@ export const useChangePlanSubscription = () => {
         });
         showToast({
           type: "success",
-          message: res.message || "Đổi gói subscription thành công",
+          message: res.message || "Thay đổi gói dịch vụ thành công",
           title: "Thành công",
           timeout: 3000,
         });

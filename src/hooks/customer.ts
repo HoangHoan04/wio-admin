@@ -64,7 +64,7 @@ export const useActivateCustomer = () => {
         });
         showToast({
           type: "success",
-          message: res.message || "Kích hoạt tài khoản thành công",
+          message: res.message,
           title: "Thành công",
           timeout: 3000,
         });
@@ -72,7 +72,7 @@ export const useActivateCustomer = () => {
       onError: (error: Error) => {
         showToast({
           type: "error",
-          message: error?.message || "Có lỗi xảy ra khi kích hoạt tài khoản",
+          message: error?.message,
           title: "Lỗi",
           timeout: 3000,
         });
@@ -100,7 +100,7 @@ export const useDeactivateCustomer = () => {
         });
         showToast({
           type: "success",
-          message: res.message || "Đình chỉ tài khoản thành công",
+          message: res.message,
           title: "Thành công",
           timeout: 3000,
         });
@@ -108,7 +108,7 @@ export const useDeactivateCustomer = () => {
       onError: (error: Error) => {
         showToast({
           type: "error",
-          message: error?.message || "Có lỗi xảy ra khi đình chỉ tài khoản",
+          message: error?.message,
           title: "Lỗi",
           timeout: 3000,
         });
