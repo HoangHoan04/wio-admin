@@ -20,7 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon, ChevronDownIcon, Search, Undo2 } from "lucide-react";
+import { CalendarIcon, ChevronDownIcon, Search, XCircle } from "lucide-react";
 import { useState } from "react";
 
 export interface FilterOption {
@@ -149,7 +149,10 @@ function FilterSelect({ field, filters, onChange }: FilterSelectProps) {
           <ComboboxValue>{getSelectedLabel(field, filters)}</ComboboxValue>
         </ComboboxTrigger>
       </div>
-      <ComboboxContent anchor={anchorRef} className="min-w-0 w-[--anchor-width]">
+      <ComboboxContent
+        anchor={anchorRef}
+        className="min-w-0 w-[--anchor-width]"
+      >
         <ComboboxList>
           {(field.options || []).map((opt) => (
             <ComboboxItem
@@ -477,7 +480,7 @@ export default function FilterCustom({
                   onClick={handleClear}
                   className="h-8 text-xs gap-1.5"
                 >
-                  <Undo2 className="size-3.5" />
+                  <XCircle className="size-3.5" />
                   Xóa bộ lọc
                 </Button>
               )}

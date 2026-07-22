@@ -1,4 +1,5 @@
 import { ROUTES } from "@/common/constants";
+import { enumData } from "@/common/enums";
 import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
 import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
@@ -79,40 +80,53 @@ export default function CustomerManagerPage() {
 
   const filterFields: FilterField[] = [
     {
+      key: "code",
+      label: "Mã khách hàng",
+      type: "input",
+      placeholder: "Nhập mã khách hàng",
+      col: 8,
+    },
+    {
       key: "fullName",
       label: "Tên người dùng",
       type: "input",
       placeholder: "Nhập tên người dùng",
-      col: 6,
+      col: 8,
     },
     {
       key: "email",
       label: "Email",
       type: "input",
       placeholder: "Nhập email",
-      col: 6,
+      col: 8,
     },
     {
       key: "phone",
       label: "Số điện thoại",
       type: "input",
       placeholder: "Nhập số điện thoại",
-      col: 6,
+      col: 8,
     },
     {
       key: "isDeleted",
       label: "Trạng thái",
       type: "select",
       placeholder: "Chọn trạng thái",
-      options: [
-        { label: "Hoạt động", value: false },
-        { label: "Đình chỉ", value: true },
-      ],
-      col: 6,
+      options: Object.values(enumData.STATUS_FILTER).map((status) => ({
+        label: status.name,
+        value: status.value,
+      })),
+      col: 8,
     },
   ];
 
   const columns: TableColumn<CustomerDto>[] = [
+    {
+      field: "code",
+      header: "Mã khách hàng",
+      width: 150,
+      sortable: true,
+    },
     {
       field: "fullName",
       header: "Tên người dùng",
@@ -125,6 +139,7 @@ export default function CustomerManagerPage() {
       width: 200,
       sortable: true,
     },
+
     {
       field: "phone",
       header: "Số điện thoại",
@@ -133,13 +148,18 @@ export default function CustomerManagerPage() {
     },
     {
       field: "isDeleted",
-      header: "Trạng thái",
+      header: "Hoạt động",
       width: 150,
       align: "center",
+      type: "tag",
       body: (rowData: CustomerDto) => (
         <StatusTag
           severity={rowData.isDeleted ? "danger" : "success"}
-          value={rowData.isDeleted ? "Đình chỉ" : "Hoạt động"}
+          value={
+            rowData.isDeleted
+              ? enumData.STATUS_FILTER.INACTIVE.name
+              : enumData.STATUS_FILTER.ACTIVE.name
+          }
         />
       ),
     },
@@ -162,7 +182,7 @@ export default function CustomerManagerPage() {
     {
       key: "deactivate",
       icon: <Ban className="size-3.5" />,
-      tooltip: "Đình chỉ",
+      tooltip: "Ngưng hoạt động",
       severity: "danger",
       visible: (record) => !record.isDeleted,
       onClick: (record) => {
@@ -231,12 +251,12 @@ export default function CustomerManagerPage() {
 
       <ActionConfirm
         ref={deactivateConfirmRef}
-        title="Xác nhận đình chỉ tài khoản"
-        confirmText="Đình chỉ"
+        title="Xác nhận ngưng hoạt động tài khoản"
+        confirmText="Ngưng hoạt động"
         cancelText="Hủy"
         variant="destructive"
         onConfirm={handleDeactivate}
-        message="Bạn có chắc chắn muốn đình chỉ tài khoản này không?"
+        message="Bạn có chắc chắn muốn ngưng hoạt động tài khoản này không?"
       />
     </BaseView>
   );

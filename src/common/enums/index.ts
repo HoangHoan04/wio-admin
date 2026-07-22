@@ -27,40 +27,55 @@ export const enumData = {
       type: "ThemMoi",
       color: "green",
     },
-    DELETE: { code: "DELETE", name: "Xoá bỏ", type: "XoaBo", color: "red" },
+    APPROVE: {
+      code: "APPROVE",
+      name: "Duyệt",
+      type: "Duyet",
+      color: "emerald",
+    },
+    ACTIVATE: {
+      code: "ACTIVATE",
+      name: "Kích hoạt",
+      type: "KichHoat",
+      color: "teal",
+    },
+    LOGIN: {
+      code: "LOGIN",
+      name: "Đăng nhập",
+      type: "DangNhap",
+      color: "lime",
+    },
+
     UPDATE: {
       code: "UPDATE",
       name: "Cập nhật",
       type: "CapNhat",
-      color: "yellow",
+      color: "amber",
     },
-    SYNC: { code: "SYNC", name: "Đồng bộ", type: "DongBo", color: "blue" },
     EDIT: {
       code: "EDIT",
       name: "Chỉnh sửa",
       type: "ChinhSua",
       color: "orange",
     },
-    APPROVE: { code: "APPROVE", name: "Duyệt", type: "Duyet", color: "green" },
-    SEND_APPROVE: {
-      code: "SEND_APPROVE",
-      name: "Gửi duyệt",
-      type: "GuiDuyet",
-      color: "blue",
+
+    DELETE: {
+      code: "DELETE",
+      name: "Xoá bỏ",
+      type: "XoaBo",
+      color: "red",
     },
-    REJECT: { code: "REJECT", name: "Từ chối", type: "TuChoi", color: "red" },
-    CANCEL: { code: "CANCEL", name: "Huỷ", type: "Huy", color: "gray" },
-    IMPORT_EXCEL: {
-      code: "IMPORT_EXCEL",
-      name: "Nhập excel",
-      type: "NhapExcel",
-      color: "purple",
+    REJECT: {
+      code: "REJECT",
+      name: "Từ chối",
+      type: "TuChoi",
+      color: "rose",
     },
-    ACTIVATE: {
-      code: "ACTIVATE",
-      name: "Kích hoạt",
-      type: "KichHoat",
-      color: "green",
+    CANCEL: {
+      code: "CANCEL",
+      name: "Huỷ",
+      type: "Huy",
+      color: "slate",
     },
     DEACTIVATE: {
       code: "DEACTIVATE",
@@ -68,35 +83,49 @@ export const enumData = {
       type: "NgungHoatDong",
       color: "gray",
     },
-    RESTORE: {
-      code: "RESTORE",
-      name: "Khôi phục",
-      type: "KhoiPhuc",
-      color: "blue",
-    },
-    LOGIN: {
-      code: "LOGIN",
-      name: "Đăng nhập",
-      type: "DangNhap",
-      color: "green",
-    },
     LOGOUT: {
       code: "LOGOUT",
       name: "Đăng xuất",
       type: "DangXuat",
-      color: "red",
+      color: "zinc",
+    },
+
+    SYNC: {
+      code: "SYNC",
+      name: "Đồng bộ",
+      type: "DongBo",
+      color: "blue",
+    },
+    SEND_APPROVE: {
+      code: "SEND_APPROVE",
+      name: "Gửi duyệt",
+      type: "GuiDuyet",
+      color: "cyan",
+    },
+    RESTORE: {
+      code: "RESTORE",
+      name: "Khôi phục",
+      type: "KhoiPhuc",
+      color: "sky",
     },
     REGISTER: {
       code: "REGISTER",
       name: "Đăng ký",
       type: "DangKy",
-      color: "blue",
+      color: "indigo",
+    },
+
+    IMPORT_EXCEL: {
+      code: "IMPORT_EXCEL",
+      name: "Nhập excel",
+      type: "NhapExcel",
+      color: "purple",
     },
     UPLOAD_FILE: {
       code: "UPLOAD_FILE",
       name: "Tải file lên",
       type: "TaiFileLen",
-      color: "purple",
+      color: "violet",
     },
   },
 
@@ -116,40 +145,20 @@ export const enumData = {
       name: "Hoa mộc Lan - Hồng",
       slug: "hoa-moc-lan-hong",
     },
-    DRAGON_PHOENIX_BLUE: {
-      code: "DRAGON_PHOENIX_BLUE",
-      name: "Long phụng - Xanh",
-      slug: "long-phung-xanh",
-    },
-    DRAGON_PHOENIX_GREEN: {
-      code: "DRAGON_PHOENIX_GREEN",
-      name: "Long phụng - Xanh lá",
-      slug: "long-phung-xanh-la",
-    },
     DRAGON_PHOENIX_RED: {
       code: "DRAGON_PHOENIX_RED",
       name: "Long phụng - Đỏ",
       slug: "long-phung-do",
     },
-    ROYAL_BLUE: {
-      code: "ROYAL_BLUE",
-      name: "Hoàng gia - Xanh",
-      slug: "hoang-gia-xanh",
-    },
-    ROYAL_GREEN: {
-      code: "ROYAL_GREEN",
-      name: "Hoàng gia - Xanh lá",
-      slug: "hoang-gia-xanh-la",
+    RED_DOUBLE_HAPPINESS: {
+      code: "RED_DOUBLE_HAPPINESS",
+      name: "Song hỷ - Đỏ truyền thống",
+      slug: "song-hy-do-truyen-thong",
     },
     ROYAL_RED: {
       code: "ROYAL_RED",
-      name: "Hoàng gia - Đỏ",
-      slug: "hoang-gia-do",
-    },
-    RED_DOUBLE_HAPPINESS: {
-      code: "RED_DOUBLE_HAPPINESS",
-      name: "Song hỷ - Đỏ",
-      slug: "song-hy-do",
+      name: "Hoàng gia - Đỏ nhung",
+      slug: "hoang-gia-do-nhung",
     },
   },
 
@@ -204,9 +213,9 @@ export const enumData = {
   },
 
   MUSIC_PROCESS_STATUS: {
-    PENDING: { code: "PENDING", name: "Chờ xử lý" },
-    PROCESSING: { code: "PROCESSING", name: "Đang xử lý" },
-    COMPLETED: { code: "COMPLETED", name: "Hoàn tất" },
-    FAILED: { code: "FAILED", name: "Thất bại" },
+    PENDING: { code: "PENDING", name: "Chờ xử lý", color: "gray" },
+    PROCESSING: { code: "PROCESSING", name: "Đang xử lý", color: "warning" },
+    COMPLETED: { code: "COMPLETED", name: "Hoàn tất", color: "success" },
+    FAILED: { code: "FAILED", name: "Thất bại", color: "danger" },
   },
 };

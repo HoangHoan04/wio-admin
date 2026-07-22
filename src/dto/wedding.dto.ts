@@ -1,22 +1,49 @@
 import type { BaseDto } from "./common";
+import type { TemplateDto } from "./template.dto";
 
 export interface WeddingDto extends BaseDto {
   userId: string;
   templateId?: string;
   slug: string;
+  displayOrder?: string;
+  showHeroImage: boolean;
+  heroImageMain?: string;
+  showIntro: boolean;
+  showGallery: boolean;
+  galleryLayout?: string;
+  showParty: boolean;
+  partyType?: string;
+  receptionWelcomeTime?: string;
+  showCountdown: boolean;
+  showMap: boolean;
+  showDressCode: boolean;
+  dressCodes?: string[];
+  showTimeline: boolean;
+  timelineTitle?: string;
+  showRsvp: boolean;
+  rsvpType?: string;
+  showGuestbook: boolean;
+  guestbookStatic: boolean;
+  guestbookFloating: boolean;
+  showThankYou: boolean;
+  thankYouText?: string;
   groomName: string;
+  groomShortName?: string;
+  groomTitle?: string;
+  groomAddress?: string;
   groomDob?: string;
   groomFamilyTitle?: string;
   groomFatherName?: string;
   groomMotherName?: string;
-  groomShortName?: string;
   groomPhotoUrl?: string;
   brideName: string;
+  brideShortName?: string;
+  brideTitle?: string;
+  brideAddress?: string;
   brideDob?: string;
   brideFamilyTitle?: string;
   brideFatherName?: string;
   brideMotherName?: string;
-  brideShortName?: string;
   bridePhotoUrl?: string;
   engagementAt?: string;
   engagementVenue?: string;
@@ -40,6 +67,7 @@ export interface WeddingDto extends BaseDto {
   musicUrl?: string;
   musicType?: string;
   musicAutoplay: boolean;
+  musicName?: string;
   groomBankAccount?: string;
   groomBankName?: string;
   groomBankOwner?: string;
@@ -48,8 +76,12 @@ export interface WeddingDto extends BaseDto {
   brideBankName?: string;
   brideBankOwner?: string;
   brideQrUrl?: string;
+  status: string;
   publishedAt?: string;
+  shareUrl?: string;
+  shareQrUrl?: string;
   expiresAt?: string;
+  template: TemplateDto;
 }
 
 export interface AdminForceResetSlugDto {

@@ -12,6 +12,7 @@ import {
   Settings,
   Trash2,
   Upload,
+  Video,
   X,
   XCircle,
 } from "lucide-react";
@@ -24,21 +25,21 @@ interface ActionItem {
   disabled?: boolean;
   loading?: boolean;
   variant?:
-    | "default"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "destructive"
-    | "link";
+  | "default"
+  | "outline"
+  | "secondary"
+  | "ghost"
+  | "destructive"
+  | "link";
   size?:
-    | "default"
-    | "xs"
-    | "sm"
-    | "lg"
-    | "icon"
-    | "icon-xs"
-    | "icon-sm"
-    | "icon-lg";
+  | "default"
+  | "xs"
+  | "sm"
+  | "lg"
+  | "icon"
+  | "icon-xs"
+  | "icon-sm"
+  | "icon-lg";
   className?: string;
 }
 
@@ -236,5 +237,19 @@ export const CommonActions = {
     size: "sm",
     className:
       "border-sky-500 text-sky-600 bg-sky-50 hover:bg-sky-100 hover:text-sky-700",
+  }),
+
+  importYoutube: (
+    onClick?: () => void,
+    label = "Nhập từ YouTube",
+  ): ActionItem => ({
+    key: "import-youtube",
+    label,
+    icon: <Video className="size-3.5" />,
+    onClick,
+    variant: "outline",
+    size: "sm",
+    className:
+      "border-rose-500 text-rose-600 bg-rose-50 hover:bg-rose-100 hover:text-rose-700",
   }),
 };
