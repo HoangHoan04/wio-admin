@@ -44,7 +44,6 @@ export default function WeddingTablesTab({ weddingId }: { weddingId: string }) {
 
   useEffect(() => {
     if (weddingId) fetchTables();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [weddingId]);
 
   const handleDelete = async (id: string) => {
@@ -94,7 +93,6 @@ export default function WeddingTablesTab({ weddingId }: { weddingId: string }) {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      {/* Thống kê tổng quan */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
           label="Tổng số bàn"
@@ -114,7 +112,6 @@ export default function WeddingTablesTab({ weddingId }: { weddingId: string }) {
         />
       </div>
 
-      {/* Danh sách bàn dạng thẻ */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {tables.map((table) => {
           const percent =

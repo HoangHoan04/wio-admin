@@ -121,7 +121,9 @@ export default function ServerError({
       await navigator.clipboard.writeText(details);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch { /* empty */ }
+    } catch { 
+      //! empty */
+     }
   };
 
   const handleReport = () => {
