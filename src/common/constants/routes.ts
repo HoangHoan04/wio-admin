@@ -56,20 +56,6 @@ export const ROUTES = {
       icon: Heart,
       path: "/wedding-manager",
       children: {
-        WEDDING_LIST: {
-          key: "WEDDING_LIST",
-          label: "Danh sách cặp đôi",
-          path: "/wedding-list",
-          icon: Users,
-          children: {
-            DETAIL_WEDDING: {
-              key: "DETAIL_WEDDING",
-              label: "Chi tiết cặp đôi",
-              path: "/wedding/detail/:id",
-              isShow: false,
-            },
-          },
-        },
         TEMPLATE_MANAGER: {
           key: "TEMPLATE_MANAGER",
           label: "Template thiệp cưới",
@@ -92,6 +78,20 @@ export const ROUTES = {
               key: "DETAIL_TEMPLATE",
               label: "Chi tiết template",
               path: "/template/detail/:id",
+              isShow: false,
+            },
+          },
+        },
+        WEDDING_LIST: {
+          key: "WEDDING_LIST",
+          label: "Danh sách cặp đôi",
+          path: "/wedding-list",
+          icon: Users,
+          children: {
+            DETAIL_WEDDING: {
+              key: "DETAIL_WEDDING",
+              label: "Chi tiết cặp đôi",
+              path: "/wedding/detail/:id",
               isShow: false,
             },
           },

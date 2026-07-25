@@ -87,7 +87,6 @@ export default function DetailWeddingPage() {
     }
   };
 
-  // Gộp mốc thời gian lễ cưới thành 1 dòng thời gian trực quan
   const milestones = [
     data.engagementAt && {
       label: "Lễ đính hôn",
@@ -113,7 +112,6 @@ export default function DetailWeddingPage() {
       icon: <Heart className="size-3.5" />,
       content: (
         <div className="flex flex-col gap-6 p-6">
-          {/* HERO: Cặp đôi */}
           <Card className="overflow-hidden border-none ">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center gap-6 md:flex-row md:justify-center md:gap-10">
@@ -154,7 +152,6 @@ export default function DetailWeddingPage() {
                 )}
               </div>
 
-              {/* Link chia sẻ + QR */}
               <div className="mt-6 flex flex-col items-center gap-3">
                 {data.shareUrl && (
                   <div className="flex items-center gap-2 rounded-lg border bg-background px-3 py-2 text-sm">
@@ -194,7 +191,6 @@ export default function DetailWeddingPage() {
             </CardContent>
           </Card>
 
-          {/* Timeline mốc thời gian */}
           {milestones.length > 0 && (
             <Card>
               <CardHeader>
@@ -228,7 +224,6 @@ export default function DetailWeddingPage() {
             </Card>
           )}
 
-          {/* Chi tiết địa điểm */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <VenueCard
               title="Lễ thành hôn"
@@ -248,7 +243,6 @@ export default function DetailWeddingPage() {
             )}
           </div>
 
-          {/* Thông tin gia đình 2 bên */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <FamilyCard
               label="Nhà trai"
@@ -266,7 +260,6 @@ export default function DetailWeddingPage() {
             />
           </div>
 
-          {/* Dress code + nhạc nền */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {data.dressCodes && data.dressCodes.length > 0 && (
               <Card>
@@ -316,7 +309,6 @@ export default function DetailWeddingPage() {
             )}
           </div>
 
-          {/* Bank / mừng cưới */}
           {(data.groomBankAccount || data.brideBankAccount) && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {data.groomBankAccount && (
@@ -340,7 +332,6 @@ export default function DetailWeddingPage() {
             </div>
           )}
 
-          {/* Lời mời / lời cảm ơn */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {data.invitationText && (
               <QuoteCard title="Thiệp mời" text={data.invitationText} />

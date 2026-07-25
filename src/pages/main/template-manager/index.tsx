@@ -1,5 +1,6 @@
 import { ROUTES } from "@/common/constants";
 import { enumData } from "@/common/enums";
+import { getEnumName } from "@/common/helpers/enumHelper";
 import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
 import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
@@ -209,6 +210,9 @@ export default function TemplateManagerPage() {
       header: "Mã theme",
       width: 100,
       align: "center",
+      body: (rowData: TemplateDto) => (
+        <>{getEnumName(enumData.THEME_CODE, rowData.themeCode)}</>
+      ),
     },
     {
       field: "isShow",

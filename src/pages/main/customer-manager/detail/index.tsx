@@ -9,7 +9,6 @@ import { useCustomerDetail } from "@/hooks/customer";
 import { ArrowLeft, History, IdCard, User } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
-// Map role code -> nhãn hiển thị tiếng Việt
 const ROLE_LABEL: Record<string, string> = {
   COUPLE: "Cặp đôi",
   ADMIN: "Quản trị viên",

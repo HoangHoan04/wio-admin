@@ -59,7 +59,6 @@ export default function WeddingWishesTab({ weddingId }: { weddingId: string }) {
 
   useEffect(() => {
     if (weddingId) fetchWishes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [weddingId]);
 
   const filteredWishes = useMemo(() => {
@@ -69,7 +68,6 @@ export default function WeddingWishesTab({ weddingId }: { weddingId: string }) {
         : filter === "pending"
           ? wishes.filter((w) => !w.isApproved)
           : wishes;
-    // Ghim lên đầu, còn lại theo thời gian mới nhất
     return [...list].sort((a, b) => {
       if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -100,7 +98,6 @@ export default function WeddingWishesTab({ weddingId }: { weddingId: string }) {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      {/* Bộ lọc + thống kê */}
       <div className="flex flex-wrap items-center gap-2">
         <FilterChip
           label={`Tất cả (${wishes.length})`}
@@ -121,7 +118,6 @@ export default function WeddingWishesTab({ weddingId }: { weddingId: string }) {
         />
       </div>
 
-      {/* Danh sách lời chúc dạng thẻ */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {filteredWishes.map((wish) => (
           <Card
