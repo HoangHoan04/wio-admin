@@ -1,0 +1,17 @@
+services:
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:4300}
+    container_name: wio_admin
+    restart: unless-stopped
+    ports:
+      - '${PORT:-3005}:80'
+    networks:
+      - wio_admin_net
+
+networks:
+  wio_admin_net:
+    driver: bridge
