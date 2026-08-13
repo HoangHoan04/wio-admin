@@ -79,7 +79,7 @@ export default function GuestManagerPage() {
       label: "Khách của ai",
       type: "select",
       placeholder: "Chọn bên",
-      options: Object.values(enumData.GUEST_SIDE).map((side) => ({
+      options: Object.values(enumData.GUEST_GROUP).map((side) => ({
         label: side.name,
         value: side.code,
       })),
@@ -140,9 +140,9 @@ export default function GuestManagerPage() {
       severity: "info",
       onClick: (record) =>
         router.push(
-          ROUTES.MAIN.WEDDING_MANAGER.children.WEDDING_LIST.children.DETAIL_WEDDING.path.replace(
+          ROUTES.MAIN.INVITATION_MANAGER.children.INVITATION_LIST.children.DETAIL_INVITATION.path.replace(
             ":id",
-            record.weddingId,
+            record.invitationId || "",
           ),
         ),
     },

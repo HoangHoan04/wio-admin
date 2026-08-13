@@ -19,26 +19,26 @@ export default function AnalyticsPage() {
 
   const stats = [
     {
-      label: "Tổng số đám cưới",
-      value: data?.totalWeddings ?? 0,
+      label: "Tổng số thiệp",
+      value: data?.invitations?.total ?? 0,
       icon: Heart,
       color: "text-pink-500",
     },
     {
-      label: "Tổng số người dùng",
-      value: data?.totalUsers ?? 0,
+      label: "User 7 ngày",
+      value: data?.users?.newLast7Days ?? 0,
       icon: Users,
       color: "text-blue-500",
     },
     {
-      label: "Tổng số subscription",
-      value: data?.totalSubscriptions ?? 0,
+      label: "RSVP tham dự",
+      value: data?.guests?.attending ?? 0,
       icon: CreditCard,
       color: "text-green-500",
     },
     {
-      label: "Tổng số template",
-      value: data?.totalTemplates ?? 0,
+      label: "Lời chúc chờ duyệt",
+      value: data?.wishes?.pending ?? 0,
       icon: Layout,
       color: "text-purple-500",
     },

@@ -2,18 +2,27 @@ import rootApiService from "@/services/api.service";
 import { API_ENDPOINTS } from "@/services/endpoint";
 import { useQuery } from "@tanstack/react-query";
 
-export interface SystemStats {
-  totalWeddings: number;
-  totalUsers: number;
-  totalSubscriptions: number;
-  totalTemplates: number;
+export interface OverviewStats {
+  invitations?: {
+    total: number;
+    published: number;
+    draft: number;
+    archived: number;
+    byType: Array<{ cardType: string; name: string; total: number }>;
+  };
+  guests?: { total: number; attending: number };
+  wishes?: { pending: number };
+  users?: { newLast7Days: number };
   [key: string]: any;
 }
 
 export const useSystemStats = () => {
-  const { data, isLoading, refetch, error } = useQuery<SystemStats>({
-    queryKey: [API_ENDPOINTS.ANALYTICS.SYSTEM_STATS],
-    queryFn: () => rootApiService.post(API_ENDPOINTS.ANALYTICS.SYSTEM_STATS),
+  const { data, isLoading, refetch, error } = useQuery<OverviewStats>({
+    queryKey: [API_ENDPOINTS.ANALYTICS.OVERVIEW],
+    queryFn: async () => {
+      const res = await rootApiService.post(API_ENDPOINTS.ANALYTICS.OVERVIEW);
+      return (res as any)?.data || res;
+    },
   });
 
   return {

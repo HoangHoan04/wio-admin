@@ -1,7 +1,7 @@
 import type { BaseDto } from "./common";
 
 export interface GuestDto extends BaseDto {
-  weddingId: string;
+  invitationId?: string;
   tableId?: string;
   fullName: string;
   salutation?: string;
@@ -19,7 +19,8 @@ export interface GuestDto extends BaseDto {
 }
 
 export interface FilterGuestDto {
-  weddingId?: string;
+  invitationId?: string;
+  groupId?: string;
   tableId?: string;
   fullName?: string;
   salutation?: string;

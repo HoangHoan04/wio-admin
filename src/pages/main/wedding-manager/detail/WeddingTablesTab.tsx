@@ -16,7 +16,11 @@ interface TableItem {
   createdAt: string;
 }
 
-export default function WeddingTablesTab({ weddingId }: { weddingId: string }) {
+export default function WeddingTablesTab({
+  invitationId,
+}: {
+  invitationId: string;
+}) {
   const [tables, setTables] = useState<TableItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { showToast } = useToast();
@@ -27,7 +31,7 @@ export default function WeddingTablesTab({ weddingId }: { weddingId: string }) {
       const res = (await rootApiService.post(API_ENDPOINTS.TABLE.PAGINATION, {
         skip: 0,
         take: 100,
-        where: { weddingId },
+        where: { invitationId },
       })) as any;
       setTables(res.data || []);
     } catch (err: any) {
@@ -43,8 +47,8 @@ export default function WeddingTablesTab({ weddingId }: { weddingId: string }) {
   };
 
   useEffect(() => {
-    if (weddingId) fetchTables();
-  }, [weddingId]);
+    if (invitationId) fetchTables();
+  }, [invitationId]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Bạn có chắc muốn xóa bàn tiệc này?")) return;

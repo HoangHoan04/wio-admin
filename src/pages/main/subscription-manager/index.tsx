@@ -101,15 +101,6 @@ export default function SubscriptionListPage() {
         row.user?.fullName || row.user?.email || row.userId || "N/A",
     },
     {
-      field: "wedding",
-      header: "Đám cưới",
-      width: 200,
-      body: (row) =>
-        row.wedding
-          ? `${row.wedding.groomName} & ${row.wedding.brideName}`
-          : "N/A",
-    },
-    {
       field: "plan",
       header: "Gói dịch vụ",
       width: 180,

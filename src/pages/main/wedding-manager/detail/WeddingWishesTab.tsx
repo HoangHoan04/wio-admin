@@ -30,7 +30,11 @@ function getAvatarColor(name: string) {
   return AVATAR_COLORS[idx];
 }
 
-export default function WeddingWishesTab({ weddingId }: { weddingId: string }) {
+export default function WeddingWishesTab({
+  invitationId,
+}: {
+  invitationId: string;
+}) {
   const [wishes, setWishes] = useState<WishItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "approved" | "pending">("all");
@@ -42,7 +46,7 @@ export default function WeddingWishesTab({ weddingId }: { weddingId: string }) {
       const res = (await rootApiService.post(API_ENDPOINTS.WISH.PAGINATION, {
         skip: 0,
         take: 1000,
-        where: { weddingId },
+        where: { invitationId },
       })) as any;
       setWishes(res.data || []);
     } catch (err: any) {
@@ -58,8 +62,8 @@ export default function WeddingWishesTab({ weddingId }: { weddingId: string }) {
   };
 
   useEffect(() => {
-    if (weddingId) fetchWishes();
-  }, [weddingId]);
+    if (invitationId) fetchWishes();
+  }, [invitationId]);
 
   const filteredWishes = useMemo(() => {
     const list =

@@ -27,14 +27,21 @@ export const API_ENDPOINTS = {
     BULK_IMAGES: "/api/upload/upload-file/upload-multi",
   },
 
-  WEDDING: {
-    PAGINATION: "/api/admin/wedding/pagination",
-    DELETE: "/api/admin/wedding/delete",
-    FIND_BY_ID: "/api/admin/wedding/find-by-id",
-    FORCE_RESET_SLUG: "/api/admin/wedding/force-reset-slug",
-    SLUG_HISTORY: "/api/admin/wedding/slug-history",
-    PUBLISH: "/api/admin/wedding/publish",
-    UNPUBLISH: "/api/admin/wedding/unpublish",
+  INVITATION: {
+    PAGINATION: "/api/admin/invitation/pagination",
+    DELETE: "/api/admin/invitation/delete",
+    FIND_BY_ID: "/api/admin/invitation/find-by-id",
+    FORCE_RESET_SLUG: "/api/admin/invitation/force-reset-slug",
+    SLUG_HISTORY: "/api/admin/invitation/slug-history",
+    PUBLISH: "/api/admin/invitation/publish",
+    UNPUBLISH: "/api/admin/invitation/unpublish",
+    STATS: "/api/admin/invitation/stats",
+  },
+
+  CARD_TYPE: {
+    PAGINATION: "/api/admin/card-type/pagination",
+    FIND_BY_ID: "/api/admin/card-type/find-by-id",
+    SYNC_ENUM: "/api/admin/card-type/sync-enum",
   },
 
   TEMPLATE: {
@@ -102,13 +109,26 @@ export const API_ENDPOINTS = {
     DELETE: "/api/admin/contact/delete",
   },
 
+  REVIEW: {
+    PAGINATION: "/api/admin/review/pagination",
+    FIND_BY_ID: "/api/admin/review/find-by-id",
+    CREATE: "/api/admin/review/create",
+    UPDATE: "/api/admin/review/update",
+    DELETE: "/api/admin/review/delete",
+    APPROVE: "/api/admin/review/approve",
+    REJECT: "/api/admin/review/reject",
+    PIN: "/api/admin/review/pin",
+    UNPIN: "/api/admin/review/unpin",
+  },
+
   TABLE: {
     PAGINATION: "/api/user/table/pagination",
     DELETE: "/api/user/table/delete",
   },
 
   ANALYTICS: {
-    SYSTEM_STATS: "/api/admin/analytics/system-stats",
+    OVERVIEW: "/api/admin/analytics/overview",
+    SYSTEM_STATS: "/api/admin/analytics/overview",
   },
 
   MUSIC_BACKGROUND: {
@@ -118,6 +138,14 @@ export const API_ENDPOINTS = {
     IMPORT_YOUTUBE: "/api/admin/music-background/import-youtube",
     UPDATE: "/api/admin/music-background/update",
     DELETE: "/api/admin/music-background/delete",
+  },
+
+  STOCK_ASSET: {
+    PAGINATION: "/api/admin/stock-asset/pagination",
+    FIND_BY_ID: "/api/admin/stock-asset/find-by-id",
+    CREATE: "/api/admin/stock-asset/create",
+    UPDATE: "/api/admin/stock-asset/update",
+    DELETE: "/api/admin/stock-asset/delete",
   },
 
   ENV_MANAGER: {

@@ -136,7 +136,7 @@ export default function TemplateManagerPage() {
 
   const handleCreate = () => {
     router.push(
-      ROUTES.MAIN.WEDDING_MANAGER.children.TEMPLATE_MANAGER.children
+      ROUTES.MAIN.INVITATION_MANAGER.children.TEMPLATE_MANAGER.children
         .ADD_TEMPLATE.path,
     );
   };
@@ -267,7 +267,7 @@ export default function TemplateManagerPage() {
       severity: "info",
       onClick: (record) =>
         router.push(
-          ROUTES.MAIN.WEDDING_MANAGER.children.TEMPLATE_MANAGER.children.DETAIL_TEMPLATE.path.replace(
+          ROUTES.MAIN.INVITATION_MANAGER.children.TEMPLATE_MANAGER.children.DETAIL_TEMPLATE.path.replace(
             ":id",
             record.id,
           ),
@@ -280,7 +280,7 @@ export default function TemplateManagerPage() {
       severity: "warning",
       onClick: (record) =>
         router.push(
-          ROUTES.MAIN.WEDDING_MANAGER.children.TEMPLATE_MANAGER.children.EDIT_TEMPLATE.path.replace(
+          ROUTES.MAIN.INVITATION_MANAGER.children.TEMPLATE_MANAGER.children.EDIT_TEMPLATE.path.replace(
             ":id",
             record.id,
           ),

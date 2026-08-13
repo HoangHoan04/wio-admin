@@ -41,18 +41,18 @@ export const useGuestDetail = (id: string | undefined | null) => {
   };
 };
 
-export const useGuestStats = (weddingId: string | undefined | null) => {
+export const useGuestStats = (invitationId: string | undefined | null) => {
   const { data, isLoading, refetch, error } = useQuery<
     SuccessResponse<GuestStatsDto>
   >({
-    queryKey: [API_ENDPOINTS.GUEST.STATS, weddingId],
+    queryKey: [API_ENDPOINTS.GUEST.STATS, invitationId],
     queryFn: async () => {
       const res = await rootApiService.post(API_ENDPOINTS.GUEST.STATS, {
-        id: weddingId,
+        id: invitationId,
       });
       return res as SuccessResponse<GuestStatsDto>;
     },
-    enabled: !!weddingId,
+    enabled: !!invitationId,
   });
 
   return {

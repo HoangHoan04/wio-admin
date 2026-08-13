@@ -1,19 +1,19 @@
 import type { PageResponse, PaginationDto, SuccessResponse } from "@/dto";
-import type { FilterWeddingDto, WeddingDto } from "@/dto/wedding.dto";
+import type { FilterInvitationDto, InvitationDto } from "@/dto/invitation.dto";
 import rootApiService from "@/services/api.service";
 import { API_ENDPOINTS } from "@/services/endpoint";
 import { useToast } from "@/store/toastStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const usePaginationWedding = (
-  params: PaginationDto<FilterWeddingDto>,
+export const usePaginationInvitation = (
+  params: PaginationDto<FilterInvitationDto>,
 ) => {
   const { data, isLoading, refetch, error } = useQuery<
-    PageResponse<WeddingDto>
+    PageResponse<InvitationDto>
   >({
-    queryKey: [API_ENDPOINTS.WEDDING.PAGINATION, params],
+    queryKey: [API_ENDPOINTS.INVITATION.PAGINATION, params],
     queryFn: () =>
-      rootApiService.post(API_ENDPOINTS.WEDDING.PAGINATION, params),
+      rootApiService.post(API_ENDPOINTS.INVITATION.PAGINATION, params),
   });
 
   return {
@@ -25,16 +25,19 @@ export const usePaginationWedding = (
   };
 };
 
-export const useWeddingDetail = (id: string | undefined | null) => {
+export const useInvitationDetail = (id: string | undefined | null) => {
   const { data, isLoading, refetch, error } = useQuery<
-    SuccessResponse<WeddingDto>
+    SuccessResponse<InvitationDto>
   >({
-    queryKey: [API_ENDPOINTS.WEDDING.FIND_BY_ID, id],
+    queryKey: [API_ENDPOINTS.INVITATION.FIND_BY_ID, id],
     queryFn: async () => {
-      const res = await rootApiService.post(API_ENDPOINTS.WEDDING.FIND_BY_ID, {
-        id,
-      });
-      return res as SuccessResponse<WeddingDto>;
+      const res = await rootApiService.post(
+        API_ENDPOINTS.INVITATION.FIND_BY_ID,
+        {
+          id,
+        },
+      );
+      return res as SuccessResponse<InvitationDto>;
     },
     enabled: !!id,
   });
@@ -53,18 +56,18 @@ export const useForceResetSlug = () => {
 
   const { mutateAsync: onForceResetSlug, isPending: isLoading } = useMutation({
     mutationFn: (data: {
-      weddingId: string;
+      invitationId: string;
       newSlug: string;
       reason: string;
     }) =>
       rootApiService.post(
-        API_ENDPOINTS.WEDDING.FORCE_RESET_SLUG,
+        API_ENDPOINTS.INVITATION.FORCE_RESET_SLUG,
         data,
       ) as Promise<SuccessResponse>,
 
     onSuccess: (res: SuccessResponse) => {
       queryClient.invalidateQueries({
-        queryKey: [API_ENDPOINTS.WEDDING.PAGINATION],
+        queryKey: [API_ENDPOINTS.INVITATION.PAGINATION],
       });
       showToast({
         type: "success",

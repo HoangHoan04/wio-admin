@@ -67,7 +67,7 @@ export default function LoginPage() {
           <div className="flex items-center gap-3">
             <Sparkles className="size-5.5" />
             <span className="font-['Syne'] text-xl font-extrabold tracking-[0.12em] uppercase">
-              Tiệm cưới tân thời
+              Wio Admin
             </span>
           </div>
 
@@ -75,7 +75,7 @@ export default function LoginPage() {
             <h2
               className={`font-['Syne'] text-4xl leading-tight font-bold md:text-5xl `}
             >
-              Hệ thống quản lý thiệp cưới Online.
+              Hệ thống quản lý thiệp online.
             </h2>
             <p className={`text-base leading-relaxed`}>Hệ thống quản lý</p>
           </div>

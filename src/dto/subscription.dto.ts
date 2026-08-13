@@ -1,11 +1,8 @@
 import type { BaseDto } from "./common";
 import type { UserDto } from "./customer.dto";
 import type { ServicePlanDto } from "./service-plan.dto";
-import type { WeddingDto } from "./wedding.dto";
 
 export interface SubscriptionDto extends BaseDto {
-  weddingId: string;
-  wedding?: WeddingDto;
   userId: string;
   user?: UserDto;
   planId: string;
@@ -20,7 +17,6 @@ export interface SubscriptionDto extends BaseDto {
 
 export interface FilterSubscriptionDto {
   userId?: string;
-  weddingId?: string;
   planId?: string;
   status?: string;
 }

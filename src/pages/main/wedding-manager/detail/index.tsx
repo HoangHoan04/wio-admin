@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { StatusTag } from "@/components/ui/status-tag";
-import { useWeddingDetail } from "@/hooks/wedding";
+import { useInvitationDetail } from "@/hooks/invitation";
 import {
   Armchair,
   ArrowLeft,
@@ -36,10 +36,10 @@ const STATUS_MAP: Record<
   EXPIRED: { label: "Hết hạn", severity: "danger" },
 };
 
-export default function DetailWeddingPage() {
+export default function DetailInvitationPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data, isLoading } = useWeddingDetail(id);
+  const { data, isLoading } = useInvitationDetail(id);
   const [showQr, setShowQr] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -58,7 +58,7 @@ export default function DetailWeddingPage() {
       <BaseView>
         <div className="flex h-full flex-col items-center justify-center gap-4">
           <p className="font-medium text-muted-foreground">
-            Không tìm thấy thông tin đám cưới
+            Không tìm thấy thông tin thiệp
           </p>
           <Button
             variant="outline"
@@ -87,58 +87,52 @@ export default function DetailWeddingPage() {
     }
   };
 
-  const milestones = [
-    data.engagementAt && {
-      label: "Lễ đính hôn",
-      at: data.engagementAt,
-      venue: data.engagementVenue,
-    },
-    data.ceremonyAt && {
-      label: "Lễ thành hôn",
-      at: data.ceremonyAt,
-      venue: data.ceremonyVenue,
-    },
-    data.receptionAt && {
-      label: "Tiệc cưới",
-      at: data.receptionAt,
-      venue: data.receptionVenue,
-    },
-  ].filter(Boolean) as { label: string; at: string; venue?: string }[];
+  const hosts = data.hosts || [];
+  const events = data.events || [];
+  const gifts = data.gifts || [];
+  const dressCodes: string[] = Array.isArray(data.extraContent?.dressCodes)
+    ? data.extraContent.dressCodes
+    : [];
+  const milestones = events
+    .filter((event: any) => event.startsAt)
+    .map((event: any) => ({
+      label: event.title || event.eventKey || "Sự kiện",
+      at: event.startsAt as string,
+      venue: event.venue,
+    }));
 
   const tabs = [
     {
       key: "1",
-      title: "Thông tin cặp đôi",
+      title: "Thông tin thiệp",
       icon: <Heart className="size-3.5" />,
       content: (
         <div className="flex flex-col gap-6 p-6">
           <Card className="overflow-hidden border-none ">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center gap-6 md:flex-row md:justify-center md:gap-10">
-                <PersonAvatar
-                  name={data.groomName}
-                  title={data.groomTitle}
-                  photoUrl={data.groomPhotoUrl}
-                  side="groom"
-                />
-                <div className="flex flex-col items-center gap-1 text-rose-400">
-                  <Heart className="size-8 fill-rose-400" />
-                  {data.hashtag && (
-                    <span className="text-xs font-medium text-rose-500">
-                      #{data.hashtag}
-                    </span>
-                  )}
-                </div>
-                <PersonAvatar
-                  name={data.brideName}
-                  title={data.brideTitle}
-                  photoUrl={data.bridePhotoUrl}
-                  side="bride"
-                />
+                {hosts.length > 0 ? (
+                  hosts.map((host: any, index: number) => (
+                    <PersonAvatar
+                      key={host.id || `${host.role}-${index}`}
+                      name={host.fullName}
+                      title={host.honorific || host.role}
+                      photoUrl={host.photoUrl}
+                      side={host.role}
+                    />
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">{data.title}</p>
+                )}
               </div>
 
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 <StatusTag severity={status.severity} value={status.label} />
+                {data.hashtag && (
+                  <span className="text-xs font-medium text-rose-500">
+                    #{data.hashtag}
+                  </span>
+                )}
                 {data.template?.themeCode && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 px-3 py-1 text-xs font-medium text-violet-700">
                     <Sparkles className="size-3" />
@@ -202,7 +196,7 @@ export default function DetailWeddingPage() {
               <CardContent>
                 <div className="relative flex flex-col gap-6 pl-6">
                   <div className="absolute left-1.75 top-1 bottom-1 w-px bg-border" />
-                  {milestones.map((m, i) => (
+                  {milestones.map((m: any, i: number) => (
                     <div key={i} className="relative">
                       <div className="absolute -left-6 top-1 size-3.5 rounded-full border-2 border-rose-400 bg-white" />
                       <p className="text-sm font-semibold text-foreground">
@@ -225,43 +219,37 @@ export default function DetailWeddingPage() {
           )}
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <VenueCard
-              title="Lễ thành hôn"
-              at={data.ceremonyAt}
-              venue={data.ceremonyVenue}
-              address={data.ceremonyAddress}
-              mapsUrl={data.ceremonyMapsUrl}
-            />
-            {data.receptionAt && (
+            {events.map((event: any, index: number) => (
               <VenueCard
-                title="Tiệc cưới"
-                at={data.receptionAt}
-                venue={data.receptionVenue}
-                address={data.receptionAddress}
-                mapsUrl={data.receptionMapsUrl}
+                key={event.id || `${event.eventKey}-${index}`}
+                title={event.title || event.eventKey || "Sự kiện"}
+                at={event.startsAt}
+                venue={event.venue}
+                address={event.address}
+                mapsUrl={event.mapsUrl}
               />
-            )}
+            ))}
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <FamilyCard
-              label="Nhà trai"
-              name={data.groomName}
-              address={data.groomAddress}
-              father={data.groomFatherName}
-              mother={data.groomMotherName}
-            />
-            <FamilyCard
-              label="Nhà gái"
-              name={data.brideName}
-              address={data.brideAddress}
-              father={data.brideFatherName}
-              mother={data.brideMotherName}
-            />
-          </div>
+          {hosts.some((host: any) => host.family) && (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {hosts.map((host: any, index: number) =>
+                host.family ? (
+                  <FamilyCard
+                    key={host.id || `family-${index}`}
+                    label={host.role || host.fullName}
+                    name={host.fullName}
+                    address={host.family.address}
+                    father={host.family.fatherName || host.family.father}
+                    mother={host.family.motherName || host.family.mother}
+                  />
+                ) : null,
+              )}
+            </div>
+          )}
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {data.dressCodes && data.dressCodes.length > 0 && (
+            {dressCodes.length > 0 && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -271,7 +259,7 @@ export default function DetailWeddingPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-3">
-                    {data.dressCodes.map((color: string) => (
+                    {dressCodes.map((color: string) => (
                       <div
                         key={color}
                         className="flex flex-col items-center gap-1.5"
@@ -290,7 +278,7 @@ export default function DetailWeddingPage() {
               </Card>
             )}
 
-            {data.musicUrl && (
+            {data.music?.url && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -299,36 +287,28 @@ export default function DetailWeddingPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
-                  <InfoItem label="Tên nhạc" value={data.musicName || "N/A"} />
+                  <InfoItem label="Tên nhạc" value={data.music.name || "N/A"} />
                   <InfoItem
                     label="Tự động phát"
-                    value={data.musicAutoplay ? "Có" : "Không"}
+                    value={data.music.autoplay ? "Có" : "Không"}
                   />
                 </CardContent>
               </Card>
             )}
           </div>
 
-          {(data.groomBankAccount || data.brideBankAccount) && (
+          {gifts.length > 0 && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {data.groomBankAccount && (
+              {gifts.map((gift: any, index: number) => (
                 <BankCard
-                  title="Tài khoản chú rể"
-                  account={data.groomBankAccount}
-                  bankName={data.groomBankName}
-                  owner={data.groomBankOwner}
-                  qrUrl={data.groomQrUrl}
+                  key={gift.id || `gift-${index}`}
+                  title={gift.label || "Tài khoản mừng"}
+                  account={gift.accountNumber || "N/A"}
+                  bankName={gift.bankName}
+                  owner={gift.accountOwner}
+                  qrUrl={gift.qrUrl}
                 />
-              )}
-              {data.brideBankAccount && (
-                <BankCard
-                  title="Tài khoản cô dâu"
-                  account={data.brideBankAccount}
-                  bankName={data.brideBankName}
-                  owner={data.brideBankOwner}
-                  qrUrl={data.brideQrUrl}
-                />
-              )}
+              ))}
             </div>
           )}
 
@@ -359,13 +339,13 @@ export default function DetailWeddingPage() {
       key: "2",
       title: "Bàn tiệc",
       icon: <Armchair className="size-3.5" />,
-      content: <WeddingTablesTab weddingId={id || ""} />,
+      content: <WeddingTablesTab invitationId={id || ""} />,
     },
     {
       key: "3",
       title: "Lời chúc",
       icon: <MessageCircle className="size-3.5" />,
-      content: <WeddingWishesTab weddingId={id || ""} />,
+      content: <WeddingWishesTab invitationId={id || ""} />,
     },
     {
       key: "4",
@@ -375,7 +355,7 @@ export default function DetailWeddingPage() {
         <ActionLog
           entityName="CustomerEntity"
           entityId={data.id}
-          title={`Lịch sử thao tác của thiệp cưới: ${data.groomName} & ${data.brideName}`}
+          title={`Lịch sử thao tác của thiệp: ${data.title}`}
         />
       ),
     },
@@ -393,9 +373,10 @@ function PersonAvatar({
   name?: string;
   title?: string;
   photoUrl?: string;
-  side: "groom" | "bride";
+  side?: string;
 }) {
-  const ringColor = side === "groom" ? "ring-sky-300" : "ring-rose-300";
+  const ringColor =
+    side === "groom" || side === "GROOM" ? "ring-sky-300" : "ring-rose-300";
   return (
     <div className="flex flex-col items-center gap-2">
       <div

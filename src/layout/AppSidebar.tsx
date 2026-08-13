@@ -428,7 +428,7 @@ export const AppSidebar: React.FC = () => {
           >
             <div className="flex flex-col">
               <span className="text-[clamp(1.3rem,3vw,1.8rem)] font-bold whitespace-nowrap logo-shimmer">
-                Tiệm cưới tân thời
+                Wio
               </span>
             </div>
           </div>

@@ -1,57 +1,64 @@
 import { ROUTES } from "@/common/constants";
 import AppLayout from "@/layout/AppLayout";
 import LoginPage from "@/pages/auth/LoginPage";
-import CustomerManagerPage from "@/pages/main/customer-manager";
-import DetailCustomerPage from "@/pages/main/customer-manager/detail";
-import GuestManagerPage from "@/pages/main/guest-manager";
-import HomePage from "@/pages/main/home";
-import MusicBackgroundManagerPage from "@/pages/main/music-background-manager";
-import PhotoWallManagerPage from "@/pages/main/photo-wall-manager";
-import TemplateManagerPage from "@/pages/main/template-manager";
-import AddTemplatePage from "@/pages/main/template-manager/add";
-import DetailTemplatePage from "@/pages/main/template-manager/detail";
-import EditTemplatePage from "@/pages/main/template-manager/edit";
-import WeddingListPage from "@/pages/main/wedding-manager";
-import DetailWeddingPage from "@/pages/main/wedding-manager/detail";
-import WishManagerPage from "@/pages/main/wish-manager";
-import PlanManagerPage from "@/pages/main/plan-manager";
-import AddPlanPage from "@/pages/main/plan-manager/add";
-import DetailPlanPage from "@/pages/main/plan-manager/detail";
-import EditPlanPage from "@/pages/main/plan-manager/edit";
-import SubscriptionListPage from "@/pages/main/subscription-manager";
-import DetailSubscriptionPage from "@/pages/main/subscription-manager/detail";
-import TransactionManagerPage from "@/pages/main/transaction-manager";
-import DetailTransactionPage from "@/pages/main/transaction-manager/detail";
-import RefundRequestPage from "@/pages/main/transaction-manager/refund-request";
-import PromotionManagerPage from "@/pages/main/promotion-manager";
-import AddPromotionPage from "@/pages/main/promotion-manager/add";
-import DetailPromotionPage from "@/pages/main/promotion-manager/detail";
-import EditPromotionPage from "@/pages/main/promotion-manager/edit";
-import StaffManagerPage from "@/pages/main/staff-manager";
-import AddStaffPage from "@/pages/main/staff-manager/add";
-import DetailStaffPage from "@/pages/main/staff-manager/detail";
-import RolePermissionPage from "@/pages/main/staff-manager/role-permission";
-import SupportTicketPage from "@/pages/main/support-ticket";
-import DetailTicketPage from "@/pages/main/support-ticket/detail";
-import MarketingCmsPage from "@/pages/main/marketing-cms";
-import BannerManagerPage from "@/pages/main/marketing-cms/banner";
-import BlogManagerPage from "@/pages/main/marketing-cms/blog";
-import FaqManagerPage from "@/pages/main/marketing-cms/faq";
-import TestimonialManagerPage from "@/pages/main/marketing-cms/testimonial";
 import AnalyticsPage from "@/pages/main/analytics-manager";
 import ConversionReportPage from "@/pages/main/analytics-manager/conversion";
 import RevenueReportPage from "@/pages/main/analytics-manager/revenue";
 import TemplateReportPage from "@/pages/main/analytics-manager/template";
 import WeddingReportPage from "@/pages/main/analytics-manager/wedding";
+import CardTypeManagerPage from "@/pages/main/card-type-manager";
+import CustomerManagerPage from "@/pages/main/customer-manager";
+import DetailCustomerPage from "@/pages/main/customer-manager/detail";
+import GuestManagerPage from "@/pages/main/guest-manager";
+import HomePage from "@/pages/main/home";
+import MarketingCmsPage from "@/pages/main/marketing-cms";
+import BannerManagerPage from "@/pages/main/marketing-cms/banner";
+import BlogManagerPage from "@/pages/main/marketing-cms/blog";
+import FaqManagerPage from "@/pages/main/marketing-cms/faq";
+import TestimonialManagerPage from "@/pages/main/marketing-cms/testimonial";
+import MusicBackgroundManagerPage from "@/pages/main/music-background-manager";
+import PhotoWallManagerPage from "@/pages/main/photo-wall-manager";
+import PlanManagerPage from "@/pages/main/plan-manager";
+import AddPlanPage from "@/pages/main/plan-manager/add";
+import DetailPlanPage from "@/pages/main/plan-manager/detail";
+import EditPlanPage from "@/pages/main/plan-manager/edit";
+import PromotionManagerPage from "@/pages/main/promotion-manager";
+import AddPromotionPage from "@/pages/main/promotion-manager/add";
+import DetailPromotionPage from "@/pages/main/promotion-manager/detail";
+import EditPromotionPage from "@/pages/main/promotion-manager/edit";
 import SettingsPage from "@/pages/main/setting-system";
 import AuditLogPage from "@/pages/main/setting-system/audit-log";
 import BankConfigPage from "@/pages/main/setting-system/bank-config";
 import DomainConfigPage from "@/pages/main/setting-system/domain-config";
 import NotificationConfigPage from "@/pages/main/setting-system/notification-config";
 import PaymentGatewayPage from "@/pages/main/setting-system/payment-gateway";
+import StaffManagerPage from "@/pages/main/staff-manager";
+import AddStaffPage from "@/pages/main/staff-manager/add";
+import DetailStaffPage from "@/pages/main/staff-manager/detail";
+import RolePermissionPage from "@/pages/main/staff-manager/role-permission";
+import StockAssetManagerPage from "@/pages/main/stock-asset-manager";
+import SubscriptionListPage from "@/pages/main/subscription-manager";
+import DetailSubscriptionPage from "@/pages/main/subscription-manager/detail";
+import SupportTicketPage from "@/pages/main/support-ticket";
+import DetailTicketPage from "@/pages/main/support-ticket/detail";
+import TemplateManagerPage from "@/pages/main/template-manager";
+import AddTemplatePage from "@/pages/main/template-manager/add";
+import DetailTemplatePage from "@/pages/main/template-manager/detail";
+import EditTemplatePage from "@/pages/main/template-manager/edit";
+import TransactionManagerPage from "@/pages/main/transaction-manager";
+import DetailTransactionPage from "@/pages/main/transaction-manager/detail";
+import RefundRequestPage from "@/pages/main/transaction-manager/refund-request";
+import WeddingListPage from "@/pages/main/wedding-manager";
+import DetailInvitationPage from "@/pages/main/wedding-manager/detail";
+import WishManagerPage from "@/pages/main/wish-manager";
 import NotFound from "@/pages/other/NotFound";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
+
+function RedirectWeddingDetail() {
+  const { id } = useParams();
+  return <Navigate to={`/invitation/detail/${id}`} replace />;
+}
 
 export default function AppRoutes() {
   return (
@@ -73,64 +80,94 @@ export default function AppRoutes() {
             />
 
             <Route
-              path={ROUTES.MAIN.WEDDING_MANAGER.path}
-              element={<WeddingListPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.WEDDING_MANAGER.children.WEDDING_LIST.path}
+              path={ROUTES.MAIN.INVITATION_MANAGER.path}
               element={<WeddingListPage />}
             />
             <Route
               path={
-                ROUTES.MAIN.WEDDING_MANAGER.children.WEDDING_LIST.children
-                  .DETAIL_WEDDING.path
+                ROUTES.MAIN.INVITATION_MANAGER.children.INVITATION_LIST.path
               }
-              element={<DetailWeddingPage />}
+              element={<WeddingListPage />}
             />
             <Route
-              path={ROUTES.MAIN.WEDDING_MANAGER.children.TEMPLATE_MANAGER.path}
+              path={
+                ROUTES.MAIN.INVITATION_MANAGER.children.INVITATION_LIST.children
+                  .DETAIL_INVITATION.path
+              }
+              element={<DetailInvitationPage />}
+            />
+            <Route
+              path="/wedding-manager"
+              element={<Navigate to="/invitation-manager" replace />}
+            />
+            <Route
+              path="/wedding-list"
+              element={<Navigate to="/invitation-list" replace />}
+            />
+            <Route
+              path="/wedding/detail/:id"
+              element={<RedirectWeddingDetail />}
+            />
+            <Route
+              path={
+                ROUTES.MAIN.INVITATION_MANAGER.children.CARD_TYPE_MANAGER.path
+              }
+              element={<CardTypeManagerPage />}
+            />
+            <Route
+              path={
+                ROUTES.MAIN.INVITATION_MANAGER.children.TEMPLATE_MANAGER.path
+              }
               element={<TemplateManagerPage />}
             />
             <Route
               path={
-                ROUTES.MAIN.WEDDING_MANAGER.children.TEMPLATE_MANAGER.children
-                  .ADD_TEMPLATE.path
+                ROUTES.MAIN.INVITATION_MANAGER.children.TEMPLATE_MANAGER
+                  .children.ADD_TEMPLATE.path
               }
               element={<AddTemplatePage />}
             />
             <Route
               path={
-                ROUTES.MAIN.WEDDING_MANAGER.children.TEMPLATE_MANAGER.children
-                  .EDIT_TEMPLATE.path
+                ROUTES.MAIN.INVITATION_MANAGER.children.TEMPLATE_MANAGER
+                  .children.EDIT_TEMPLATE.path
               }
               element={<EditTemplatePage />}
             />
             <Route
               path={
-                ROUTES.MAIN.WEDDING_MANAGER.children.TEMPLATE_MANAGER.children
-                  .DETAIL_TEMPLATE.path
+                ROUTES.MAIN.INVITATION_MANAGER.children.TEMPLATE_MANAGER
+                  .children.DETAIL_TEMPLATE.path
               }
               element={<DetailTemplatePage />}
             />
             <Route
               path={
-                ROUTES.MAIN.WEDDING_MANAGER.children.PHOTO_WALL_MANAGER.path
+                ROUTES.MAIN.INVITATION_MANAGER.children.PHOTO_WALL_MANAGER.path
               }
               element={<PhotoWallManagerPage />}
             />
             <Route
               path={
-                ROUTES.MAIN.WEDDING_MANAGER.children.MUSIC_BACKGROUND_MANAGER
+                ROUTES.MAIN.INVITATION_MANAGER.children.MUSIC_BACKGROUND_MANAGER
                   .path
               }
               element={<MusicBackgroundManagerPage />}
             />
             <Route
-              path={ROUTES.MAIN.WEDDING_MANAGER.children.GUEST_MANAGER.path}
+              path={
+                ROUTES.MAIN.INVITATION_MANAGER.children.STOCK_ASSET_MANAGER.path
+              }
+              element={<StockAssetManagerPage />}
+            />
+            <Route
+              path={ROUTES.MAIN.INVITATION_MANAGER.children.GUEST_MANAGER.path}
               element={<GuestManagerPage />}
             />
             <Route
-              path={ROUTES.MAIN.WEDDING_MANAGER.children.MODERATION_QUEUE.path}
+              path={
+                ROUTES.MAIN.INVITATION_MANAGER.children.MODERATION_QUEUE.path
+              }
               element={<WishManagerPage />}
             />
 

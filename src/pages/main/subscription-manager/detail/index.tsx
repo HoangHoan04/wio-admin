@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { StatusTag } from "@/components/ui/status-tag";
 import { useSubscriptionDetail } from "@/hooks/subscription";
-import { ArrowLeft, CreditCard, Heart, History, User } from "lucide-react";
+import { ArrowLeft, CreditCard, History, User } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function DetailSubscriptionPage() {
@@ -130,8 +130,8 @@ export default function DetailSubscriptionPage() {
       ),
     },
     {
-      key: "customer-wedding-info",
-      title: "Khách hàng & Đám cưới",
+      key: "customer-info",
+      title: "Khách hàng",
       icon: <User className="size-3.5" />,
       content: (
         <div className="flex flex-col gap-6 p-6">
@@ -156,43 +156,6 @@ export default function DetailSubscriptionPage() {
               ) : (
                 <p className="text-sm text-muted-foreground">
                   Mã người dùng: {data.userId}
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center gap-2">
-              <Heart className="size-5 text-pink-500" />
-              <CardTitle>Thông tin Đám cưới</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {data.wedding ? (
-                <div className="grid grid-cols-1 gap-x-6 gap-y-6 md:grid-cols-3">
-                  <InfoItem
-                    label="Tên chú rể"
-                    value={data.wedding.groomName || "N/A"}
-                  />
-                  <InfoItem
-                    label="Tên cô dâu"
-                    value={data.wedding.brideName || "N/A"}
-                  />
-                  <InfoItem
-                    label="Đường dẫn slug"
-                    value={data.wedding.slug || "N/A"}
-                  />
-                  <InfoItem
-                    label="Ngày cưới (Lễ thành hôn)"
-                    value={
-                      data.wedding.ceremonyAt
-                        ? formatDateTime(data.wedding.ceremonyAt)
-                        : "N/A"
-                    }
-                  />
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  Mã đám cưới: {data.weddingId}
                 </p>
               )}
             </CardContent>

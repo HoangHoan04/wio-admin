@@ -160,9 +160,41 @@ export const enumData = {
       name: "Hoàng gia - Đỏ nhung",
       slug: "hoang-gia-do-nhung",
     },
+    BIRTHDAY_CORAL: {
+      code: "BIRTHDAY_CORAL",
+      name: "Sinh nhật - Coral",
+      slug: "sinh-nhat-coral",
+    },
+    CUSTOM_DESIGN: {
+      code: "CUSTOM_DESIGN",
+      name: "Tự thiết kế",
+      slug: "tu-thiet-ke",
+    },
   },
 
-  WEDDING_STATUS: {
+  CARD_TYPE: {
+    WEDDING: { code: "WEDDING", name: "Thiệp cưới", color: "#8B2942" },
+    BIRTHDAY: { code: "BIRTHDAY", name: "Thiệp sinh nhật", color: "#E25C3A" },
+    GRADUATION: {
+      code: "GRADUATION",
+      name: "Thiệp tốt nghiệp",
+      color: "#1E3A5F",
+    },
+    BABY: { code: "BABY", name: "Thôi nôi / đầy tháng", color: "#D4A0A7" },
+    HOUSEWARMING: {
+      code: "HOUSEWARMING",
+      name: "Thiệp tân gia",
+      color: "#C45C26",
+    },
+    ANNIVERSARY: {
+      code: "ANNIVERSARY",
+      name: "Thiệp kỷ niệm",
+      color: "#B8860B",
+    },
+    CUSTOM: { code: "CUSTOM", name: "Sự kiện khác", color: "#C45C26" },
+  },
+
+  INVITATION_STATUS: {
     DRAFT: { code: "DRAFT", name: "Nháp", color: "gray" },
     PUBLISHED: { code: "PUBLISHED", name: "Đã xuất bản", color: "green" },
     ARCHIVED: { code: "ARCHIVED", name: "Đã lưu trữ", color: "blue" },
@@ -174,10 +206,16 @@ export const enumData = {
     SPOTIFY: { code: "SPOTIFY", name: "Spotify" },
   },
 
-  GUEST_SIDE: {
+  GUEST_GROUP: {
     GROOM: { code: "GROOM", name: "Bên chú rể" },
     BRIDE: { code: "BRIDE", name: "Bên cô dâu" },
     BOTH: { code: "BOTH", name: "Cả hai bên" },
+    FAMILY: { code: "FAMILY", name: "Gia đình" },
+    FRIENDS: { code: "FRIENDS", name: "Bạn bè" },
+    WORK: { code: "WORK", name: "Đồng nghiệp" },
+    TEACHERS: { code: "TEACHERS", name: "Thầy cô" },
+    PATERNAL: { code: "PATERNAL", name: "Bên nội" },
+    MATERNAL: { code: "MATERNAL", name: "Bên ngoại" },
   },
 
   RSVP_STATUS: {
@@ -217,5 +255,24 @@ export const enumData = {
     PROCESSING: { code: "PROCESSING", name: "Đang xử lý", color: "warning" },
     COMPLETED: { code: "COMPLETED", name: "Hoàn tất", color: "success" },
     FAILED: { code: "FAILED", name: "Thất bại", color: "danger" },
+  },
+
+  STOCK_ASSET_KIND: {
+    STICKER: { code: "sticker", name: "Sticker" },
+    EMOJI: { code: "emoji", name: "Emoji" },
+    ORNAMENT: { code: "ornament", name: "Họa tiết" },
+  },
+
+  STOCK_ASSET_CATEGORY: {
+    HEARTS: { code: "hearts", name: "Trái tim" },
+    FLOWERS: { code: "flowers", name: "Hoa" },
+    PARTY: { code: "party", name: "Tiệc" },
+    WEDDING: { code: "wedding", name: "Cưới" },
+    GRADUATION: { code: "graduation", name: "Tốt nghiệp" },
+    BIRTHDAY: { code: "birthday", name: "Sinh nhật" },
+    BABY: { code: "baby", name: "Baby" },
+    NATURE: { code: "nature", name: "Thiên nhiên" },
+    STARS: { code: "stars", name: "Sao & lấp lánh" },
+    ORNAMENT: { code: "ornament", name: "Họa tiết" },
   },
 };

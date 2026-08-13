@@ -1,10 +1,10 @@
 import {
   BarChart3,
   CreditCard,
-  Heart,
   Home,
   Image as ImageIcon,
   LifeBuoy,
+  Mail,
   Megaphone,
   Music,
   Package,
@@ -50,15 +50,15 @@ export const ROUTES = {
       },
     },
 
-    WEDDING_MANAGER: {
-      key: "WEDDING_MANAGER",
-      label: "Quản lý đám cưới",
-      icon: Heart,
-      path: "/wedding-manager",
+    INVITATION_MANAGER: {
+      key: "INVITATION_MANAGER",
+      label: "Quản lý thiệp",
+      icon: Mail,
+      path: "/invitation-manager",
       children: {
         TEMPLATE_MANAGER: {
           key: "TEMPLATE_MANAGER",
-          label: "Template thiệp cưới",
+          label: "Mẫu thiệp",
           path: "/template-manager",
           icon: ImageIcon,
           children: {
@@ -82,19 +82,25 @@ export const ROUTES = {
             },
           },
         },
-        WEDDING_LIST: {
-          key: "WEDDING_LIST",
-          label: "Danh sách cặp đôi",
-          path: "/wedding-list",
-          icon: Users,
+        INVITATION_LIST: {
+          key: "INVITATION_LIST",
+          label: "Danh sách thiệp",
+          path: "/invitation-list",
+          icon: Mail,
           children: {
-            DETAIL_WEDDING: {
-              key: "DETAIL_WEDDING",
-              label: "Chi tiết cặp đôi",
-              path: "/wedding/detail/:id",
+            DETAIL_INVITATION: {
+              key: "DETAIL_INVITATION",
+              label: "Chi tiết thiệp",
+              path: "/invitation/detail/:id",
               isShow: false,
             },
           },
+        },
+        CARD_TYPE_MANAGER: {
+          key: "CARD_TYPE_MANAGER",
+          label: "Loại thiệp",
+          icon: Mail,
+          path: "/card-type-manager",
         },
         PHOTO_WALL_MANAGER: {
           key: "PHOTO_WALL_MANAGER",
@@ -107,6 +113,12 @@ export const ROUTES = {
           label: "Âm nhạc nền",
           icon: Music,
           path: "/music-background-manager",
+        },
+        STOCK_ASSET_MANAGER: {
+          key: "STOCK_ASSET_MANAGER",
+          label: "Kho sticker",
+          icon: ImageIcon,
+          path: "/stock-asset-manager",
         },
         GUEST_MANAGER: {
           key: "GUEST_MANAGER",
@@ -309,7 +321,7 @@ export const ROUTES = {
         },
         WEDDING_REPORT: {
           key: "WEDDING_REPORT",
-          label: "Báo cáo đám cưới mới",
+          label: "Báo cáo thiệp mới",
           path: "/analytics/wedding",
           isShow: false,
         },
@@ -343,6 +355,7 @@ export const ROUTES = {
           key: "PAYMENT_GATEWAY",
           label: "Cấu hình cổng thanh toán",
           path: "/settings/payment-gateway",
+          isShow: false,
         },
         NOTIFICATION_CONFIG: {
           key: "NOTIFICATION_CONFIG",
@@ -353,6 +366,7 @@ export const ROUTES = {
           key: "DOMAIN_CONFIG",
           label: "Cấu hình domain riêng",
           path: "/settings/domain-config",
+          isShow: false,
         },
         BANK_CONFIG: {
           key: "BANK_CONFIG",
