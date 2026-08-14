@@ -66,11 +66,11 @@ function AddPlanPage({
         min: 0,
       },
       {
-        name: "maxTemplates",
-        label: "Số mẫu thiệp tối đa",
+        name: "maxInvitations",
+        label: "Số lượng thiệp tối đa",
         type: "number",
         required: true,
-        placeholder: "Nhập số mẫu thiệp",
+        placeholder: "Nhập số thiệp tối đa",
         min: 1,
       },
       {
@@ -103,7 +103,7 @@ function AddPlanPage({
       durationDays: Number(values.durationDays || 30),
       maxGuests: Number(values.maxGuests || 0),
       maxPhotos: Number(values.maxPhotos || 0),
-      maxTemplates: Number(values.maxTemplates || 1),
+      maxInvitations: Number(values.maxInvitations || values.maxTemplates || 1),
       hasAi: !!values.hasAi,
       hasAnalytics: !!values.hasAnalytics,
       hasCustomSlug: !!values.hasCustomSlug,

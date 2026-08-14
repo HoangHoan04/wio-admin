@@ -101,7 +101,7 @@ export const defaultSettings: DashboardSettings = {
   fontFamily: "Inter",
   fontWeight: "normal",
   titleSize: 20,
-  bodySize: 13,
+  bodySize: 14,
   boldText: false,
   italicText: false,
   uppercaseText: false,
@@ -157,6 +157,129 @@ interface LegacyPersistedState {
   activeTabId?: string;
 }
 
+function hexToRgba(hex: string, alpha: number): string {
+  const raw = (hex || "").replace("#", "").trim();
+  if (raw.length !== 6) return `rgba(59, 130, 246, ${alpha})`;
+  const r = parseInt(raw.slice(0, 2), 16);
+  const g = parseInt(raw.slice(2, 4), 16);
+  const b = parseInt(raw.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function shadeColor(hex: string, percent: number): string {
+  const raw = (hex || "").replace("#", "").trim();
+  if (raw.length !== 6) return hex;
+  const num = parseInt(raw, 16);
+  const clamp = (v: number) => Math.max(0, Math.min(255, v));
+  const r = clamp((num >> 16) + Math.round(255 * (percent / 100)));
+  const g = clamp(((num >> 8) & 0xff) + Math.round(255 * (percent / 100)));
+  const b = clamp((num & 0xff) + Math.round(255 * (percent / 100)));
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}
+
+export function applyTheme(s: DashboardSettings): void {
+  if (typeof window === "undefined" || !document.documentElement) return;
+  const root = document.documentElement;
+  const isDark =
+    s.theme === "dark" ||
+    (s.theme === "system" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  root.classList.toggle("dark", isDark);
+  root.setAttribute("data-layout", s.layoutMode || "modern");
+  root.setAttribute("data-sidebar-position", s.sidebarPosition || "left");
+  root.setAttribute("data-config-position", s.configPosition || "right");
+
+  if (s.grayscale) {
+    root.style.setProperty("filter", "grayscale(100%)");
+  } else if (s.colorBlind) {
+    root.style.setProperty(
+      "filter",
+      "contrast(120%) saturate(130%) sepia(20%)",
+    );
+  } else {
+    root.style.removeProperty("filter");
+  }
+
+  root.style.setProperty("--primary", s.primaryColor);
+  root.style.setProperty("--color-primary", s.primaryColor);
+  root.style.setProperty("--primary-hover", shadeColor(s.primaryColor, -12));
+  root.style.setProperty("--primary-active", shadeColor(s.primaryColor, -22));
+  root.style.setProperty(
+    "--primary-muted",
+    hexToRgba(s.primaryColor, isDark ? 0.18 : 0.12),
+  );
+  root.style.setProperty("--ring", hexToRgba(s.primaryColor, 0.4));
+  root.style.setProperty(
+    "--shadow-primary",
+    `0 8px 20px ${hexToRgba(s.primaryColor, 0.28)}`,
+  );
+
+  root.style.setProperty("--radius", `${s.borderRadius}px`);
+  root.style.setProperty("--radius-sm", `${s.borderRadius * 0.6}px`);
+  root.style.setProperty("--radius-md", `${s.borderRadius * 0.8}px`);
+  root.style.setProperty("--radius-lg", `${s.borderRadius}px`);
+  root.style.setProperty("--radius-xl", `${s.borderRadius * 1.4}px`);
+  root.style.setProperty("--radius-2xl", `${s.borderRadius * 1.8}px`);
+  root.style.setProperty("--radius-3xl", `${s.borderRadius * 2.2}px`);
+  root.style.setProperty("--radius-4xl", `${s.borderRadius * 2.6}px`);
+
+  root.style.setProperty("--sidebar-width", `${s.sidebarWidth}px`);
+  root.style.setProperty(
+    "--sidebar-collapsed-width",
+    `${s.sidebarCollapsedWidth}px`,
+  );
+  root.style.setProperty("--navbar-height", "64px");
+  root.style.setProperty("--footer-height", "56px");
+
+  if (s.fontFamily) {
+    root.style.setProperty("--font-family", `'${s.fontFamily}', sans-serif`);
+  }
+  root.style.setProperty("--title-size", `${s.titleSize}px`);
+  root.style.setProperty("--body-size", `${s.bodySize}px`);
+  root.style.removeProperty("font-size");
+
+  const body = document.body;
+  if (body) {
+    body.style.fontSize = `${s.bodySize}px`;
+    if (s.fontFamily) body.style.fontFamily = `'${s.fontFamily}', sans-serif`;
+  }
+
+  const w =
+    s.fontWeight === "light"
+      ? "300"
+      : s.fontWeight === "normal"
+        ? "400"
+        : s.fontWeight === "medium"
+          ? "500"
+          : "600";
+  const fw = s.boldText ? "700" : w;
+  root.style.fontWeight = fw;
+  if (body) body.style.fontWeight = fw;
+
+  if (s.italicText) {
+    root.style.fontStyle = "italic";
+    if (body) body.style.fontStyle = "italic";
+  } else {
+    root.style.fontStyle = "normal";
+    if (body) body.style.fontStyle = "normal";
+  }
+
+  const navbarColor = isDark ? s.navbarColorDark : s.navbarColorLight;
+  const sidebarColor = isDark ? s.sidebarColorDark : s.sidebarColorLight;
+  root.style.setProperty("--navbar-bg", navbarColor);
+  root.style.setProperty("--sidebar-bg", sidebarColor);
+  root.setAttribute("data-navbar-color-type", s.navbarColorType || "solid");
+  root.setAttribute("data-sidebar-color-type", s.sidebarColorType || "solid");
+  root.classList.toggle("s-uppercase", !!s.uppercaseText);
+  root.classList.toggle("s-show-footer", !!s.showFooter);
+  root.classList.toggle("s-fixed-footer", !!s.fixedFooter);
+  root.classList.toggle("s-show-sidebar", !!s.showSidebar);
+  root.classList.toggle("s-collapse-sidebar", !!s.collapseSidebar);
+  root.classList.toggle("s-show-tabs", !!s.showTabs);
+  root.classList.toggle("s-watermark", !!s.watermark);
+}
+
 export const useDashboardStore = create<DashboardState>()(
   persist<DashboardState, [], [], PersistedDashboardState>(
     (set) => ({
@@ -173,15 +296,25 @@ export const useDashboardStore = create<DashboardState>()(
       isMaximized: false,
 
       updateSettings: (newSettings) =>
-        set((state) => ({
-          settings: { ...state.settings, ...newSettings },
-        })),
+        set((state) => {
+          const nextSettings = { ...state.settings, ...newSettings };
+          applyTheme(nextSettings);
+          return { settings: nextSettings };
+        }),
 
       setConfigOpen: (isOpen) => set({ isConfigOpen: isOpen }),
 
-      setMaximized: (isMax) => set({ isMaximized: isMax }),
+      setMaximized: (isMax) => {
+        if (typeof document !== "undefined") {
+          document.documentElement.classList.toggle("s-maximized", isMax);
+        }
+        set({ isMaximized: isMax });
+      },
 
-      resetSettings: () => set({ settings: defaultSettings }),
+      resetSettings: () => {
+        applyTheme(defaultSettings);
+        set({ settings: defaultSettings });
+      },
 
       addTab: (tab) =>
         set((state) => {
@@ -275,7 +408,26 @@ export const useDashboardStore = create<DashboardState>()(
           ? state.activeTabId
           : "dashboard",
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.settings) {
+          applyTheme(state.settings);
+        }
+      },
     },
   ),
 );
+
+if (typeof window !== "undefined") {
+  const initialSettings = useDashboardStore.getState().settings;
+  applyTheme(initialSettings);
+
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  mediaQuery.addEventListener("change", () => {
+    const current = useDashboardStore.getState().settings;
+    if (current.theme === "system") {
+      applyTheme(current);
+    }
+  });
+}
+
 export default useDashboardStore;

@@ -189,6 +189,7 @@ export const ROUTES = {
       label: "Giao dịch & Thanh toán",
       icon: Receipt,
       path: "/transaction-manager",
+      isShow: false,
       children: {
         DETAIL_TRANSACTION: {
           key: "DETAIL_TRANSACTION",
@@ -237,6 +238,7 @@ export const ROUTES = {
       label: "Nhân sự & Phân quyền",
       icon: ShieldCheck,
       path: "/staff-manager",
+      isShow: false,
       children: {
         ADD_STAFF: {
           key: "ADD_STAFF",
@@ -279,6 +281,7 @@ export const ROUTES = {
       label: "Nội dung Marketing",
       icon: Megaphone,
       path: "/marketing-cms",
+      isShow: false,
       children: {
         BANNER_MANAGER: {
           key: "BANNER_MANAGER",

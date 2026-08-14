@@ -1,20 +1,28 @@
 import { ROUTES } from "@/common/constants";
 import { enumData } from "@/common/enums";
+import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
+import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
 import type { FilterField } from "@/components/layout/FilterCustom";
 import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
 import type { FilterInvitationDto, InvitationDto, PaginationDto } from "@/dto";
-import { usePaginationInvitation } from "@/hooks/invitation";
+import {
+  useDeleteInvitation,
+  usePaginationInvitation,
+  usePublishInvitation,
+  useUnpublishInvitation,
+} from "@/hooks/invitation";
 import { useRouter } from "@/routes/hooks";
-import { Eye } from "lucide-react";
-import { useState } from "react";
+import { Eye, Globe, GlobeLock, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
 
 const initFilter: FilterInvitationDto = {};
 
 export default function InvitationListPage() {
   const router = useRouter();
+  const confirmRef = useRef<ActionConfirmRef>(null);
   const [filter, setFilter] = useState<FilterInvitationDto>(initFilter);
   const [pagination, setPagination] = useState<PaginationDto<FilterInvitationDto>>(
     {
@@ -24,7 +32,15 @@ export default function InvitationListPage() {
     },
   );
   const [selectedRows, setSelectedRows] = useState<InvitationDto[]>([]);
+  const [selectedInvitation, setSelectedInvitation] =
+    useState<InvitationDto | null>(null);
+  const [actionType, setActionType] = useState<
+    "publish" | "unpublish" | "delete" | null
+  >(null);
   const { data, isLoading, refetch, total } = usePaginationInvitation(pagination);
+  const { onPublishInvitation } = usePublishInvitation();
+  const { onUnpublishInvitation } = useUnpublishInvitation();
+  const { onDeleteInvitation } = useDeleteInvitation();
 
   const handleSearch = (isReset?: boolean) => {
     setPagination((prev) => ({
@@ -136,6 +152,29 @@ export default function InvitationListPage() {
     },
   ];
 
+  const askConfirm = (
+    record: InvitationDto,
+    type: "publish" | "unpublish" | "delete",
+  ) => {
+    setSelectedInvitation(record);
+    setActionType(type);
+    confirmRef.current?.show();
+  };
+
+  const handleConfirm = async () => {
+    if (!selectedInvitation || !actionType) return;
+    if (actionType === "publish") {
+      await onPublishInvitation(selectedInvitation.id);
+    } else if (actionType === "unpublish") {
+      await onUnpublishInvitation(selectedInvitation.id);
+    } else {
+      await onDeleteInvitation(selectedInvitation.id);
+    }
+    await refetch();
+    setSelectedInvitation(null);
+    setActionType(null);
+  };
+
   const rowActions: RowAction<InvitationDto>[] = [
     {
       key: "view",
@@ -149,6 +188,31 @@ export default function InvitationListPage() {
             record.id,
           ),
         ),
+    },
+    {
+      key: "publish",
+      icon: <Globe className="size-3.5" />,
+      tooltip: "Xuất bản",
+      severity: "success",
+      visible: (record) =>
+        record.status !== enumData.INVITATION_STATUS.PUBLISHED.code,
+      onClick: (record) => askConfirm(record, "publish"),
+    },
+    {
+      key: "unpublish",
+      icon: <GlobeLock className="size-3.5" />,
+      tooltip: "Hủy xuất bản",
+      severity: "warning",
+      visible: (record) =>
+        record.status === enumData.INVITATION_STATUS.PUBLISHED.code,
+      onClick: (record) => askConfirm(record, "unpublish"),
+    },
+    {
+      key: "delete",
+      icon: <Trash2 className="size-3.5" />,
+      tooltip: "Xóa",
+      severity: "danger",
+      onClick: (record) => askConfirm(record, "delete"),
     },
   ];
 
@@ -194,6 +258,36 @@ export default function InvitationListPage() {
           onRefresh: refetch,
         }}
       />
+
+      {selectedInvitation && actionType && (
+        <ActionConfirm
+          ref={confirmRef}
+          title={
+            actionType === "delete"
+              ? "Xác nhận xóa thiệp"
+              : actionType === "publish"
+                ? "Xác nhận xuất bản"
+                : "Xác nhận hủy xuất bản"
+          }
+          confirmText={
+            actionType === "delete"
+              ? "Xóa"
+              : actionType === "publish"
+                ? "Xuất bản"
+                : "Hủy xuất bản"
+          }
+          cancelText="Hủy"
+          variant={actionType === "delete" ? "destructive" : "default"}
+          onConfirm={handleConfirm}
+          message={
+            actionType === "delete"
+              ? "Bạn có chắc chắn muốn xóa thiệp này không?"
+              : actionType === "publish"
+                ? "Xuất bản thiệp này để khách có thể xem?"
+                : "Hủy xuất bản thiệp này?"
+          }
+        />
+      )}
     </BaseView>
   );
 }

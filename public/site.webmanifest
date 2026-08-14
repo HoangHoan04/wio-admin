@@ -1,0 +1,8 @@
+{
+  "name": "InviGo Admin",
+  "short_name": "InviGo",
+  "icons": [],
+  "theme_color": "#2D231F",
+  "background_color": "#F3EDE3",
+  "display": "standalone"
+}

@@ -140,10 +140,11 @@ export default function PlanManagerPage() {
       align: "center",
     },
     {
-      field: "maxTemplates",
-      header: "Tối đa template",
+      field: "maxInvitations",
+      header: "Tối đa thiệp",
       width: 130,
       align: "center",
+      body: (row) => row.maxInvitations ?? row.maxTemplates ?? "—",
     },
     {
       field: "hasAi",

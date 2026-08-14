@@ -88,3 +88,106 @@ export const useForceResetSlug = () => {
 
   return { onForceResetSlug, isLoading };
 };
+
+export const usePublishInvitation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  const { mutateAsync: onPublishInvitation, isPending: isLoading } =
+    useMutation({
+      mutationFn: (id: string) =>
+        rootApiService.post(API_ENDPOINTS.INVITATION.PUBLISH, {
+          id,
+        }) as Promise<SuccessResponse>,
+      onSuccess: (res: SuccessResponse) => {
+        queryClient.invalidateQueries({
+          queryKey: [API_ENDPOINTS.INVITATION.PAGINATION],
+        });
+        showToast({
+          type: "success",
+          message: res.message || "Xuất bản thiệp thành công",
+          title: "Thành công",
+          timeout: 3000,
+        });
+      },
+      onError: (error: Error) => {
+        showToast({
+          type: "error",
+          message: error?.message || "Có lỗi xảy ra",
+          title: "Lỗi",
+          timeout: 3000,
+        });
+      },
+    });
+
+  return { onPublishInvitation, isLoading };
+};
+
+export const useUnpublishInvitation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  const { mutateAsync: onUnpublishInvitation, isPending: isLoading } =
+    useMutation({
+      mutationFn: (id: string) =>
+        rootApiService.post(API_ENDPOINTS.INVITATION.UNPUBLISH, {
+          id,
+        }) as Promise<SuccessResponse>,
+      onSuccess: (res: SuccessResponse) => {
+        queryClient.invalidateQueries({
+          queryKey: [API_ENDPOINTS.INVITATION.PAGINATION],
+        });
+        showToast({
+          type: "success",
+          message: res.message || "Hủy xuất bản thiệp thành công",
+          title: "Thành công",
+          timeout: 3000,
+        });
+      },
+      onError: (error: Error) => {
+        showToast({
+          type: "error",
+          message: error?.message || "Có lỗi xảy ra",
+          title: "Lỗi",
+          timeout: 3000,
+        });
+      },
+    });
+
+  return { onUnpublishInvitation, isLoading };
+};
+
+export const useDeleteInvitation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  const { mutateAsync: onDeleteInvitation, isPending: isLoading } = useMutation(
+    {
+      mutationFn: (id: string) =>
+        rootApiService.post(API_ENDPOINTS.INVITATION.DELETE, {
+          id,
+        }) as Promise<SuccessResponse>,
+      onSuccess: (res: SuccessResponse) => {
+        queryClient.invalidateQueries({
+          queryKey: [API_ENDPOINTS.INVITATION.PAGINATION],
+        });
+        showToast({
+          type: "success",
+          message: res.message || "Xóa thiệp thành công",
+          title: "Thành công",
+          timeout: 3000,
+        });
+      },
+      onError: (error: Error) => {
+        showToast({
+          type: "error",
+          message: error?.message || "Có lỗi xảy ra",
+          title: "Lỗi",
+          timeout: 3000,
+        });
+      },
+    },
+  );
+
+  return { onDeleteInvitation, isLoading };
+};

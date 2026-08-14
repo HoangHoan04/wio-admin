@@ -162,8 +162,13 @@ export const enumData = {
     },
     BIRTHDAY_CORAL: {
       code: "BIRTHDAY_CORAL",
-      name: "Sinh nhật - Coral",
-      slug: "sinh-nhat-coral",
+      name: "Sinh nhật - San hô rực rỡ",
+      slug: "sinh-nhat-san-ho",
+    },
+    GRADUATION_ACADEMIC: {
+      code: "GRADUATION_ACADEMIC",
+      name: "Tốt nghiệp - Học thuật Navy",
+      slug: "tot-nghiep-navy",
     },
     CUSTOM_DESIGN: {
       code: "CUSTOM_DESIGN",

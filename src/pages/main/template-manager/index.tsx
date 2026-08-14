@@ -231,8 +231,11 @@ export default function TemplateManagerPage() {
     {
       field: "minPlan",
       header: "Gói tối thiểu",
-      width: 120,
+      width: 140,
       align: "center",
+      body: (rowData: TemplateDto) => (
+        <>{rowData.minPlan?.name || "—"}</>
+      ),
     },
     {
       field: "trialDays",

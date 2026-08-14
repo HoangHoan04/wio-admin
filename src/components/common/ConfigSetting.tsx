@@ -439,7 +439,7 @@ export const ConfigSetting: React.FC = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="solid">MMàu đơn</SelectItem>
+                      <SelectItem value="solid">Màu đơn</SelectItem>
                       <SelectItem value="gradient">Màu gradient</SelectItem>
                     </SelectContent>
                   </Select>

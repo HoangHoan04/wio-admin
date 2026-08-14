@@ -15,54 +15,15 @@ export const AppLayout: React.FC = () => {
   const settings = useDashboardStore((state) => state.settings);
   const isMaximized = useDashboardStore((state) => state.isMaximized);
   const location = useLocation();
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (settings.theme === "dark") {
-      root.classList.add("dark");
-    } else if (settings.theme === "light") {
-      root.classList.remove("dark");
-    } else {
-      const systemDark = window.matchMedia(
-        "(prefers-color-scheme: dark)",
-      ).matches;
-      if (systemDark) {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
-    }
-  }, [settings.theme]);
 
   useEffect(() => {
     if (settings.dynamicTitle) {
       const path = location.pathname;
       const route = getRouteByPath(path);
       const title = route?.label || "Admin Dashboard";
-
       document.title = title;
     }
   }, [location.pathname, settings.dynamicTitle]);
-
-  const dynamicStyles: React.CSSProperties = {
-    "--primary": settings.primaryColor,
-    "--primary-foreground": "#ffffff",
-    "--radius": `${settings.borderRadius}px`,
-    fontFamily: `'${settings.fontFamily}', sans-serif`,
-    fontSize: `${settings.bodySize}px`,
-    fontWeight:
-      settings.fontWeight === "light"
-        ? 300
-        : settings.fontWeight === "normal"
-          ? 400
-          : settings.fontWeight === "medium"
-            ? 500
-            : 600,
-    filter:
-      cn(
-        settings.grayscale && "grayscale(100%)",
-        settings.colorBlind && "contrast(120%) saturate(130%) sepia(20%)",
-      ) || undefined,
-  } as React.CSSProperties;
 
   const isRTL = settings.layoutMode === "RTL";
   const showHeader = settings.layoutMode !== "without header";
@@ -87,59 +48,11 @@ export const AppLayout: React.FC = () => {
 
   return (
     <div
-      style={dynamicStyles}
       dir={isRTL ? "rtl" : "ltr"}
       className={cn(
-        "h-screen w-screen overflow-hidden bg-background text-foreground transition-all duration-300 flex flex-col",
+        "h-screen w-screen overflow-hidden bg-background text-foreground transition-colors duration-200 flex flex-col",
       )}
     >
-      <style>{`
-        :root {
-          --primary: ${settings.primaryColor} !important;
-          --color-primary: ${settings.primaryColor} !important;
-          --radius: ${settings.borderRadius}px !important;
-          --radius-sm: ${settings.borderRadius * 0.6}px !important;
-          --radius-md: ${settings.borderRadius * 0.8}px !important;
-          --radius-lg: ${settings.borderRadius}px !important;
-          --radius-xl: ${settings.borderRadius * 1.4}px !important;
-          --radius-2xl: ${settings.borderRadius * 1.8}px !important;
-          --radius-3xl: ${settings.borderRadius * 2.2}px !important;
-          --radius-4xl: ${settings.borderRadius * 2.6}px !important;
-        }
-        
-        div:not(.no-override):not(.no-override *), 
-        p:not(.no-override):not(.no-override *), 
-        span:not(.no-override):not(.no-override *), 
-        a:not(.no-override):not(.no-override *), 
-        button:not(.no-override):not(.no-override *), 
-        input:not(.no-override):not(.no-override *), 
-        select:not(.no-override):not(.no-override *), 
-        textarea:not(.no-override):not(.no-override *), 
-        label:not(.no-override):not(.no-override *) {
-          font-family: '${settings.fontFamily}', sans-serif !important;
-          font-size: ${settings.bodySize}px !important;
-          font-weight: ${
-            settings.fontWeight === "light"
-              ? 300
-              : settings.fontWeight === "normal"
-                ? 400
-                : settings.fontWeight === "medium"
-                  ? 500
-                  : 600
-          } !important;
-          ${settings.boldText ? "font-weight: 700 !important;" : ""}
-          ${settings.italicText ? "font-style: italic !important;" : ""}
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-          font-family: '${settings.fontFamily}', sans-serif !important;
-          font-size: ${settings.titleSize}px !important;
-          ${settings.boldText ? "font-weight: 800 !important;" : "font-weight: 700 !important;"}
-          ${settings.italicText ? "font-style: italic !important;" : ""}
-          ${settings.uppercaseText ? "text-transform: uppercase !important;" : ""}
-        }
-      `}</style>
-
       <Watermark />
       <ConfigSetting />
       <BackToTop />
@@ -169,3 +82,4 @@ export const AppLayout: React.FC = () => {
 };
 
 export default AppLayout;
+

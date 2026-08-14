@@ -302,9 +302,9 @@ const FieldItem = memo(
     const selectOptions = useMemo(
       () =>
         field.options && field.options.length > 0
-          ? field.options.map((o) => ({
-              label: o.name,
-              value: o.value,
+          ? field.options.map((o: any) => ({
+              label: o.name ?? o.label ?? String(o.value ?? o.id ?? ""),
+              value: o.value !== undefined ? o.value : o.id !== undefined ? o.id : "",
             }))
           : [{ label: "Không có lựa chọn", value: "" }],
       [field.options],
@@ -312,9 +312,9 @@ const FieldItem = memo(
 
     const multiselectOptions = useMemo(
       () =>
-        field.options?.map((o) => ({
-          label: o.name,
-          value: o.value,
+        field.options?.map((o: any) => ({
+          label: o.name ?? o.label ?? String(o.value ?? o.id ?? ""),
+          value: o.value !== undefined ? o.value : o.id !== undefined ? o.id : "",
         })) || [],
       [field.options],
     );

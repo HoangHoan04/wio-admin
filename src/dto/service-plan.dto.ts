@@ -4,7 +4,8 @@ export interface ServicePlanDto extends BaseDto {
   name: string;
   maxGuests: number;
   maxPhotos: number;
-  maxTemplates: number;
+  maxInvitations: number;
+  maxTemplates?: number;
   hasAi: boolean;
   hasAnalytics: boolean;
   hasCustomSlug: boolean;
@@ -15,6 +16,14 @@ export interface ServicePlanDto extends BaseDto {
 
 export interface FilterServicePlanDto {
   name?: string;
+  maxGuests?: number;
+  maxPhotos?: number;
+  maxInvitations?: number;
+  hasAi?: boolean;
+  hasAnalytics?: boolean;
+  hasCustomSlug?: boolean;
+  durationDays?: number;
+  priceVnd?: number;
   isActive?: boolean;
 }
 
@@ -22,7 +31,8 @@ export interface CreateServicePlanDto {
   name: string;
   maxGuests: number;
   maxPhotos: number;
-  maxTemplates: number;
+  maxInvitations: number;
+  maxTemplates?: number;
   hasAi?: boolean;
   hasAnalytics?: boolean;
   hasCustomSlug?: boolean;

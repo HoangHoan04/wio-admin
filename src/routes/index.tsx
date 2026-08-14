@@ -1,6 +1,5 @@
 import { ROUTES } from "@/common/constants";
 import AppLayout from "@/layout/AppLayout";
-import LoginPage from "@/pages/auth/LoginPage";
 import AnalyticsPage from "@/pages/main/analytics-manager";
 import ConversionReportPage from "@/pages/main/analytics-manager/conversion";
 import RevenueReportPage from "@/pages/main/analytics-manager/revenue";
@@ -52,20 +51,13 @@ import WeddingListPage from "@/pages/main/wedding-manager";
 import DetailInvitationPage from "@/pages/main/wedding-manager/detail";
 import WishManagerPage from "@/pages/main/wish-manager";
 import NotFound from "@/pages/other/NotFound";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
-
-function RedirectWeddingDetail() {
-  const { id } = useParams();
-  return <Navigate to={`/invitation/detail/${id}`} replace />;
-}
 
 export default function AppRoutes() {
   return (
     <>
       <Routes>
-        <Route path={ROUTES.AUTH.LOGIN.path} element={<LoginPage />} />
-
         <Route element={<PrivateRoute />}>
           <Route element={<AppLayout />}>
             <Route index element={<HomePage />} />
@@ -96,18 +88,7 @@ export default function AppRoutes() {
               }
               element={<DetailInvitationPage />}
             />
-            <Route
-              path="/wedding-manager"
-              element={<Navigate to="/invitation-manager" replace />}
-            />
-            <Route
-              path="/wedding-list"
-              element={<Navigate to="/invitation-list" replace />}
-            />
-            <Route
-              path="/wedding/detail/:id"
-              element={<RedirectWeddingDetail />}
-            />
+
             <Route
               path={
                 ROUTES.MAIN.INVITATION_MANAGER.children.CARD_TYPE_MANAGER.path

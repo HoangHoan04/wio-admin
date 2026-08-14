@@ -1,3 +1,4 @@
+import { formatDateTime } from "@/common/helpers";
 import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
 import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
@@ -5,6 +6,7 @@ import type { FilterField } from "@/components/layout/FilterCustom";
 import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
+import { StatusTag } from "@/components/ui/status-tag";
 import type { FilterPhotoWallDto, PaginationDto, PhotoWallDto } from "@/dto";
 import {
   useApprovePhotoWall,
@@ -85,21 +87,20 @@ export default function PhotoWallManagerPage() {
 
   const filterFields: FilterField[] = [
     {
-      key: "guestName",
-      label: "Tên khách mời",
+      key: "uploaderName",
+      label: "Tên người gửi",
       type: "input",
-      placeholder: "Nhập tên khách mời",
+      placeholder: "Nhập tên người gửi",
       col: 6,
     },
     {
-      key: "status",
-      label: "Trạng thái",
+      key: "isApproved",
+      label: "Trạng thái duyệt",
       type: "select",
-      placeholder: "Chọn trạng thái",
+      placeholder: "Tất cả trạng thái",
       options: [
-        { label: "Chờ duyệt", value: "PENDING" },
-        { label: "Đã duyệt", value: "APPROVED" },
-        { label: "Từ chối", value: "REJECTED" },
+        { label: "Đã duyệt", value: true as any },
+        { label: "Chờ duyệt", value: false as any },
       ],
       col: 6,
     },
@@ -107,24 +108,58 @@ export default function PhotoWallManagerPage() {
 
   const columns: TableColumn<PhotoWallDto>[] = [
     {
-      field: "guestName",
-      header: "Tên khách mời",
-      width: 180,
-      sortable: true,
+      field: "url",
+      header: "Hình ảnh",
+      width: 100,
+      align: "center",
+      body: (rowData: PhotoWallDto) => {
+        const imgUrl = rowData.url || rowData.photoUrl;
+        return imgUrl ? (
+          <img
+            src={imgUrl}
+            alt={rowData.uploaderName || "Ảnh"}
+            className="size-12 rounded object-cover mx-auto border"
+          />
+        ) : (
+          "—"
+        );
+      },
     },
     {
-      field: "message",
-      header: "Lời nhắn",
+      field: "uploaderName",
+      header: "Người gửi",
+      width: 180,
+      sortable: true,
+      body: (row) => row.uploaderName || row.guestName || "—",
+    },
+    {
+      field: "caption",
+      header: "Lời nhắn (Caption)",
       width: 250,
       body: (rowData: PhotoWallDto) => (
-        <div className="max-w-62.5 truncate">{rowData.message || "-"}</div>
+        <div className="max-w-62.5 truncate">
+          {rowData.caption || rowData.message || "—"}
+        </div>
       ),
     },
     {
-      field: "status",
+      field: "isApproved",
       header: "Trạng thái",
       width: 120,
       align: "center",
+      body: (row) => (
+        <StatusTag
+          severity={row.isApproved ? "success" : "warning"}
+          value={row.isApproved ? "Đã duyệt" : "Chờ duyệt"}
+        />
+      ),
+    },
+    {
+      field: "createdAt",
+      header: "Ngày gửi",
+      width: 150,
+      align: "center",
+      body: (row) => (row.createdAt ? formatDateTime(row.createdAt) : "—"),
     },
   ];
 
@@ -134,15 +169,15 @@ export default function PhotoWallManagerPage() {
       icon: <CheckCircle className="size-3.5" />,
       tooltip: "Phê duyệt",
       severity: "success",
-      visible: (record) => record.status === "PENDING",
+      visible: (record) => !record.isApproved,
       onClick: (record) => askConfirm(record, "approve"),
     },
     {
       key: "reject",
       icon: <XCircle className="size-3.5" />,
       tooltip: "Từ chối",
-      severity: "danger",
-      visible: (record) => record.status === "PENDING",
+      severity: "warning",
+      visible: (record) => !!record.isApproved,
       onClick: (record) => askConfirm(record, "reject"),
     },
     {

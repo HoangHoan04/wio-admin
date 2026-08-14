@@ -76,8 +76,8 @@ export default function DetailPlanPage() {
                   value={`${data.maxPhotos} ảnh`}
                 />
                 <InfoItem
-                  label="Số lượng template tối đa"
-                  value={`${data.maxTemplates} mẫu`}
+                  label="Số lượng thiệp tối đa"
+                  value={`${data.maxInvitations ?? data.maxTemplates ?? 0} thiệp`}
                 />
                 <InfoItem
                   label="Tính năng AI"

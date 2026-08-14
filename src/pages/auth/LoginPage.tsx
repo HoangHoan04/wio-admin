@@ -67,7 +67,7 @@ export default function LoginPage() {
           <div className="flex items-center gap-3">
             <Sparkles className="size-5.5" />
             <span className="font-['Syne'] text-xl font-extrabold tracking-[0.12em] uppercase">
-              Wio Admin
+              InviGo Admin
             </span>
           </div>
 

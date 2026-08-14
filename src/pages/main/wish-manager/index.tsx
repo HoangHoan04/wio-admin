@@ -1,3 +1,4 @@
+import { formatDateTime } from "@/common/helpers";
 import type { ActionConfirmRef } from "@/components/layout/ActionConfirm";
 import { ActionConfirm } from "@/components/layout/ActionConfirm";
 import BaseView from "@/components/layout/BaseView";
@@ -5,6 +6,7 @@ import type { FilterField } from "@/components/layout/FilterCustom";
 import FilterCustom from "@/components/layout/FilterCustom";
 import type { RowAction, TableColumn } from "@/components/layout/TableCustom";
 import TableCustom from "@/components/layout/TableCustom";
+import { StatusTag } from "@/components/ui/status-tag";
 import type { FilterWishDto, PaginationDto, WishDto } from "@/dto";
 import {
   useApproveWish,
@@ -92,14 +94,13 @@ export default function WishManagerPage() {
       col: 6,
     },
     {
-      key: "status",
-      label: "Trạng thái",
+      key: "isApproved",
+      label: "Trạng thái duyệt",
       type: "select",
-      placeholder: "Chọn trạng thái",
+      placeholder: "Tất cả trạng thái",
       options: [
-        { label: "Chờ duyệt", value: "PENDING" },
-        { label: "Đã duyệt", value: "APPROVED" },
-        { label: "Từ chối", value: "REJECTED" },
+        { label: "Đã duyệt", value: true as any },
+        { label: "Chờ duyệt", value: false as any },
       ],
       col: 6,
     },
@@ -114,17 +115,23 @@ export default function WishManagerPage() {
     },
     {
       field: "content",
-      header: "Nội dung",
+      header: "Nội dung lời chúc",
       width: 300,
       body: (rowData: WishDto) => (
         <div className="max-w-75 truncate">{rowData.content}</div>
       ),
     },
     {
-      field: "status",
+      field: "isApproved",
       header: "Trạng thái",
       width: 120,
       align: "center",
+      body: (row) => (
+        <StatusTag
+          severity={row.isApproved ? "success" : "warning"}
+          value={row.isApproved ? "Đã duyệt" : "Chờ duyệt"}
+        />
+      ),
     },
     {
       field: "isPinned",
@@ -132,6 +139,13 @@ export default function WishManagerPage() {
       width: 80,
       align: "center",
       type: "boolean",
+    },
+    {
+      field: "createdAt",
+      header: "Ngày gửi",
+      width: 150,
+      align: "center",
+      body: (row) => (row.createdAt ? formatDateTime(row.createdAt) : "—"),
     },
   ];
 
@@ -141,15 +155,15 @@ export default function WishManagerPage() {
       icon: <CheckCircle className="size-3.5" />,
       tooltip: "Phê duyệt",
       severity: "success",
-      visible: (record) => record.status === "PENDING",
+      visible: (record) => !record.isApproved,
       onClick: (record) => askConfirm(record, "approve"),
     },
     {
       key: "reject",
       icon: <XCircle className="size-3.5" />,
       tooltip: "Từ chối",
-      severity: "danger",
-      visible: (record) => record.status === "PENDING",
+      severity: "warning",
+      visible: (record) => !!record.isApproved,
       onClick: (record) => askConfirm(record, "reject"),
     },
     {

@@ -478,6 +478,16 @@ function TableCustom<T extends Record<string, any>>({
       case "tag":
         return formatters.badge(value, col.badgeSeverity || col.tagSeverity);
       default:
+        if (typeof value === "object" && value !== null) {
+          return (
+            (value as any)?.name ||
+            (value as any)?.title ||
+            (value as any)?.fullName ||
+            (value as any)?.label ||
+            (value as any)?.code ||
+            "—"
+          );
+        }
         return value;
     }
   };
