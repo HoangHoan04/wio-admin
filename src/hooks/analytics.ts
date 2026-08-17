@@ -17,7 +17,7 @@ export interface OverviewStats {
 }
 
 export const useSystemStats = () => {
-  const { data, isLoading, refetch, error } = useQuery<OverviewStats>({
+  const { data, isLoading, isFetching, refetch, error } = useQuery<OverviewStats>({
     queryKey: [API_ENDPOINTS.ANALYTICS.OVERVIEW],
     queryFn: async () => {
       const res = await rootApiService.post(API_ENDPOINTS.ANALYTICS.OVERVIEW);
@@ -28,6 +28,7 @@ export const useSystemStats = () => {
   return {
     data,
     isLoading,
+    isFetching,
     refetch,
     error,
   };

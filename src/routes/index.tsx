@@ -50,6 +50,7 @@ import RefundRequestPage from "@/pages/main/transaction-manager/refund-request";
 import WeddingListPage from "@/pages/main/wedding-manager";
 import DetailInvitationPage from "@/pages/main/wedding-manager/detail";
 import WishManagerPage from "@/pages/main/wish-manager";
+import LoginPage from "@/pages/auth/LoginPage";
 import NotFound from "@/pages/other/NotFound";
 import { Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -58,6 +59,8 @@ export default function AppRoutes() {
   return (
     <>
       <Routes>
+        <Route path={ROUTES.AUTH.LOGIN.path} element={<LoginPage />} />
+
         <Route element={<PrivateRoute />}>
           <Route element={<AppLayout />}>
             <Route index element={<HomePage />} />

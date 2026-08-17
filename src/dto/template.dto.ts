@@ -14,6 +14,8 @@ export interface TemplateDto extends BaseDto {
   minPlanId?: string;
   minPlan?: ServicePlanDto;
   trialDays: number;
+  themeLayout?: any;
+  presetTokens?: any;
 }
 
 export interface CreateTemplateDto {
