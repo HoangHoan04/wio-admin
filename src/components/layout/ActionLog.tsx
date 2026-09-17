@@ -1,31 +1,172 @@
-import { enumData } from "@/common/enums";
-import { formatDateTime } from "@/common/helpers";
+import { enumData } from '@/common/enums';
+import { formatDateTime } from '@/common/helpers';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { StatusTag } from "@/components/ui/status-tag";
-import type { ActionLogDto, ActionLogFilterDto, PaginationDto } from "@/dto";
-import { usePaginationActionLog } from "@/hooks/action-log";
-import { Eye, History } from "lucide-react";
-import { useTheme } from "next-themes";
-import { memo, useMemo, useState } from "react";
-import BaseView from "./BaseView";
-import type { PaginationConfig, RowAction, TableColumn } from "./TableCustom";
-import TableCustom from "./TableCustom";
+} from '@/components/ui/dialog';
+import type { ActionLogDto, ActionLogFilterDto, PaginationDto } from '@/dto';
+import { usePaginationActionLog } from '@/hooks/action-log';
+import { Eye, History } from 'lucide-react';
+import { useState, useMemo, useCallback, memo } from 'react';
+import { StatusTag } from '../ui/status-tag';
+import BaseView from './BaseView';
+import TableCustom, { type TableColumn, type RowAction, type PaginationConfig } from './TableCustom';
 
+/* ============================================================
+ * HELPER — Format JSON value an toàn
+ * ============================================================ */
+function formatJsonValue(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'object') {
+    try {
+      return JSON.stringify(value, null, 2);
+    } catch {
+      return String(value);
+    }
+  }
+  return String(value);
+}
+
+function hasContent(value: unknown): boolean {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string') return value.trim().length > 0;
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'object') {
+    return Object.keys(value as object).length > 0;
+  }
+  return true;
+}
+
+/* ============================================================
+ * PROPS
+ * ============================================================ */
+interface ActionLogDetailDialogProps {
+  open: boolean;
+  log: ActionLogDto | null;
+  onClose: () => void;
+}
+
+/* ============================================================
+ * COMPONENT
+ * ============================================================ */
+export function ActionLogDetailDialog({
+  open,
+  log,
+  onClose,
+}: ActionLogDetailDialogProps) {
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-4xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <History className="size-4" />
+            Chi tiết thay đổi dữ liệu
+          </DialogTitle>
+        </DialogHeader>
+
+        {log && (
+          <div className="grid grid-cols-1 gap-4 pt-2 md:grid-cols-2">
+            {/* ---- OLD VALUE ---- */}
+            <ValuePanel
+              title="Dữ liệu cũ"
+              subtitle="oldValue"
+              value={log.oldValue}
+              emptyText="Không có dữ liệu cũ hoặc bản ghi được tạo mới."
+              variant="old"
+            />
+
+            {/* ---- NEW VALUE ---- */}
+            <ValuePanel
+              title="Dữ liệu mới"
+              subtitle="newValue"
+              value={log.newValue}
+              emptyText="Không có dữ liệu mới cập nhật."
+              variant="new"
+            />
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* ============================================================
+ * SUB-COMPONENT — Value Panel
+ * ============================================================ */
+interface ValuePanelProps {
+  title: string;
+  subtitle: string;
+  value: unknown;
+  emptyText: string;
+  variant: 'old' | 'new';
+}
+
+function ValuePanel({
+  title,
+  subtitle,
+  value,
+  emptyText,
+  variant,
+}: ValuePanelProps) {
+  const colorClasses =
+    variant === 'old'
+      ? 'border-red-200 bg-red-50/50 dark:border-red-900/40 dark:bg-red-950/10'
+      : 'border-green-200 bg-green-50/50 dark:border-green-900/40 dark:bg-green-950/10';
+
+  const headingClasses =
+    variant === 'old'
+      ? 'border-red-200 text-red-600 dark:border-red-900/30 dark:text-red-400'
+      : 'border-green-200 text-green-600 dark:border-green-900/30 dark:text-green-400';
+
+  const hasValue = hasContent(value);
+
+  return (
+    <div className={`rounded-lg border p-3 ${colorClasses}`}>
+      <h3
+        className={`mb-2 flex items-center gap-2 border-b pb-2 text-sm font-bold ${headingClasses}`}
+      >
+        <Eye className="size-4" />
+        {title}{' '}
+        <span className="font-mono text-xs opacity-60">({subtitle})</span>
+      </h3>
+
+      <pre className="m-0 max-h-96 overflow-auto font-mono text-xs whitespace-pre-wrap text-gray-700 dark:text-gray-300">
+        {hasValue
+          ? formatJsonValue(value)
+          : emptyText}
+      </pre>
+    </div>
+  );
+}
+
+
+
+/* ============================================================
+ * CONSTANTS
+ * ============================================================ */
+const DATE_FORMAT = 'DD/MM/YYYY HH:mm:ss';
+
+/** Map action code → enum item — build 1 lần */
+const ACTION_TYPE_MAP = new Map<string, any>(
+  Object.values(enumData.ACTION_TYPE).map((item) => [item.code, item]),
+);
+
+/* ============================================================
+ * PROPS
+ * ============================================================ */
 interface ActionLogProps {
   entityName: string;
   entityId: string;
   title?: string;
 }
 
-function ActionLog({ entityName, entityId, title }: ActionLogProps) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
+/* ============================================================
+ * COMPONENT
+ * ============================================================ */
+function ActionLogComponent({ entityName, entityId, title }: ActionLogProps) {
   const [pagination, setPagination] = useState<
     PaginationDto<ActionLogFilterDto>
   >({
@@ -36,77 +177,94 @@ function ActionLog({ entityName, entityId, title }: ActionLogProps) {
 
   const [selectedLog, setSelectedLog] = useState<ActionLogDto | null>(null);
 
-  const queryPayload = useMemo(
+  /* --------------------------------------------------------
+   * QUERY PAYLOAD
+   * -------------------------------------------------------- */
+  const queryPayload = useMemo<PaginationDto<ActionLogFilterDto>>(
     () => ({
-      ...pagination,
+      skip: pagination.skip,
+      take: pagination.take,
       where: {
-        entityId: entityId || "",
-        entityName: entityName || "",
+        entityId,
+        entityName,
       },
     }),
-    [pagination, entityId, entityName],
+    [pagination.skip, pagination.take, entityId, entityName],
   );
 
   const { data, total, isLoading } = usePaginationActionLog(queryPayload);
 
+  /* --------------------------------------------------------
+   * COLUMNS
+   * -------------------------------------------------------- */
   const columns = useMemo<TableColumn<ActionLogDto>[]>(
     () => [
       {
-        field: "createdAt",
-        header: "Ngày tạo",
-        body: (rowData: ActionLogDto) =>
-          formatDateTime(rowData.createdAt, "DD/MM/YYYY HH:mm:ss"),
-        style: { width: "160px" },
+        field: 'createdAt',
+        header: 'Ngày tạo',
+        style: { width: '160px' },
+        body: (row) => formatDateTime(row.createdAt, DATE_FORMAT),
       },
       {
-        field: "updatedAt",
-        header: "Ngày cập nhật",
-        body: (rowData: ActionLogDto) =>
-          formatDateTime(rowData.updatedAt, "DD/MM/YYYY HH:mm:ss"),
-        style: { width: "160px" },
+        field: 'updatedAt',
+        header: 'Ngày cập nhật',
+        style: { width: '160px' },
+        body: (row) => formatDateTime(row.updatedAt, DATE_FORMAT),
       },
       {
-        field: "createdByName",
-        header: "Người tạo",
-        style: { width: "180px" },
+        field: 'createdByName',
+        header: 'Người tạo',
+        style: { width: '180px' },
       },
       {
-        field: "actionType",
-        header: "Hành động",
-        style: { width: "150px" },
-        body: (rowData: ActionLogDto) => {
-          const action = Object.values(enumData.ACTION_TYPE).find(
-            (item) => item.code === rowData.actionType,
+        field: 'actionType',
+        header: 'Hành động',
+        style: { width: '150px' },
+        body: (row) => {
+          const action = ACTION_TYPE_MAP.get(row.actionType ?? '');
+          return (
+            <StatusTag
+              color={action?.color}
+              value={action?.name ?? row.actionType ?? 'N/A'}
+            />
           );
-          const label = action?.name || rowData.actionType || "N/A";
-          return <StatusTag color={action?.color} value={label} />;
         },
       },
       {
-        field: "createdNote",
-        header: "Mô tả",
-        style: { minWidth: "300px" },
+        field: 'createdNote',
+        header: 'Mô tả',
+        style: { minWidth: '300px' },
       },
     ],
     [],
   );
+
+  /* --------------------------------------------------------
+   * ROW ACTIONS
+   * -------------------------------------------------------- */
+  const handleViewDetail = useCallback((record: ActionLogDto) => {
+    setSelectedLog(record);
+  }, []);
 
   const rowActions = useMemo<RowAction<ActionLogDto>[]>(
     () => [
       {
-        key: "view",
+        key: 'view',
         icon: <Eye className="size-3.5" />,
-        tooltip: "Xem chi tiết thay đổi",
-        severity: "info",
-        onClick: (record) => setSelectedLog(record),
+        tooltip: 'Xem chi tiết thay đổi',
+        severity: 'info',
+        onClick: handleViewDetail,
       },
     ],
-    [],
+    [handleViewDetail],
   );
 
+  /* --------------------------------------------------------
+   * PAGINATION
+   * -------------------------------------------------------- */
   const paginationConfig = useMemo<PaginationConfig>(
     () => ({
-      total: total || 0,
+      total,
       current: Math.floor(pagination.skip / pagination.take) + 1,
       pageSize: pagination.take,
       showTotal: true,
@@ -114,106 +272,51 @@ function ActionLog({ entityName, entityId, title }: ActionLogProps) {
     [total, pagination.skip, pagination.take],
   );
 
-  const handlePageChange = (page: number, pageSize: number) => {
+  const handlePageChange = useCallback((page: number, pageSize: number) => {
     setPagination((prev) => ({
       ...prev,
       skip: (page - 1) * pageSize,
       take: pageSize,
     }));
-  };
+  }, []);
 
-  if (!entityId) return null;
+  const handleCloseDialog = useCallback(() => setSelectedLog(null), []);
 
+  /* --------------------------------------------------------
+   * GUARD
+   * -------------------------------------------------------- */
+  if (!entityId || !entityName) return null;
+
+  /* --------------------------------------------------------
+   * RENDER
+   * -------------------------------------------------------- */
   return (
     <BaseView>
       <div className="flex h-full flex-col items-center justify-start gap-4">
         <span className="text-center text-lg font-black">
-          {title || "Lịch sử thao tác"}
+          {title || 'Lịch sử thao tác'}
         </span>
+
         <TableCustom<ActionLogDto>
-          data={data || []}
+          data={data}
           columns={columns}
           loading={isLoading}
           pagination={paginationConfig}
           onPageChange={handlePageChange}
-          stripedRows={true}
+          stripedRows
           rowActions={rowActions}
-          scrollable={true}
+          scrollable
           emptyText="Không có lịch sử thao tác"
         />
       </div>
 
-      <Dialog open={!!selectedLog} onOpenChange={() => setSelectedLog(null)}>
-        <DialogContent className="sm:max-w-4xl max-w-[calc(100%-2rem)]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <History className="size-4" />
-              Chi tiết thay đổi dữ liệu
-            </DialogTitle>
-          </DialogHeader>
-          {selectedLog && (
-            <div className="grid grid-cols-1 gap-4 pt-2 md:grid-cols-2">
-              <div
-                className={`rounded-lg border p-3 ${
-                  isDark
-                    ? "border-red-900/40 bg-red-950/10"
-                    : "border-red-200 bg-red-50/50"
-                }`}
-              >
-                <h3
-                  className={`mb-2 flex items-center gap-2 border-b pb-2 text-sm font-bold ${
-                    isDark
-                      ? "border-red-900/30 text-red-400"
-                      : "border-red-200 text-red-600"
-                  }`}
-                >
-                  <History className="size-4" /> Dữ liệu cũ (oldValue)
-                </h3>
-                <pre
-                  className={`m-0 max-h-96 overflow-auto font-mono text-xs whitespace-pre-wrap ${
-                    isDark ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
-                  {selectedLog.oldValue &&
-                  Object.keys(selectedLog.oldValue).length > 0
-                    ? JSON.stringify(selectedLog.oldValue, null, 2)
-                    : "Không có dữ liệu cũ hoặc record được tạo mới."}
-                </pre>
-              </div>
-
-              <div
-                className={`rounded-lg border p-3 ${
-                  isDark
-                    ? "border-green-900/40 bg-green-950/10"
-                    : "border-green-200 bg-green-50/50"
-                }`}
-              >
-                <h3
-                  className={`mb-2 flex items-center gap-2 border-b pb-2 text-sm font-bold ${
-                    isDark
-                      ? "border-green-900/30 text-green-400"
-                      : "border-green-200 text-green-600"
-                  }`}
-                >
-                  <History className="size-4" /> Dữ liệu mới (newValue)
-                </h3>
-                <pre
-                  className={`m-0 max-h-96 overflow-auto font-mono text-xs whitespace-pre-wrap ${
-                    isDark ? "text-gray-300" : "text-gray-700"
-                  }`}
-                >
-                  {selectedLog.newValue &&
-                  Object.keys(selectedLog.newValue).length > 0
-                    ? JSON.stringify(selectedLog.newValue, null, 2)
-                    : "Không có dữ liệu mới cập nhật."}
-                </pre>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <ActionLogDetailDialog
+        open={!!selectedLog}
+        log={selectedLog}
+        onClose={handleCloseDialog}
+      />
     </BaseView>
   );
 }
 
-export default memo(ActionLog);
+export default memo(ActionLogComponent);

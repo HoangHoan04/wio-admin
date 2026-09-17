@@ -43,7 +43,7 @@ function AddTemplatePage({
         type: "select",
         required: true,
         options: Object.values(enumData.THEME_CODE || {}).map(
-          (item: { code: string; name: string }) => ({
+          (item: any) => ({
             id: item.code,
             name: item.name,
             value: item.code,
@@ -108,7 +108,7 @@ function AddTemplatePage({
     if (isEdit && handleUpdate) {
       handleUpdate(values);
     } else {
-      onCreateTemplate(values);
+      onCreateTemplate(values as any);
     }
   };
 

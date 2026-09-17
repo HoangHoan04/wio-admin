@@ -1,17 +1,16 @@
 import type { BaseDto } from "./common";
 
 export interface ContactDto extends BaseDto {
-  code?: string;
+  code?: string | null;
   name: string;
   email: string;
-  phone?: string;
-  subject?: string;
+  phone?: string | null;
+  subject?: string | null;
   message: string;
-  status: "PENDING" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
-  adminNote?: string;
-  respondedAt?: string;
-  respondedBy?: string;
-  createdById?: string;
+  status: string;
+  adminNote?: string | null;
+  respondedAt?: string | null;
+  respondedBy?: string | null;
 }
 
 export interface FilterContactDto {

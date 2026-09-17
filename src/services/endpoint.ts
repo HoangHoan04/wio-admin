@@ -1,3 +1,6 @@
+/* ============================================================
+ * BASE CONFIG
+ * ============================================================ */
 export const API_ROUTES = {
   BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:4300",
   TIMEOUT: 30000,
@@ -6,151 +9,246 @@ export const API_ROUTES = {
   },
 };
 
+/* ============================================================
+ * HELPER
+ * ============================================================ */
+const ADMIN = "/api/admin";
+const UPLOAD = "/api/upload";
+const API = "/api";
+
+/* ============================================================
+ * API ENDPOINTS — CHỈ ADMIN SITE (Chuẩn theo wio-api)
+ * ============================================================ */
 export const API_ENDPOINTS = {
+  /* --------------------------------------------------------
+   * AUTH — /admin/auth/*
+   * -------------------------------------------------------- */
   AUTH: {
-    LOGIN: "/api/admin/auth/login",
-    LOGOUT: "/api/admin/auth/logout",
-    REFRESH_TOKEN: "/api/admin/auth/refresh-token",
-    ME: "/api/admin/auth/me",
-    UPDATE_PASSWORD: "/api/admin/auth/update-password",
-    CHANGE_PASSWORD: "/api/admin/auth/change-password",
-    CLEAN_TOKENS: "/api/admin/auth/clean-tokens",
+    LOGIN: `${ADMIN}/auth/login`,
+    LOGOUT: `${ADMIN}/auth/logout`,
+    REFRESH_TOKEN: `${ADMIN}/auth/refresh-token`,
+    ME: `${ADMIN}/auth/me`,
+    UPDATE_PASSWORD: `${ADMIN}/auth/update-password`,
+    CHANGE_PASSWORD: `${ADMIN}/auth/change-password`,
+    UPDATE_PROFILE: `${ADMIN}/auth/update-profile`,
+    CLEAN_TOKENS: `${ADMIN}/auth/clean-tokens`,
   },
 
-  ACTION_LOG: "/api/admin/action-log/pagination",
-
+  /* --------------------------------------------------------
+   * UPLOAD FILE — /upload/upload-file/*
+   * -------------------------------------------------------- */
   UPLOAD_FILE: {
-    IMAGE: "/api/upload/upload-file/upload-image",
-    AUDIO: "/api/upload/upload-file/upload-audio",
-    DOCUMENT: "/api/upload/upload-file/upload-document",
-    SINGLE: "/api/upload/upload-file/upload-single",
-    BULK_IMAGES: "/api/upload/upload-file/upload-multi",
+    SINGLE: `${UPLOAD}/upload-file/upload-single`,
+    MULTI: `${UPLOAD}/upload-file/upload-multi`,
+    IMAGE: `${UPLOAD}/upload-file/upload-image`,
+    AUDIO: `${UPLOAD}/upload-file/upload-audio`,
+    DOCUMENT: `${UPLOAD}/upload-file/upload-document`,
+    CATBOX: `${UPLOAD}/upload-file/upload-catbox`,
+    CATBOX_URL: `${UPLOAD}/upload-file/upload-catbox-url`,
   },
 
-  INVITATION: {
-    PAGINATION: "/api/admin/invitation/pagination",
-    DELETE: "/api/admin/invitation/delete",
-    FIND_BY_ID: "/api/admin/invitation/find-by-id",
-    FORCE_RESET_SLUG: "/api/admin/invitation/force-reset-slug",
-    SLUG_HISTORY: "/api/admin/invitation/slug-history",
-    PUBLISH: "/api/admin/invitation/publish",
-    UNPUBLISH: "/api/admin/invitation/unpublish",
-    STATS: "/api/admin/invitation/stats",
-  },
-
-  CARD_TYPE: {
-    PAGINATION: "/api/admin/card-type/pagination",
-    FIND_BY_ID: "/api/admin/card-type/find-by-id",
-    SYNC_ENUM: "/api/admin/card-type/sync-enum",
-  },
-
+  /* --------------------------------------------------------
+   * TEMPLATE — /admin/template/*
+   * -------------------------------------------------------- */
   TEMPLATE: {
-    PAGINATION: "/api/admin/template/pagination",
-    CREATE: "/api/admin/template/create",
-    UPDATE: "/api/admin/template/update",
-    FIND_BY_ID: "/api/admin/template/find-by-id",
-    SET_PREMIUM: "/api/admin/template/set-premium",
-    SET_IS_SHOW: "/api/admin/template/set-is-show",
-    SET_IS_DELETED: "/api/admin/template/set-is-deleted",
+    PAGINATION: `${ADMIN}/template/pagination`,
+    FIND_BY_ID: `${ADMIN}/template/find-by-id`,
+    CREATE: `${ADMIN}/template/create`,
+    UPDATE: `${ADMIN}/template/update`,
+    SET_PREMIUM: `${ADMIN}/template/set-premium`,
+    SET_IS_SHOW: `${ADMIN}/template/set-is-show`,
+    SET_IS_DELETED: `${ADMIN}/template/set-is-deleted`,
   },
 
-  WISH: {
-    PAGINATION: "/api/admin/wish/pagination",
-    DELETE: "/api/admin/wish/delete",
-    APPROVE: "/api/admin/wish/approve",
-    REJECT: "/api/admin/wish/reject",
-    PIN: "/api/admin/wish/pin",
-    UNPIN: "/api/admin/wish/unpin",
+  /* --------------------------------------------------------
+   * TEMPLATE CATEGORY — /admin/template-category/*
+   * -------------------------------------------------------- */
+  TEMPLATE_CATEGORY: {
+    PAGINATION: `${ADMIN}/template-category/pagination`,
+    FIND_BY_ID: `${ADMIN}/template-category/find-by-id`,
+    SYNC_ENUM: `${ADMIN}/template-category/sync-enum`,
   },
 
-  PHOTO_WALL: {
-    PAGINATION: "/api/admin/photo-wall/pagination",
-    DELETE: "/api/admin/photo-wall/delete",
-    APPROVE: "/api/admin/photo-wall/approve",
-    REJECT: "/api/admin/photo-wall/reject",
+  /* --------------------------------------------------------
+   * INVITATION — /admin/invitation/*
+   * -------------------------------------------------------- */
+  INVITATION: {
+    PAGINATION: `${ADMIN}/invitation/pagination`,
+    FIND_BY_ID: `${ADMIN}/invitation/find-by-id`,
+    DELETE: `${ADMIN}/invitation/delete`,
+    PUBLISH: `${ADMIN}/invitation/publish`,
+    UNPUBLISH: `${ADMIN}/invitation/unpublish`,
+    FORCE_RESET_SLUG: `${ADMIN}/invitation/force-reset-slug`,
+    SLUG_HISTORY: `${ADMIN}/invitation/slug-history`,
+    STATS: `${ADMIN}/invitation/stats`,
   },
 
-  CUSTOMER: {
-    PAGINATION: "/api/admin/customer/pagination",
-    FIND_BY_ID: "/api/admin/customer/find-by-id",
-    ACTIVATE: "/api/admin/customer/activate",
-    DEACTIVATE: "/api/admin/customer/deactivate",
-    SELECT_BOX: "/api/admin/customer/select-box",
-    CHANGE_PASSWORD: "/api/admin/customer/change-password",
+  /* --------------------------------------------------------
+   * WEDDING INFO — /admin/wedding-info/*
+   * -------------------------------------------------------- */
+  WEDDING_INFO: {
+    PAGINATION: `${ADMIN}/wedding-info/pagination`,
+    FIND_BY_ID: `${ADMIN}/wedding-info/find-by-id`,
+    CREATE: `${ADMIN}/wedding-info/create`,
+    UPDATE: `${ADMIN}/wedding-info/update`,
+    DELETE: `${ADMIN}/wedding-info/delete`,
   },
 
+  /* --------------------------------------------------------
+   * GUEST — /admin/guest/*
+   * -------------------------------------------------------- */
   GUEST: {
-    PAGINATION: "/api/admin/guest/pagination",
-    FIND_BY_ID: "/api/admin/guest/find-by-id",
-    STATS: "/api/admin/guest/stats",
-    DELETE: "/api/admin/guest/delete",
+    PAGINATION: `${ADMIN}/guest/pagination`,
+    FIND_BY_ID: `${ADMIN}/guest/find-by-id`,
+    STATS: `${ADMIN}/guest/stats`,
+    DELETE: `${ADMIN}/guest/delete`,
   },
 
-  SERVICE_PLAN: {
-    PAGINATION: "/api/admin/service-plan/pagination",
-    FIND_BY_ID: "/api/admin/service-plan/find-by-id",
-    CREATE: "/api/admin/service-plan/create",
-    UPDATE: "/api/admin/service-plan/update",
-    DELETE: "/api/admin/service-plan/delete",
-    SELECT_BOX: "/api/admin/service-plan/select-box",
+  /* --------------------------------------------------------
+   * WISH — /admin/wish/*
+   * -------------------------------------------------------- */
+  WISH: {
+    PAGINATION: `${ADMIN}/wish/pagination`,
+    FIND_BY_ID: `${ADMIN}/wish/find-by-id`,
+    CREATE: `${ADMIN}/wish/create`,
+    UPDATE: `${ADMIN}/wish/update`,
+    DELETE: `${ADMIN}/wish/delete`,
+    APPROVE: `${ADMIN}/wish/approve`,
+    REJECT: `${ADMIN}/wish/reject`,
+    PIN: `${ADMIN}/wish/pin`,
+    UNPIN: `${ADMIN}/wish/unpin`,
   },
 
-  SUBSCRIPTION: {
-    PAGINATION: "/api/admin/subscription/pagination",
-    DELETE: "/api/admin/subscription/delete",
-    FIND_BY_ID: "/api/admin/subscription/find-by-id",
-    CHANGE_PLAN: "/api/admin/subscription/change-plan",
+  /* --------------------------------------------------------
+   * PHOTO WALL — /admin/photo-wall/*
+   * -------------------------------------------------------- */
+  PHOTO_WALL: {
+    PAGINATION: `${ADMIN}/photo-wall/pagination`,
+    FIND_BY_ID: `${ADMIN}/photo-wall/find-by-id`,
+    CREATE: `${ADMIN}/photo-wall/create`,
+    UPDATE: `${ADMIN}/photo-wall/update`,
+    DELETE: `${ADMIN}/photo-wall/delete`,
+    APPROVE: `${ADMIN}/photo-wall/approve`,
+    REJECT: `${ADMIN}/photo-wall/reject`,
   },
 
-  CONTACT: {
-    PAGINATION: "/api/admin/contact/pagination",
-    FIND_BY_ID: "/api/admin/contact/find-by-id",
-    UPDATE_STATUS: "/api/admin/contact/update-status",
-    DELETE: "/api/admin/contact/delete",
-  },
-
-  REVIEW: {
-    PAGINATION: "/api/admin/review/pagination",
-    FIND_BY_ID: "/api/admin/review/find-by-id",
-    CREATE: "/api/admin/review/create",
-    UPDATE: "/api/admin/review/update",
-    DELETE: "/api/admin/review/delete",
-    APPROVE: "/api/admin/review/approve",
-    REJECT: "/api/admin/review/reject",
-    PIN: "/api/admin/review/pin",
-    UNPIN: "/api/admin/review/unpin",
-  },
-
+  /* --------------------------------------------------------
+   * TABLE — /table/*
+   * -------------------------------------------------------- */
   TABLE: {
-    PAGINATION: "/api/user/table/pagination",
-    DELETE: "/api/user/table/delete",
+    PAGINATION: `${API}/table/pagination`,
+    FIND_BY_ID: `${API}/table/find-by-id`,
+    CREATE: `${API}/table/create`,
+    UPDATE: `${API}/table/update`,
+    DELETE: `${API}/table/delete`,
+    ASSIGN_GUEST: `${API}/table/assign-guest`,
+    UNASSIGN_GUEST: `${API}/table/unassign-guest`,
   },
 
-  ANALYTICS: {
-    OVERVIEW: "/api/admin/analytics/overview",
-    SYSTEM_STATS: "/api/admin/analytics/overview",
+  /* --------------------------------------------------------
+   * CUSTOMER — /admin/customer/*
+   * -------------------------------------------------------- */
+  CUSTOMER: {
+    PAGINATION: `${ADMIN}/customer/pagination`,
+    FIND_BY_ID: `${ADMIN}/customer/find-by-id`,
+    SELECT_BOX: `${ADMIN}/customer/select-box`,
+    ACTIVATE: `${ADMIN}/customer/activate`,
+    DEACTIVATE: `${ADMIN}/customer/deactivate`,
+    CHANGE_PASSWORD: `${ADMIN}/customer/change-password`,
   },
 
+  /* --------------------------------------------------------
+   * SERVICE PLAN — /admin/service-plan/*
+   * -------------------------------------------------------- */
+  SERVICE_PLAN: {
+    PAGINATION: `${ADMIN}/service-plan/pagination`,
+    FIND_BY_ID: `${ADMIN}/service-plan/find-by-id`,
+    CREATE: `${ADMIN}/service-plan/create`,
+    UPDATE: `${ADMIN}/service-plan/update`,
+    DELETE: `${ADMIN}/service-plan/delete`,
+    SELECT_BOX: `${ADMIN}/service-plan/select-box`,
+  },
+
+  /* --------------------------------------------------------
+   * SUBSCRIPTION — /admin/subscription/*
+   * -------------------------------------------------------- */
+  SUBSCRIPTION: {
+    PAGINATION: `${ADMIN}/subscription/pagination`,
+    FIND_BY_ID: `${ADMIN}/subscription/find-by-id`,
+    CREATE: `${ADMIN}/subscription/create`,
+    UPDATE: `${ADMIN}/subscription/update`,
+    DELETE: `${ADMIN}/subscription/delete`,
+    CHANGE_PLAN: `${ADMIN}/subscription/change-plan`,
+  },
+
+  /* --------------------------------------------------------
+   * MUSIC BACKGROUND — /admin/music-background/*
+   * -------------------------------------------------------- */
   MUSIC_BACKGROUND: {
-    PAGINATION: "/api/admin/music-background/pagination",
-    FIND_BY_ID: "/api/admin/music-background/find-by-id",
-    CREATE: "/api/admin/music-background/create",
-    IMPORT_YOUTUBE: "/api/admin/music-background/import-youtube",
-    UPDATE: "/api/admin/music-background/update",
-    DELETE: "/api/admin/music-background/delete",
+    PAGINATION: `${ADMIN}/music-background/pagination`,
+    FIND_BY_ID: `${ADMIN}/music-background/find-by-id`,
+    CREATE: `${ADMIN}/music-background/create`,
+    UPDATE: `${ADMIN}/music-background/update`,
+    DELETE: `${ADMIN}/music-background/delete`,
+    IMPORT_YOUTUBE: `${ADMIN}/music-background/import-youtube`,
+    INFO: `${ADMIN}/music-background/info`,
   },
 
+  /* --------------------------------------------------------
+   * STOCK ASSET — /admin/stock-asset/*
+   * -------------------------------------------------------- */
   STOCK_ASSET: {
-    PAGINATION: "/api/admin/stock-asset/pagination",
-    FIND_BY_ID: "/api/admin/stock-asset/find-by-id",
-    CREATE: "/api/admin/stock-asset/create",
-    UPDATE: "/api/admin/stock-asset/update",
-    DELETE: "/api/admin/stock-asset/delete",
+    PAGINATION: `${ADMIN}/stock-asset/pagination`,
+    FIND_BY_ID: `${ADMIN}/stock-asset/find-by-id`,
+    CREATE: `${ADMIN}/stock-asset/create`,
+    UPDATE: `${ADMIN}/stock-asset/update`,
+    DELETE: `${ADMIN}/stock-asset/delete`,
   },
 
-  ENV_MANAGER: {
-    FILES: "/api/admin/env-manager/files",
-    FILE: (project: string, environment: string) =>
-      `/api/admin/env-manager/files/${project}/${environment}`,
+  /* --------------------------------------------------------
+   * CONTACT — /admin/contact/*
+   * -------------------------------------------------------- */
+  CONTACT: {
+    PAGINATION: `${ADMIN}/contact/pagination`,
+    FIND_BY_ID: `${ADMIN}/contact/find-by-id`,
+    UPDATE_STATUS: `${ADMIN}/contact/update-status`,
+    DELETE: `${ADMIN}/contact/delete`,
+  },
+
+  /* --------------------------------------------------------
+   * REVIEW — /admin/review/*
+   * -------------------------------------------------------- */
+  REVIEW: {
+    PAGINATION: `${ADMIN}/review/pagination`,
+    FIND_BY_ID: `${ADMIN}/review/find-by-id`,
+    CREATE: `${ADMIN}/review/create`,
+    UPDATE: `${ADMIN}/review/update`,
+    DELETE: `${ADMIN}/review/delete`,
+    APPROVE: `${ADMIN}/review/approve`,
+    REJECT: `${ADMIN}/review/reject`,
+    PIN: `${ADMIN}/review/pin`,
+    UNPIN: `${ADMIN}/review/unpin`,
+  },
+
+  /* --------------------------------------------------------
+   * NOTIFICATION — /admin/notification/*
+   * -------------------------------------------------------- */
+  NOTIFICATION: {
+    PAGINATION: `${ADMIN}/notification/pagination`,
+    FIND_BY_ID: `${ADMIN}/notification/find-by-id`,
+  },
+
+  /* --------------------------------------------------------
+   * ACTION LOG — /admin/action-log/*
+   * -------------------------------------------------------- */
+  ACTION_LOG: {
+    PAGINATION: `${ADMIN}/action-log/pagination`,
+  },
+
+  /* --------------------------------------------------------
+   * ANALYTICS — /admin/analytics/*
+   * -------------------------------------------------------- */
+  ANALYTICS: {
+    OVERVIEW: `${ADMIN}/analytics/overview`,
   },
 };

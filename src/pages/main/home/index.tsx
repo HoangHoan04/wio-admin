@@ -63,9 +63,7 @@ export default function HomePage() {
       : 0;
 
   const displayName =
-    user?.fullName?.trim() ||
-    user?.email?.split("@")[0] ||
-    "Admin";
+    user?.customer?.fullName?.trim() || user?.email?.split("@")[0] || "Admin";
 
   return (
     <BaseView>

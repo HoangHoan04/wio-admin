@@ -217,11 +217,10 @@ export const AppNavbar: React.FC = () => {
 
     setIsChangingPassword(true);
     try {
-      const u = tokenCache.getUser();
       await authService.changePassword({
-        userId: u?.id,
-        oldPassword,
+        currentPassword: oldPassword,
         newPassword,
+        confirmPassword,
       });
       showToast({
         type: "success",

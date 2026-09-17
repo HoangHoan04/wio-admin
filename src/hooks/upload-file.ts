@@ -1,71 +1,115 @@
+import type { UploadResultDto } from "@/dto/upload.dto";
 import rootApiService from "@/services/api.service";
 import { API_ENDPOINTS } from "@/services/endpoint";
-import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
-export interface UploadFileResponse {
-  fileName: string;
-  fileUrl: string;
-  storage: string;
+/* ============================================================
+ * TYPES
+ * ============================================================ */
+export type UploadFileType = "image" | "audio" | "document" | "auto" | "all";
+
+export interface UploadSingleVariables {
+  file: File;
+  type?: UploadFileType;
 }
 
-export type UploadFileType = "image" | "document" | "audio" | "all";
+export interface UploadMultiVariables {
+  files: File[];
+}
 
-const getUploadEndpoint = (type: UploadFileType): string => {
+/* ============================================================
+ * ENDPOINT RESOLVER
+ * ============================================================ */
+const resolveEndpoint = (type: UploadFileType = "auto"): string => {
   switch (type) {
     case "document":
       return API_ENDPOINTS.UPLOAD_FILE.DOCUMENT;
-    case "image":
-      return API_ENDPOINTS.UPLOAD_FILE.IMAGE;
     case "audio":
       return API_ENDPOINTS.UPLOAD_FILE.AUDIO;
+    case "image":
+      return API_ENDPOINTS.UPLOAD_FILE.IMAGE;
+    case "all":
+    case "auto":
     default:
       return API_ENDPOINTS.UPLOAD_FILE.SINGLE;
   }
 };
 
+/* ============================================================
+ * API FUNCTIONS
+ * ============================================================ */
+async function uploadSingleApi({
+  file,
+  type = "auto",
+}: UploadSingleVariables): Promise<UploadResultDto> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return rootApiService.post<UploadResultDto>(resolveEndpoint(type), formData);
+}
+
+async function uploadMultiApi({
+  files,
+}: UploadMultiVariables): Promise<UploadResultDto[]> {
+  const formData = new FormData();
+  files.forEach((file) => formData.append("files", file));
+
+  return rootApiService.post<UploadResultDto[]>(
+    API_ENDPOINTS.UPLOAD_FILE.MULTI,
+    formData,
+  );
+}
+
+/* ============================================================
+ * HOOKS
+ * ============================================================ */
+export const useUploadSingleFile = () => {
+  return useMutation({
+    mutationFn: uploadSingleApi,
+  });
+};
+
+export const useUploadMultipleFiles = () => {
+  return useMutation({
+    mutationFn: uploadMultiApi,
+  });
+};
+
+/* ============================================================
+ * CONVENIENCE HOOK — gộp cả 2
+ * ============================================================ */
 export const useUploadFile = () => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const uploadFile = async (
-    file: File,
-    type: UploadFileType = "image",
-  ): Promise<UploadFileResponse | null> => {
-    setIsLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await rootApiService.post<UploadFileResponse>(
-        getUploadEndpoint(type),
-        formData,
-      );
-      return response;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const uploadFiles = async (files: File[]): Promise<UploadFileResponse[]> => {
-    if (files.length === 0) return [];
-
-    setIsLoading(true);
-    try {
-      const formData = new FormData();
-      files.forEach((file) => formData.append("files", file));
-
-      const response = await rootApiService.post<UploadFileResponse[]>(
-        API_ENDPOINTS.UPLOAD_FILE.BULK_IMAGES,
-        formData,
-      );
-      return response;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const single = useUploadSingleFile();
+  const multiple = useUploadMultipleFiles();
 
   return {
-    uploadFile,
-    uploadFiles,
-    isLoading,
+    /* Single */
+    uploadFile: (
+      fileOrVars: File | UploadSingleVariables,
+      type?: UploadFileType,
+    ) =>
+      single.mutateAsync(
+        fileOrVars instanceof File
+          ? { file: fileOrVars, type }
+          : fileOrVars,
+      ),
+    isLoading: single.isPending,
+    isUploading: single.isPending,
+    uploadError: single.error,
+
+    /* Multiple */
+    uploadFiles: (filesOrVars: File[] | UploadMultiVariables) =>
+      multiple.mutateAsync(
+        Array.isArray(filesOrVars) ? { files: filesOrVars } : filesOrVars,
+      ),
+    isLoadingMultiple: multiple.isPending,
+    isUploadingMultiple: multiple.isPending,
+    uploadMultipleError: multiple.error,
+
+    /* Utilities */
+    reset: () => {
+      single.reset();
+      multiple.reset();
+    },
   };
 };

@@ -1,28 +1,38 @@
 import type { BaseDto } from "./common";
 
+/* ============================================================
+ * USER
+ * ============================================================ */
+export interface UserDto extends BaseDto {
+  email: string;
+  phone?: string | null;
+  role: string;
+  isActive: boolean;
+  lastLogin?: string | null;
+  refreshToken?: string | null;
+  customer?: CustomerDto | null;
+  fullName?: string | null;
+  isAdmin?: boolean;
+}
+
+/* ============================================================
+ * CUSTOMER
+ * ============================================================ */
 export interface CustomerDto extends BaseDto {
   userId: string;
-  code: string;
+  code?: string | null;
   fullName: string;
-  email?: string;
-  phone?: string;
-  gender?: string;
-  dateOfBirth?: string;
+  email?: string | null;
+  phone?: string | null;
+  gender?: string | null;
+  dateOfBirth?: string | null;
+  avatarUrl?: string | null;
   user?: UserDto;
 }
 
-export interface UserDto extends BaseDto {
-  fullName?: string;
-  email: string;
-  phone?: string;
-  customerId?: string;
-  isAdmin: boolean;
-  role: string;
-  provider: string;
-  isActive: boolean;
-  lastLogin?: string;
-}
-
+/* ============================================================
+ * FILTER
+ * ============================================================ */
 export interface FilterCustomerDto {
   code?: string;
   fullName?: string;
@@ -32,8 +42,10 @@ export interface FilterCustomerDto {
   isDeleted?: boolean;
 }
 
-export interface ChangePasswordDto {
-  userId: string;
-  oldPassword: string;
+/* ============================================================
+ * ACTIONS
+ * ============================================================ */
+export interface ChangeCustomerPasswordDto {
+  customerId: string;
   newPassword: string;
 }

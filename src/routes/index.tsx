@@ -1,54 +1,32 @@
 import { ROUTES } from "@/common/constants";
 import AppLayout from "@/layout/AppLayout";
 import AnalyticsPage from "@/pages/main/analytics-manager";
-import ConversionReportPage from "@/pages/main/analytics-manager/conversion";
-import RevenueReportPage from "@/pages/main/analytics-manager/revenue";
-import TemplateReportPage from "@/pages/main/analytics-manager/template";
-import WeddingReportPage from "@/pages/main/analytics-manager/wedding";
-import CardTypeManagerPage from "@/pages/main/card-type-manager";
 import CustomerManagerPage from "@/pages/main/customer-manager";
 import DetailCustomerPage from "@/pages/main/customer-manager/detail";
 import GuestManagerPage from "@/pages/main/guest-manager";
 import HomePage from "@/pages/main/home";
-import MarketingCmsPage from "@/pages/main/marketing-cms";
-import BannerManagerPage from "@/pages/main/marketing-cms/banner";
-import BlogManagerPage from "@/pages/main/marketing-cms/blog";
-import FaqManagerPage from "@/pages/main/marketing-cms/faq";
-import TestimonialManagerPage from "@/pages/main/marketing-cms/testimonial";
+import InvitationListPage from "@/pages/main/invitation-manager";
+import DetailInvitationPage from "@/pages/main/invitation-manager/detail";
 import MusicBackgroundManagerPage from "@/pages/main/music-background-manager";
 import PhotoWallManagerPage from "@/pages/main/photo-wall-manager";
 import PlanManagerPage from "@/pages/main/plan-manager";
 import AddPlanPage from "@/pages/main/plan-manager/add";
 import DetailPlanPage from "@/pages/main/plan-manager/detail";
 import EditPlanPage from "@/pages/main/plan-manager/edit";
-import PromotionManagerPage from "@/pages/main/promotion-manager";
-import AddPromotionPage from "@/pages/main/promotion-manager/add";
-import DetailPromotionPage from "@/pages/main/promotion-manager/detail";
-import EditPromotionPage from "@/pages/main/promotion-manager/edit";
+import ReviewManagerPage from "@/pages/main/review-manager";
 import SettingsPage from "@/pages/main/setting-system";
 import AuditLogPage from "@/pages/main/setting-system/audit-log";
-import BankConfigPage from "@/pages/main/setting-system/bank-config";
-import DomainConfigPage from "@/pages/main/setting-system/domain-config";
-import NotificationConfigPage from "@/pages/main/setting-system/notification-config";
-import PaymentGatewayPage from "@/pages/main/setting-system/payment-gateway";
-import StaffManagerPage from "@/pages/main/staff-manager";
-import AddStaffPage from "@/pages/main/staff-manager/add";
-import DetailStaffPage from "@/pages/main/staff-manager/detail";
-import RolePermissionPage from "@/pages/main/staff-manager/role-permission";
+import NotificationLogPage from "@/pages/main/setting-system/notification-log";
 import StockAssetManagerPage from "@/pages/main/stock-asset-manager";
 import SubscriptionListPage from "@/pages/main/subscription-manager";
 import DetailSubscriptionPage from "@/pages/main/subscription-manager/detail";
-import SupportTicketPage from "@/pages/main/support-ticket";
-import DetailTicketPage from "@/pages/main/support-ticket/detail";
+import ContactManagerPage from "@/pages/main/contact-manager";
+import DetailContactPage from "@/pages/main/contact-manager/detail";
+import TemplateCategoryManagerPage from "@/pages/main/template-category-manager";
 import TemplateManagerPage from "@/pages/main/template-manager";
 import AddTemplatePage from "@/pages/main/template-manager/add";
 import DetailTemplatePage from "@/pages/main/template-manager/detail";
 import EditTemplatePage from "@/pages/main/template-manager/edit";
-import TransactionManagerPage from "@/pages/main/transaction-manager";
-import DetailTransactionPage from "@/pages/main/transaction-manager/detail";
-import RefundRequestPage from "@/pages/main/transaction-manager/refund-request";
-import WeddingListPage from "@/pages/main/wedding-manager";
-import DetailInvitationPage from "@/pages/main/wedding-manager/detail";
 import WishManagerPage from "@/pages/main/wish-manager";
 import LoginPage from "@/pages/auth/LoginPage";
 import NotFound from "@/pages/other/NotFound";
@@ -65,6 +43,7 @@ export default function AppRoutes() {
           <Route element={<AppLayout />}>
             <Route index element={<HomePage />} />
 
+            {/* Quản lý khách hàng */}
             <Route
               path={ROUTES.MAIN.CUSTOMER_MANAGER.path}
               element={<CustomerManagerPage />}
@@ -74,15 +53,16 @@ export default function AppRoutes() {
               element={<DetailCustomerPage />}
             />
 
+            {/* Quản lý thiệp */}
             <Route
               path={ROUTES.MAIN.INVITATION_MANAGER.path}
-              element={<WeddingListPage />}
+              element={<InvitationListPage />}
             />
             <Route
               path={
                 ROUTES.MAIN.INVITATION_MANAGER.children.INVITATION_LIST.path
               }
-              element={<WeddingListPage />}
+              element={<InvitationListPage />}
             />
             <Route
               path={
@@ -92,12 +72,7 @@ export default function AppRoutes() {
               element={<DetailInvitationPage />}
             />
 
-            <Route
-              path={
-                ROUTES.MAIN.INVITATION_MANAGER.children.CARD_TYPE_MANAGER.path
-              }
-              element={<CardTypeManagerPage />}
-            />
+            {/* Mẫu thiệp */}
             <Route
               path={
                 ROUTES.MAIN.INVITATION_MANAGER.children.TEMPLATE_MANAGER.path
@@ -125,12 +100,25 @@ export default function AppRoutes() {
               }
               element={<DetailTemplatePage />}
             />
+
+            {/* Phong cách cưới */}
+            <Route
+              path={
+                ROUTES.MAIN.INVITATION_MANAGER.children.TEMPLATE_CATEGORY_MANAGER
+                  .path
+              }
+              element={<TemplateCategoryManagerPage />}
+            />
+
+            {/* Tường ảnh */}
             <Route
               path={
                 ROUTES.MAIN.INVITATION_MANAGER.children.PHOTO_WALL_MANAGER.path
               }
               element={<PhotoWallManagerPage />}
             />
+
+            {/* Âm nhạc nền */}
             <Route
               path={
                 ROUTES.MAIN.INVITATION_MANAGER.children.MUSIC_BACKGROUND_MANAGER
@@ -138,16 +126,22 @@ export default function AppRoutes() {
               }
               element={<MusicBackgroundManagerPage />}
             />
+
+            {/* Kho sticker & họa tiết */}
             <Route
               path={
                 ROUTES.MAIN.INVITATION_MANAGER.children.STOCK_ASSET_MANAGER.path
               }
               element={<StockAssetManagerPage />}
             />
+
+            {/* Khách mời */}
             <Route
               path={ROUTES.MAIN.INVITATION_MANAGER.children.GUEST_MANAGER.path}
               element={<GuestManagerPage />}
             />
+
+            {/* Kiểm duyệt lời chúc */}
             <Route
               path={
                 ROUTES.MAIN.INVITATION_MANAGER.children.MODERATION_QUEUE.path
@@ -155,6 +149,11 @@ export default function AppRoutes() {
               element={<WishManagerPage />}
             />
 
+            {/* Gói dịch vụ & Thuê bao */}
+            <Route
+              path={ROUTES.MAIN.SUBSCRIPTION_MANAGER.path}
+              element={<SubscriptionListPage />}
+            />
             <Route
               path={ROUTES.MAIN.SUBSCRIPTION_MANAGER.children.PLAN_MANAGER.path}
               element={<PlanManagerPage />}
@@ -182,10 +181,6 @@ export default function AppRoutes() {
             />
 
             <Route
-              path={ROUTES.MAIN.SUBSCRIPTION_MANAGER.path}
-              element={<SubscriptionListPage />}
-            />
-            <Route
               path={
                 ROUTES.MAIN.SUBSCRIPTION_MANAGER.children.SUBSCRIPTION_LIST.path
               }
@@ -199,110 +194,31 @@ export default function AppRoutes() {
               element={<DetailSubscriptionPage />}
             />
 
+            {/* Đánh giá khách hàng */}
             <Route
-              path={ROUTES.MAIN.TRANSACTION_MANAGER.path}
-              element={<TransactionManagerPage />}
+              path={ROUTES.MAIN.REVIEW_MANAGER.path}
+              element={<ReviewManagerPage />}
+            />
+
+            {/* Yêu cầu liên hệ */}
+            <Route
+              path={ROUTES.MAIN.CONTACT_MANAGER.path}
+              element={<ContactManagerPage />}
             />
             <Route
               path={
-                ROUTES.MAIN.TRANSACTION_MANAGER.children.DETAIL_TRANSACTION.path
+                ROUTES.MAIN.CONTACT_MANAGER.children.DETAIL_CONTACT.path
               }
-              element={<DetailTransactionPage />}
-            />
-            <Route
-              path={
-                ROUTES.MAIN.TRANSACTION_MANAGER.children.REFUND_REQUEST.path
-              }
-              element={<RefundRequestPage />}
+              element={<DetailContactPage />}
             />
 
-            <Route
-              path={ROUTES.MAIN.PROMOTION_MANAGER.path}
-              element={<PromotionManagerPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.PROMOTION_MANAGER.children.ADD_PROMOTION.path}
-              element={<AddPromotionPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.PROMOTION_MANAGER.children.EDIT_PROMOTION.path}
-              element={<EditPromotionPage />}
-            />
-            <Route
-              path={
-                ROUTES.MAIN.PROMOTION_MANAGER.children.DETAIL_PROMOTION.path
-              }
-              element={<DetailPromotionPage />}
-            />
-
-            <Route
-              path={ROUTES.MAIN.STAFF_MANAGER.path}
-              element={<StaffManagerPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.STAFF_MANAGER.children.ADD_STAFF.path}
-              element={<AddStaffPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.STAFF_MANAGER.children.DETAIL_STAFF.path}
-              element={<DetailStaffPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.STAFF_MANAGER.children.ROLE_PERMISSION.path}
-              element={<RolePermissionPage />}
-            />
-
-            <Route
-              path={ROUTES.MAIN.SUPPORT_TICKET.path}
-              element={<SupportTicketPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.SUPPORT_TICKET.children.DETAIL_TICKET.path}
-              element={<DetailTicketPage />}
-            />
-
-            <Route
-              path={ROUTES.MAIN.MARKETING_CMS.path}
-              element={<MarketingCmsPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.MARKETING_CMS.children.BANNER_MANAGER.path}
-              element={<BannerManagerPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.MARKETING_CMS.children.BLOG_MANAGER.path}
-              element={<BlogManagerPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.MARKETING_CMS.children.FAQ_MANAGER.path}
-              element={<FaqManagerPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.MARKETING_CMS.children.TESTIMONIAL_MANAGER.path}
-              element={<TestimonialManagerPage />}
-            />
-
+            {/* Thống kê */}
             <Route
               path={ROUTES.MAIN.ANALYTICS.path}
               element={<AnalyticsPage />}
             />
-            <Route
-              path={ROUTES.MAIN.ANALYTICS.children.REVENUE_REPORT.path}
-              element={<RevenueReportPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.ANALYTICS.children.WEDDING_REPORT.path}
-              element={<WeddingReportPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.ANALYTICS.children.CONVERSION_REPORT.path}
-              element={<ConversionReportPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.ANALYTICS.children.TEMPLATE_REPORT.path}
-              element={<TemplateReportPage />}
-            />
 
+            {/* Cài đặt */}
             <Route
               path={ROUTES.MAIN.SETTINGS.path}
               element={<SettingsPage />}
@@ -312,20 +228,8 @@ export default function AppRoutes() {
               element={<AuditLogPage />}
             />
             <Route
-              path={ROUTES.MAIN.SETTINGS.children.PAYMENT_GATEWAY.path}
-              element={<PaymentGatewayPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.SETTINGS.children.NOTIFICATION_CONFIG.path}
-              element={<NotificationConfigPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.SETTINGS.children.DOMAIN_CONFIG.path}
-              element={<DomainConfigPage />}
-            />
-            <Route
-              path={ROUTES.MAIN.SETTINGS.children.BANK_CONFIG.path}
-              element={<BankConfigPage />}
+              path={ROUTES.MAIN.SETTINGS.children.NOTIFICATION_LOG.path}
+              element={<NotificationLogPage />}
             />
           </Route>
         </Route>

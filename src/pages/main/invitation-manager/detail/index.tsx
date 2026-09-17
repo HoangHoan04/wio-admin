@@ -90,8 +90,18 @@ export default function DetailInvitationPage() {
   const hosts = data.hosts || [];
   const events = data.events || [];
   const gifts = data.gifts || [];
-  const dressCodes: string[] = Array.isArray(data.extraContent?.dressCodes)
-    ? data.extraContent.dressCodes
+  let extraContentObj: Record<string, any> | null = null;
+  try {
+    if (typeof data.extraContent === "string") {
+      extraContentObj = JSON.parse(data.extraContent);
+    } else if (typeof data.extraContent === "object") {
+      extraContentObj = data.extraContent as any;
+    }
+  } catch {
+    extraContentObj = null;
+  }
+  const dressCodes: string[] = Array.isArray(extraContentObj?.dressCodes)
+    ? extraContentObj.dressCodes
     : [];
   const milestones = events
     .filter((event: any) => event.startsAt)
@@ -278,7 +288,7 @@ export default function DetailInvitationPage() {
               </Card>
             )}
 
-            {data.music?.url && (
+            {(data.music?.audioUrl || (data.music as any)?.url) && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -287,10 +297,17 @@ export default function DetailInvitationPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
-                  <InfoItem label="Tên nhạc" value={data.music.name || "N/A"} />
+                  <InfoItem
+                    label="Tên nhạc"
+                    value={data.music?.title || (data.music as any)?.name || "N/A"}
+                  />
                   <InfoItem
                     label="Tự động phát"
-                    value={data.music.autoplay ? "Có" : "Không"}
+                    value={
+                      data.musicConfig?.autoplay || (data.music as any)?.autoplay
+                        ? "Có"
+                        : "Không"
+                    }
                   />
                 </CardContent>
               </Card>

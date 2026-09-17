@@ -4,21 +4,21 @@ export interface ActionLogDto extends BaseDto {
   createdById: string;
   createdByCode: string;
   createdByName: string;
-  createdNote?: string;
-  actionType?: string;
-  entityId?: string;
-  entityName?: string;
-  oldValue?: any;
-  newValue?: any;
-  ipAddress?: string;
-  userAgent?: string;
-  location?: string;
+  createdNote?: string | null;
+  actionType?: string | null;
+  entityId?: string | null;
+  entityName?: string | null;
+  oldValue?: Record<string, unknown> | null;
+  newValue?: Record<string, unknown> | null;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  location?: string | null;
 }
 
 export interface ActionLogFilterDto {
-  createdByCode?: string;
+  entityId?: string;
+  entityName?: string;
+  createdById?: string;
   createdByName?: string;
   actionType?: string;
-  entityName?: string;
-  entityId?: string;
 }

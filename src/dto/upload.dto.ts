@@ -1,20 +1,15 @@
-import type { BaseDto } from "./common";
-
-export interface FileArchivalDto extends BaseDto {
-  fileCode: string;
+/* ============================================================
+ * RESPONSE — Kết quả upload
+ * ============================================================ */
+export interface UploadResultDto {
   fileName: string;
   fileUrl: string;
-  fileType?: string;
-  fileSize?: number;
-  extension?: string;
+  storage: "cloudinary" | "catbox";
 }
 
-export interface UploadSingleResponseDto {
-  id: string;
-  fileCode: string;
-  fileName: string;
-  fileUrl: string;
-  fileType?: string;
-  fileSize?: number;
-  extension?: string;
+/* ============================================================
+ * REQUEST
+ * ============================================================ */
+export interface UploadCatboxFromUrlDto {
+  url: string;
 }

@@ -1,18 +1,30 @@
 export interface BaseDto {
   id: string;
-  createdAt: Date;
-  updatedAt?: Date;
-  createdBy: string | null;
+  createdAt: string;
+  updatedAt?: string | null;
+  createdBy?: string | null;
   updatedBy?: string | null;
   isDeleted: boolean;
-  statusColor?: string;
-  statusName?: string;
-  status?: string;
 }
-export interface PaginationDto<T> {
+
+/* ============================================================
+ * PAGINATION
+ * ============================================================ */
+export interface PaginationDto<TWhere = Record<string, unknown>> {
   skip: number;
   take: number;
-  where: T;
+  where?: TWhere;
+  order?: Record<string, "ASC" | "DESC">;
+}
+
+export interface PageResponse<T = unknown> {
+  data: T[];
+  total: number;
+}
+
+export interface SuccessResponse<T = unknown> {
+  message: string;
+  data: T;
 }
 
 type TOperatorText = "=" | "LIKE" | "NOT LIKE";
@@ -55,12 +67,9 @@ export type OrderOption<T = unknown> = {
   [k in keyof T]?: "ASC" | "DESC" | "";
 };
 
-export interface PageResponse<T = any> {
-  data: T[];
-  total: number;
-}
-
-export interface SuccessResponse<T = any> {
-  message: string;
-  data: T;
+/* ============================================================
+ * ID DTO (dùng chung cho các endpoint find-by-id/delete)
+ * ============================================================ */
+export interface IdDto {
+  id: string;
 }

@@ -17,13 +17,14 @@ export interface OverviewStats {
 }
 
 export const useSystemStats = () => {
-  const { data, isLoading, isFetching, refetch, error } = useQuery<OverviewStats>({
-    queryKey: [API_ENDPOINTS.ANALYTICS.OVERVIEW],
-    queryFn: async () => {
-      const res = await rootApiService.post(API_ENDPOINTS.ANALYTICS.OVERVIEW);
-      return (res as any)?.data || res;
-    },
-  });
+  const { data, isLoading, isFetching, refetch, error } =
+    useQuery<OverviewStats>({
+      queryKey: [API_ENDPOINTS.ANALYTICS.OVERVIEW],
+      queryFn: async () => {
+        const res = await rootApiService.post(API_ENDPOINTS.ANALYTICS.OVERVIEW);
+        return (res as any)?.data || res;
+      },
+    });
 
   return {
     data,

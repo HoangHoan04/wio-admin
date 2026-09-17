@@ -1,18 +1,17 @@
 import {
   BarChart3,
   CreditCard,
+  HeartHandshake,
   Home,
   Image as ImageIcon,
+  Layers,
   LifeBuoy,
   Mail,
-  Megaphone,
   Music,
   Package,
-  Receipt,
   Settings,
   ShieldAlert,
-  ShieldCheck,
-  Ticket,
+  Star,
   Users,
   UserSquare2,
 } from "lucide-react";
@@ -56,11 +55,25 @@ export const ROUTES = {
       icon: Mail,
       path: "/invitation-manager",
       children: {
+        INVITATION_LIST: {
+          key: "INVITATION_LIST",
+          label: "Danh sách thiệp",
+          path: "/invitation-list",
+          icon: Mail,
+          children: {
+            DETAIL_INVITATION: {
+              key: "DETAIL_INVITATION",
+              label: "Chi tiết thiệp",
+              path: "/invitation/detail/:id",
+              isShow: false,
+            },
+          },
+        },
         TEMPLATE_MANAGER: {
           key: "TEMPLATE_MANAGER",
           label: "Mẫu thiệp",
           path: "/template-manager",
-          icon: ImageIcon,
+          icon: Layers,
           children: {
             ADD_TEMPLATE: {
               key: "ADD_TEMPLATE",
@@ -82,29 +95,15 @@ export const ROUTES = {
             },
           },
         },
-        INVITATION_LIST: {
-          key: "INVITATION_LIST",
-          label: "Danh sách thiệp",
-          path: "/invitation-list",
-          icon: Mail,
-          children: {
-            DETAIL_INVITATION: {
-              key: "DETAIL_INVITATION",
-              label: "Chi tiết thiệp",
-              path: "/invitation/detail/:id",
-              isShow: false,
-            },
-          },
-        },
-        CARD_TYPE_MANAGER: {
-          key: "CARD_TYPE_MANAGER",
-          label: "Loại thiệp",
-          icon: Mail,
-          path: "/card-type-manager",
+        TEMPLATE_CATEGORY_MANAGER: {
+          key: "TEMPLATE_CATEGORY_MANAGER",
+          label: "Phong cách cưới",
+          icon: HeartHandshake,
+          path: "/template-category-manager",
         },
         PHOTO_WALL_MANAGER: {
           key: "PHOTO_WALL_MANAGER",
-          label: "Photo Wall",
+          label: "Tường ảnh",
           icon: ImageIcon,
           path: "/photo-wall-manager",
         },
@@ -116,7 +115,7 @@ export const ROUTES = {
         },
         STOCK_ASSET_MANAGER: {
           key: "STOCK_ASSET_MANAGER",
-          label: "Kho sticker",
+          label: "Kho sticker & họa tiết",
           icon: ImageIcon,
           path: "/stock-asset-manager",
         },
@@ -130,14 +129,14 @@ export const ROUTES = {
           key: "MODERATION_QUEUE",
           label: "Kiểm duyệt lời chúc",
           icon: ShieldAlert,
-          path: "/moderation-queue",
+          path: "/wish-manager",
         },
       },
     },
 
     SUBSCRIPTION_MANAGER: {
       key: "SUBSCRIPTION_MANAGER",
-      label: "Subscription",
+      label: "Dịch vụ & Thuê bao",
       icon: CreditCard,
       path: "/subscription-manager",
       children: {
@@ -169,13 +168,13 @@ export const ROUTES = {
         },
         SUBSCRIPTION_LIST: {
           key: "SUBSCRIPTION_LIST",
-          label: "Danh sách subscription",
+          label: "Danh sách thuê bao",
           path: "/subscription-list",
           icon: CreditCard,
           children: {
             DETAIL_SUBSCRIPTION: {
               key: "DETAIL_SUBSCRIPTION",
-              label: "Chi tiết subscription",
+              label: "Chi tiết thuê bao",
               path: "/subscription/detail/:id",
               isShow: false,
             },
@@ -184,127 +183,23 @@ export const ROUTES = {
       },
     },
 
-    TRANSACTION_MANAGER: {
-      key: "TRANSACTION_MANAGER",
-      label: "Giao dịch & Thanh toán",
-      icon: Receipt,
-      path: "/transaction-manager",
-      isShow: false,
-      children: {
-        DETAIL_TRANSACTION: {
-          key: "DETAIL_TRANSACTION",
-          label: "Chi tiết giao dịch",
-          path: "/transaction/detail/:id",
-          isShow: false,
-        },
-        REFUND_REQUEST: {
-          key: "REFUND_REQUEST",
-          label: "Yêu cầu hoàn tiền",
-          path: "/transaction/refund-request",
-          isShow: false,
-        },
-      },
+    REVIEW_MANAGER: {
+      key: "REVIEW_MANAGER",
+      label: "Đánh giá khách hàng",
+      icon: Star,
+      path: "/review-manager",
     },
 
-    PROMOTION_MANAGER: {
-      key: "PROMOTION_MANAGER",
-      label: "Mã giảm giá",
-      icon: Ticket,
-      path: "/promotion-manager",
-      children: {
-        ADD_PROMOTION: {
-          key: "ADD_PROMOTION",
-          label: "Thêm mã giảm giá",
-          path: "/promotion/add",
-          isShow: false,
-        },
-        EDIT_PROMOTION: {
-          key: "EDIT_PROMOTION",
-          label: "Chỉnh sửa mã giảm giá",
-          path: "/promotion/edit/:id",
-          isShow: false,
-        },
-        DETAIL_PROMOTION: {
-          key: "DETAIL_PROMOTION",
-          label: "Chi tiết mã giảm giá",
-          path: "/promotion/detail/:id",
-          isShow: false,
-        },
-      },
-    },
-
-    STAFF_MANAGER: {
-      key: "STAFF_MANAGER",
-      label: "Nhân sự & Phân quyền",
-      icon: ShieldCheck,
-      path: "/staff-manager",
-      isShow: false,
-      children: {
-        ADD_STAFF: {
-          key: "ADD_STAFF",
-          label: "Thêm nhân sự",
-          path: "/staff/add",
-          isShow: false,
-        },
-        DETAIL_STAFF: {
-          key: "DETAIL_STAFF",
-          label: "Chi tiết nhân sự",
-          path: "/staff/detail/:id",
-          isShow: false,
-        },
-        ROLE_PERMISSION: {
-          key: "ROLE_PERMISSION",
-          label: "Phân quyền vai trò",
-          path: "/staff/role-permission",
-          isShow: false,
-        },
-      },
-    },
-
-    SUPPORT_TICKET: {
-      key: "SUPPORT_TICKET",
-      label: "Hỗ trợ khách hàng",
+    CONTACT_MANAGER: {
+      key: "CONTACT_MANAGER",
+      label: "Yêu cầu liên hệ",
       icon: LifeBuoy,
-      path: "/support-ticket",
+      path: "/contact-manager",
       children: {
-        DETAIL_TICKET: {
-          key: "DETAIL_TICKET",
-          label: "Chi tiết yêu cầu hỗ trợ",
-          path: "/support-ticket/detail/:id",
-          isShow: false,
-        },
-      },
-    },
-
-    MARKETING_CMS: {
-      key: "MARKETING_CMS",
-      label: "Nội dung Marketing",
-      icon: Megaphone,
-      path: "/marketing-cms",
-      isShow: false,
-      children: {
-        BANNER_MANAGER: {
-          key: "BANNER_MANAGER",
-          label: "Banner trang chủ",
-          path: "/marketing-cms/banner",
-          isShow: false,
-        },
-        BLOG_MANAGER: {
-          key: "BLOG_MANAGER",
-          label: "Bài viết / Blog",
-          path: "/marketing-cms/blog",
-          isShow: false,
-        },
-        FAQ_MANAGER: {
-          key: "FAQ_MANAGER",
-          label: "Câu hỏi thường gặp",
-          path: "/marketing-cms/faq",
-          isShow: false,
-        },
-        TESTIMONIAL_MANAGER: {
-          key: "TESTIMONIAL_MANAGER",
-          label: "Đánh giá khách hàng",
-          path: "/marketing-cms/testimonial",
+        DETAIL_CONTACT: {
+          key: "DETAIL_CONTACT",
+          label: "Chi tiết liên hệ",
+          path: "/contact-manager/detail/:id",
           isShow: false,
         },
       },
@@ -315,32 +210,6 @@ export const ROUTES = {
       label: "Thống kê hệ thống",
       icon: BarChart3,
       path: "/analytics",
-      children: {
-        REVENUE_REPORT: {
-          key: "REVENUE_REPORT",
-          label: "Báo cáo doanh thu",
-          path: "/analytics/revenue",
-          isShow: false,
-        },
-        WEDDING_REPORT: {
-          key: "WEDDING_REPORT",
-          label: "Báo cáo thiệp mới",
-          path: "/analytics/wedding",
-          isShow: false,
-        },
-        CONVERSION_REPORT: {
-          key: "CONVERSION_REPORT",
-          label: "Tỷ lệ nâng cấp gói",
-          path: "/analytics/conversion",
-          isShow: false,
-        },
-        TEMPLATE_REPORT: {
-          key: "TEMPLATE_REPORT",
-          label: "Template phổ biến",
-          path: "/analytics/template",
-          isShow: false,
-        },
-      },
     },
 
     SETTINGS: {
@@ -354,27 +223,10 @@ export const ROUTES = {
           label: "Lịch sử hoạt động",
           path: "/settings/audit-log",
         },
-        PAYMENT_GATEWAY: {
-          key: "PAYMENT_GATEWAY",
-          label: "Cấu hình cổng thanh toán",
-          path: "/settings/payment-gateway",
-          isShow: false,
-        },
-        NOTIFICATION_CONFIG: {
-          key: "NOTIFICATION_CONFIG",
-          label: "Cấu hình Email/SMS",
-          path: "/settings/notification-config",
-        },
-        DOMAIN_CONFIG: {
-          key: "DOMAIN_CONFIG",
-          label: "Cấu hình domain riêng",
-          path: "/settings/domain-config",
-          isShow: false,
-        },
-        BANK_CONFIG: {
-          key: "BANK_CONFIG",
-          label: "Tài khoản nhận tiền",
-          path: "/settings/bank-config",
+        NOTIFICATION_LOG: {
+          key: "NOTIFICATION_LOG",
+          label: "Lịch sử gửi thông báo",
+          path: "/settings/notification-log",
         },
       },
     },

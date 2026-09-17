@@ -3,7 +3,9 @@ import type { SubscriptionDto } from "@/dto/subscription.dto";
 import type { TemplateDto } from "@/dto/template.dto";
 
 const DAY_WEIGHTS = [0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.22];
-const MONTH_WEIGHTS = [0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17];
+const MONTH_WEIGHTS = [
+  0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17,
+];
 
 const DAY_LABELS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
 
@@ -65,7 +67,11 @@ export function buildEngagementSeries(stats?: OverviewStats) {
 
   return [
     { label: "Tham dự", value: attending, key: "attending" },
-    { label: "Chưa phản hồi", value: Math.max(declined - pending, 0), key: "pending" },
+    {
+      label: "Chưa phản hồi",
+      value: Math.max(declined - pending, 0),
+      key: "pending",
+    },
     { label: "Lời chúc", value: pending, key: "wishes" },
   ].filter((item) => item.value > 0);
 }
@@ -73,7 +79,11 @@ export function buildEngagementSeries(stats?: OverviewStats) {
 export function buildStatusSeries(stats?: OverviewStats) {
   const invitations = stats?.invitations;
   return [
-    { key: "published", label: "Đã xuất bản", value: invitations?.published ?? 0 },
+    {
+      key: "published",
+      label: "Đã xuất bản",
+      value: invitations?.published ?? 0,
+    },
     { key: "draft", label: "Bản nháp", value: invitations?.draft ?? 0 },
     { key: "archived", label: "Lưu trữ", value: invitations?.archived ?? 0 },
   ].filter((item) => item.value > 0);
@@ -84,12 +94,16 @@ export function buildTypeSeries(stats?: OverviewStats) {
     .filter((item) => item.total > 0)
     .map((item) => ({
       ...item,
-      shortName: item.name.length > 16 ? `${item.name.slice(0, 14)}…` : item.name,
+      shortName:
+        item.name.length > 16 ? `${item.name.slice(0, 14)}…` : item.name,
     }));
 }
 
 export function aggregateSubscriptionsByPlan(subscriptions: SubscriptionDto[]) {
-  const map = new Map<string, { label: string; count: number; revenue: number }>();
+  const map = new Map<
+    string,
+    { label: string; count: number; revenue: number }
+  >();
 
   subscriptions.forEach((item) => {
     const label = item.plan?.name ?? "Không xác định";
@@ -102,14 +116,19 @@ export function aggregateSubscriptionsByPlan(subscriptions: SubscriptionDto[]) {
   return Array.from(map.values()).sort((a, b) => b.revenue - a.revenue);
 }
 
-export function aggregateSubscriptionsByMonth(subscriptions: SubscriptionDto[]) {
+export function aggregateSubscriptionsByMonth(
+  subscriptions: SubscriptionDto[],
+) {
   const map = new Map<string, number>();
 
   subscriptions.forEach((item) => {
     const date = new Date(item.startedAt);
     if (Number.isNaN(date.getTime())) return;
     const key = `T${date.getMonth() + 1}/${String(date.getFullYear()).slice(-2)}`;
-    map.set(key, (map.get(key) ?? 0) + (item.paidAmountVnd ?? item.plan?.priceVnd ?? 0));
+    map.set(
+      key,
+      (map.get(key) ?? 0) + (item.paidAmountVnd ?? item.plan?.priceVnd ?? 0),
+    );
   });
 
   return Array.from(map.entries())
@@ -154,15 +173,20 @@ export function aggregateTemplatePremiumSplit(templates: TemplateDto[]) {
 export function getWeddingTotal(stats?: OverviewStats) {
   return (
     stats?.invitations?.byType?.find(
-      (item) => item.cardType === "WEDDING" || item.name.toLowerCase().includes("cưới"),
+      (item) =>
+        item.cardType === "WEDDING" || item.name.toLowerCase().includes("cưới"),
     )?.total ?? 0
   );
 }
 
 export function buildConversionFunnel(subscriptions: SubscriptionDto[]) {
   const total = subscriptions.length;
-  const active = subscriptions.filter((item) => item.status?.toLowerCase() === "active").length;
-  const paid = subscriptions.filter((item) => (item.paidAmountVnd ?? 0) > 0).length;
+  const active = subscriptions.filter(
+    (item) => item.status?.toLowerCase() === "active",
+  ).length;
+  const paid = subscriptions.filter(
+    (item) => (item.paidAmountVnd ?? 0) > 0,
+  ).length;
 
   return [
     { label: "Đăng ký gói", value: total, key: "registered" },
@@ -173,7 +197,9 @@ export function buildConversionFunnel(subscriptions: SubscriptionDto[]) {
 
 export function calcConversionRate(subscriptions: SubscriptionDto[]) {
   if (subscriptions.length === 0) return 0;
-  const paid = subscriptions.filter((item) => (item.paidAmountVnd ?? 0) > 0).length;
+  const paid = subscriptions.filter(
+    (item) => (item.paidAmountVnd ?? 0) > 0,
+  ).length;
   return Math.round((paid / subscriptions.length) * 1000) / 10;
 }
 

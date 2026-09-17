@@ -58,12 +58,12 @@ export default function DetailTemplatePage() {
   const features: string[] = Array.isArray(data.features)
     ? data.features
     : typeof data.features === "string"
-      ? data.features
+      ? ((data.features as unknown as string)
           .split(/\r?\n/)
           .map((s: string) => s.trim())
-          .filter(Boolean)
-      : Array.isArray(data.features?.list)
-        ? data.features.list
+          .filter(Boolean))
+      : Array.isArray((data.features as any)?.list)
+        ? (data.features as any).list
         : [];
 
   const tabs = [

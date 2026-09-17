@@ -1,4 +1,5 @@
 import { ROUTES } from "@/common/constants";
+import InviGoLogo from "@/components/common/Logo";
 import { menuItems } from "@/config/menu";
 import { cn } from "@/lib/utils";
 import useDashboardStore from "@/store/dashboardStore";
@@ -320,117 +321,18 @@ export const AppSidebar: React.FC = () => {
         isRTL ? "border-l border-r-0" : "",
       )}
     >
-      <style>{`
-        .mini-solar-system {
-          box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.05);
-        }
-
-        .mini-sun {
-          position: absolute;
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          z-index: 5;
-          background: radial-gradient(circle, #fff 0%, #ff9e00 60%, #ff3c00 100%);
-          box-shadow:
-            0 0 12px #ff6a00,
-            0 0 4px #ff3c00;
-        }
-
-        .mini-orbit {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          border: 1px dashed rgba(165, 180, 252, 0.2);
-          border-radius: 50%;
-          transform: translate(-50%, -50%);
-          animation: mini-spin linear infinite;
-        }
-
-        .orbit-1 {
-          width: 20px;
-          height: 20px;
-          animation-duration: 3s;
-        }
-        .orbit-2 {
-          width: 30px;
-          height: 30px;
-          animation-duration: 5s;
-        }
-        .orbit-3 {
-          width: 40px;
-          height: 40px;
-          animation-duration: 8s;
-        }
-
-        .mini-planet {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          border-radius: 50%;
-          transform: translate(-50%, -50%);
-        }
-
-        .planet-mercury {
-          width: 3px;
-          height: 3px;
-          background: radial-gradient(circle at 30% 30%, #ffd18c, #cc8b3d);
-        }
-        .planet-earth {
-          width: 4px;
-          height: 4px;
-          background: radial-gradient(circle at 30% 30%, #63b3ff, #1d6fd1);
-          box-shadow: 0 0 4px rgba(99, 102, 241, 0.4);
-        }
-        .planet-mars {
-          width: 3.5px;
-          height: 3.5px;
-          background: radial-gradient(circle at 30% 30%, #ff8f8f, #d13b3b);
-        }
-
-        @keyframes mini-spin {
-          from {
-            transform: translate(-50%, -50%) rotate(0deg);
-          }
-          to {
-            transform: translate(-50%, -50%) rotate(360deg);
-          }
-        }
-        .logo-shimmer {
-          animation: logoShimmer 4s ease-in-out infinite;
-        }
-      `}</style>
       <div
         className={cn(
           "flex items-center h-24 shrink-0 transition-all duration-300 gap-3 border-b border-border/10",
           isCollapsed ? "justify-center px-2" : "px-6",
         )}
       >
-        <div
-          onClick={() => navigate(ROUTES.MAIN.HOME.path)}
-          className="mini-solar-system relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl overflow-hidden bg-transparent cursor-pointer"
-        >
-          <div className="mini-sun"></div>
-          <div className="mini-orbit orbit-1">
-            <div className="mini-planet planet-mercury"></div>
-          </div>
-          <div className="mini-orbit orbit-2">
-            <div className="mini-planet planet-earth"></div>
-          </div>
-          <div className="mini-orbit orbit-3">
-            <div className="mini-planet planet-mars"></div>
-          </div>
-        </div>
         {!isCollapsed && (
           <div
             className="flex flex-col truncate cursor-pointer"
             onClick={() => navigate(ROUTES.MAIN.HOME.path)}
           >
-            <div className="flex flex-col">
-              <span className="text-[clamp(1.3rem,3vw,1.8rem)] font-bold whitespace-nowrap logo-shimmer">
-                Wio
-              </span>
-            </div>
+            <InviGoLogo />
           </div>
         )}
       </div>

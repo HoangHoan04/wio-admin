@@ -1,7 +1,11 @@
 import type {
+  ChangePasswordReq,
   LoginReq,
+  LogoutReq,
   RefreshTokenReq,
   RefreshTokenResponseDto,
+  UpdatePasswordReq,
+  UpdateProfileReq,
   UserInfoResponseDto,
   UserLogInResponseDto,
 } from "@/dto/auth.dto";
@@ -9,45 +13,82 @@ import rootApiService from "./api.service";
 import { API_ENDPOINTS } from "./endpoint";
 
 export const authService = {
+  /* ============================================================
+   * LOGIN
+   * ============================================================ */
   login: async (data: LoginReq): Promise<UserLogInResponseDto> => {
-    const response = await rootApiService.post<UserLogInResponseDto>(
+    return rootApiService.post<UserLogInResponseDto>(
       API_ENDPOINTS.AUTH.LOGIN,
       data,
     );
-    return response;
   },
 
+  /* ============================================================
+   * REFRESH TOKEN
+   * ============================================================ */
   refreshToken: async (
     data: RefreshTokenReq,
   ): Promise<RefreshTokenResponseDto> => {
-    const response = await rootApiService.post<RefreshTokenResponseDto>(
+    return rootApiService.post<RefreshTokenResponseDto>(
       API_ENDPOINTS.AUTH.REFRESH_TOKEN,
       data,
     );
-    return response;
   },
 
+  /* ============================================================
+   * GET ME
+   * ============================================================ */
   getUserInfo: async (): Promise<UserInfoResponseDto> => {
-    const response = await rootApiService.post<UserInfoResponseDto>(
-      API_ENDPOINTS.AUTH.ME,
-    );
-    return response;
+    return rootApiService.post<UserInfoResponseDto>(API_ENDPOINTS.AUTH.ME);
   },
 
-  logout: async (): Promise<{ message: string }> => {
-    const response = await rootApiService.post<{ message: string }>(
+  /* ============================================================
+   * LOGOUT
+   * ============================================================ */
+  logout: async (data?: LogoutReq): Promise<{ message: string }> => {
+    return rootApiService.post<{ message: string }>(
       API_ENDPOINTS.AUTH.LOGOUT,
+      data ?? {},
     );
-    return response;
   },
 
+  /* ============================================================
+   * PASSWORD
+   * ============================================================ */
   changePassword: async (
-    data: Record<string, any>,
+    data: ChangePasswordReq,
   ): Promise<{ message: string }> => {
-    const response = await rootApiService.post<{ message: string }>(
+    return rootApiService.post<{ message: string }>(
       API_ENDPOINTS.AUTH.CHANGE_PASSWORD,
       data,
     );
-    return response;
+  },
+
+  updatePassword: async (
+    data: UpdatePasswordReq,
+  ): Promise<{ message: string }> => {
+    return rootApiService.post<{ message: string }>(
+      API_ENDPOINTS.AUTH.UPDATE_PASSWORD,
+      data,
+    );
+  },
+
+  /* ============================================================
+   * PROFILE
+   * ============================================================ */
+  updateProfile: async (
+    data: UpdateProfileReq,
+  ): Promise<{ message: string; data: UserInfoResponseDto["data"] }> => {
+    return rootApiService.post(API_ENDPOINTS.AUTH.UPDATE_PROFILE, data);
+  },
+
+  /* ============================================================
+   * CLEAN TOKENS (Admin only)
+   * ============================================================ */
+  cleanTokens: async (): Promise<{
+    message: string;
+    deletedCount: number;
+  }> => {
+    return rootApiService.post(API_ENDPOINTS.AUTH.CLEAN_TOKENS);
   },
 };

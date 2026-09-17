@@ -16,7 +16,8 @@ export const usePaginationContact = (
     PageResponse<ContactDto>
   >({
     queryKey: [API_ENDPOINTS.CONTACT.PAGINATION, params],
-    queryFn: () => rootApiService.post(API_ENDPOINTS.CONTACT.PAGINATION, params),
+    queryFn: () =>
+      rootApiService.post(API_ENDPOINTS.CONTACT.PAGINATION, params),
   });
 
   return {
@@ -34,10 +35,9 @@ export const useContactDetail = (id: string | undefined | null) => {
   >({
     queryKey: [API_ENDPOINTS.CONTACT.FIND_BY_ID, id],
     queryFn: async () => {
-      const res = await rootApiService.post(
-        API_ENDPOINTS.CONTACT.FIND_BY_ID,
-        { id },
-      );
+      const res = await rootApiService.post(API_ENDPOINTS.CONTACT.FIND_BY_ID, {
+        id,
+      });
       return res as SuccessResponse<ContactDto>;
     },
     enabled: !!id,
@@ -91,33 +91,32 @@ export const useDeleteContact = () => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const { mutateAsync: onDeleteContact, isPending: isLoading } =
-    useMutation({
-      mutationFn: (id: string) =>
-        rootApiService.post(API_ENDPOINTS.CONTACT.DELETE, {
-          id,
-        }) as Promise<SuccessResponse>,
+  const { mutateAsync: onDeleteContact, isPending: isLoading } = useMutation({
+    mutationFn: (id: string) =>
+      rootApiService.post(API_ENDPOINTS.CONTACT.DELETE, {
+        id,
+      }) as Promise<SuccessResponse>,
 
-      onSuccess: (res: SuccessResponse) => {
-        queryClient.invalidateQueries({
-          queryKey: [API_ENDPOINTS.CONTACT.PAGINATION],
-        });
-        showToast({
-          type: "success",
-          message: res.message || "Xóa yêu cầu liên hệ thành công",
-          title: "Thành công",
-          timeout: 3000,
-        });
-      },
-      onError: (error: Error) => {
-        showToast({
-          type: "error",
-          message: error?.message || "Có lỗi xảy ra",
-          title: "Lỗi",
-          timeout: 3000,
-        });
-      },
-    });
+    onSuccess: (res: SuccessResponse) => {
+      queryClient.invalidateQueries({
+        queryKey: [API_ENDPOINTS.CONTACT.PAGINATION],
+      });
+      showToast({
+        type: "success",
+        message: res.message || "Xóa yêu cầu liên hệ thành công",
+        title: "Thành công",
+        timeout: 3000,
+      });
+    },
+    onError: (error: Error) => {
+      showToast({
+        type: "error",
+        message: error?.message || "Có lỗi xảy ra",
+        title: "Lỗi",
+        timeout: 3000,
+      });
+    },
+  });
 
   return { onDeleteContact, isLoading };
 };

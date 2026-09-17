@@ -297,13 +297,21 @@ export default function MusicBackgroundManagerPage() {
       width: 140,
       align: "center",
       body: (rowData) => {
-        const status = Object.values(enumData.MUSIC_PROCESS_STATUS).find(
-          (item) => item.code === rowData.status,
-        );
+        const musicStatus = (enumData.MUSIC_STATUS as any)[rowData.status] ||
+          Object.values(enumData.MUSIC_STATUS as any).find(
+            (item: any) => item.code === rowData.status,
+          );
+        const mapSeverity: Record<string, "warning" | "success" | "danger" | "secondary"> = {
+          PENDING: "secondary",
+          PROCESSING: "warning",
+          READY: "success",
+          COMPLETED: "success",
+          FAILED: "danger",
+        };
         return (
           <StatusTag
-            severity={status?.color || "gray"}
-            value={status?.name || rowData.status}
+            severity={mapSeverity[rowData.status] || "secondary"}
+            value={musicStatus?.name || rowData.status}
           />
         );
       },

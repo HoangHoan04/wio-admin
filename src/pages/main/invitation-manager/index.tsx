@@ -67,11 +67,11 @@ export default function InvitationListPage() {
       col: 6,
     },
     {
-      key: "cardType",
-      label: "Loại thiệp",
+      key: "weddingTheme",
+      label: "Chủ đề",
       type: "select",
-      placeholder: "Chọn loại",
-      options: Object.values(enumData.CARD_TYPE).map((item) => ({
+      placeholder: "Chọn chủ đề",
+      options: Object.values(enumData.WEDDING_THEME).map((item) => ({
         label: item.name,
         value: item.code,
       })),
@@ -98,19 +98,19 @@ export default function InvitationListPage() {
       sortable: true,
     },
     {
-      field: "cardType",
-      header: "Loại",
+      field: "weddingTheme",
+      header: "Chủ đề",
       width: 140,
       body: (row) => {
-        const type = Object.values(enumData.CARD_TYPE).find(
-          (item) => item.code === row.cardType,
+        const theme = Object.values(enumData.WEDDING_THEME).find(
+          (item) => item.code === row.weddingTheme,
         );
         return (
           <span
             className="px-2 py-1 rounded-md text-xs font-semibold text-white"
-            style={{ background: type?.color || "#6B7280" }}
+            style={{ background: theme?.color || "#6B7280" }}
           >
-            {type?.name || row.cardType}
+            {theme?.name || row.weddingTheme || "—"}
           </span>
         );
       },

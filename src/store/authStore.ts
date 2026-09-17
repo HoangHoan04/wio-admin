@@ -1,89 +1,120 @@
-import { ROUTES } from "@/common/constants/routes";
 import type { LoginReq, UserSessionDto } from "@/dto/auth.dto";
-import { authService } from "@/services";
-import { tokenCache } from "@/utils";
+import { authService } from "@/services/auth.service";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const LOGIN_PATH = ROUTES.AUTH.LOGIN.path;
-const HOME_PATH = ROUTES.MAIN.HOME.path;
-
+/* ============================================================
+ * STATE
+ * ============================================================ */
 interface AuthState {
   user: UserSessionDto | null;
-  isLoading: boolean;
+  accessToken: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
 
-  login: (credentials: LoginReq) => Promise<void>;
+  /* Actions */
+  login: (data: LoginReq) => Promise<void>;
   logout: () => Promise<void>;
-  refreshUserInfo: () => Promise<void>;
-  initAuth: () => Promise<void>;
+  refresh: () => Promise<void>;
+  setUser: (user: UserSessionDto | null) => void;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
-  isLoading: true,
-  isAuthenticated: false,
+/* ============================================================
+ * STORE
+ * ============================================================ */
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
 
-  login: async (credentials) => {
-    set({ isLoading: true });
-    try {
-      const response = await authService.login(credentials);
-      tokenCache.setAuthData(
-        response.accessToken,
-        response.refreshToken,
-        response.user,
-      );
-      set({ user: response.user, isAuthenticated: true });
-      window.location.href = HOME_PATH;
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      /* ----------------- LOGIN ----------------- */
+      login: async (data) => {
+        const res = await authService.login(data);
+        set({
+          user: res.user,
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+          isAuthenticated: true,
+        });
+      },
 
-  logout: async () => {
-    try {
-      await authService.logout();
-    } catch (error) {
-      console.error("Lỗi khi gọi API logout:", error);
-    } finally {
-      tokenCache.clear();
-      set({ user: null, isAuthenticated: false });
-      window.location.href = LOGIN_PATH;
-    }
-  },
+      /* ----------------- LOGOUT ----------------- */
+      logout: async () => {
+        try {
+          const refreshToken = get().refreshToken;
+          await authService.logout(refreshToken ? { refreshToken } : undefined);
+        } finally {
+          set({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+          });
+        }
+      },
 
-  refreshUserInfo: async () => {
-    try {
-      const response = await authService.getUserInfo();
-      set({ user: response.data, isAuthenticated: true });
-      tokenCache.setUser(response.data);
-    } catch {
-      get().logout();
-    }
-  },
+      /* ----------------- REFRESH TOKEN ----------------- */
+      refresh: async () => {
+        const refreshToken = get().refreshToken;
+        if (!refreshToken) throw new Error("No refresh token");
 
-  initAuth: async () => {
-    const token = tokenCache.getAccessToken();
+        const res = await authService.refreshToken({ refreshToken });
+        set({
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+        });
+      },
 
-    if (token) {
-      try {
-        const response = await authService.getUserInfo();
-        set({ user: response.data, isAuthenticated: true });
-        tokenCache.setUser(response.data);
-      } catch {
-        tokenCache.clear();
-        set({ user: null, isAuthenticated: false });
-        window.location.href = LOGIN_PATH;
-      }
-    } else {
-      set({ isAuthenticated: false });
-      if (window.location.pathname !== LOGIN_PATH) {
-        window.location.href = LOGIN_PATH;
-      }
-    }
-    set({ isLoading: false });
-  },
-}));
+      /* ----------------- SET USER ----------------- */
+      setUser: (user) => set({ user }),
+    }),
+    {
+      name: "invigo-admin-auth",
+      partialize: (state) => ({
+        user: state.user,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
+);
 
+/* ============================================================
+ * SELECTOR HOOKS
+ * ============================================================ */
+
+/**
+ * Lấy thông tin user hiện tại
+ */
 export const useUser = () => useAuthStore((s) => s.user);
+
+/**
+ * Kiểm tra đã đăng nhập chưa
+ */
 export const useIsAuthenticated = () => useAuthStore((s) => s.isAuthenticated);
-export const useIsAuthLoading = () => useAuthStore((s) => s.isLoading);
+
+/**
+ * Lấy access token
+ */
+export const useAccessToken = () => useAuthStore((s) => s.accessToken);
+
+/**
+ * Lấy refresh token
+ */
+export const useRefreshToken = () => useAuthStore((s) => s.refreshToken);
+
+/**
+ * Lấy các action (login, logout, refresh, setUser)
+ * Stable reference — không gây re-render không cần thiết
+ */
+export const useAuthActions = () =>
+  useAuthStore((s) => ({
+    login: s.login,
+    logout: s.logout,
+    refresh: s.refresh,
+    setUser: s.setUser,
+  }));
