@@ -1,0 +1,8 @@
+name: wio-admin
+
+services:
+  admin:
+    image: ghcr.io/${GHCR_OWNER}/wio-admin:${TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:3005:80'

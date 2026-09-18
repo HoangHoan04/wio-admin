@@ -13,6 +13,9 @@ import TableCustom from "@/components/layout/TableCustom";
 import { StatusTag } from "@/components/ui/status-tag";
 import type { FilterTemplateDto, PaginationDto, TemplateDto } from "@/dto";
 import {
+  useExportTemplateExcel,
+  useImportTemplateExcel,
+  useDownloadTemplateSampleExcel,
   usePaginationTemplate,
   useSetIsDeletedTemplate,
   useSetIsShowTemplate,
@@ -28,7 +31,7 @@ import {
   Trash2,
   XCircle,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 
 const initFilter: FilterTemplateDto = {};
 
@@ -51,6 +54,7 @@ export default function TemplateManagerPage() {
   const [actionType, setActionType] = useState<ActionType | null>(null);
 
   const confirmRef = useRef<ActionConfirmRef>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { onSetIsDeletedTemplate, isLoading: isLoadingIsDeleted } =
     useSetIsDeletedTemplate();
@@ -58,6 +62,12 @@ export default function TemplateManagerPage() {
     useSetIsShowTemplate();
   const { onSetPremiumTemplate, isLoading: isLoadingPremium } =
     useSetPremiumTemplate();
+  const { onDownloadSampleExcel, isLoading: isLoadingSample } =
+    useDownloadTemplateSampleExcel();
+  const { onImportExcel, isLoading: isLoadingImport } =
+    useImportTemplateExcel();
+  const { onExportExcel, isLoading: isLoadingExport } =
+    useExportTemplateExcel();
   const { data, isLoading, refetch, total } = usePaginationTemplate(pagination);
 
   const handleSearch = (isReset?: boolean) => {
@@ -141,6 +151,22 @@ export default function TemplateManagerPage() {
     );
   };
 
+  const handleImportExcel = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    try {
+      if (file) {
+        await onImportExcel(file);
+        await refetch();
+      }
+    } finally {
+      event.target.value = "";
+    }
+  };
+
   const filterFields: FilterField[] = [
     {
       key: "name",
@@ -150,10 +176,32 @@ export default function TemplateManagerPage() {
       col: 6,
     },
     {
+      key: "weddingTheme",
+      label: "Phong cách cưới",
+      type: "select",
+      placeholder: "Chọn phong cách",
+      options: Object.values(enumData.WEDDING_THEME || {}).map((item) => ({
+        label: item.name,
+        value: item.code,
+      })),
+      col: 6,
+    },
+    {
       key: "themeCode",
       label: "Mã theme",
       type: "input",
       placeholder: "Nhập mã theme",
+      col: 6,
+    },
+    {
+      key: "kind",
+      label: "Loại mẫu",
+      type: "select",
+      placeholder: "Chọn loại mẫu",
+      options: Object.values(enumData.TEMPLATE_KIND || {}).map((item) => ({
+        label: item.name,
+        value: item.code,
+      })),
       col: 6,
     },
     {
@@ -206,12 +254,30 @@ export default function TemplateManagerPage() {
       sortable: true,
     },
     {
-      field: "themeCode",
-      header: "Mã theme",
-      width: 100,
+      field: "weddingTheme",
+      header: "Phong cách",
+      width: 130,
       align: "center",
       body: (rowData: TemplateDto) => (
-        <>{getEnumName(enumData.THEME_CODE, rowData.themeCode)}</>
+        <>{getEnumName(enumData.WEDDING_THEME, rowData.weddingTheme)}</>
+      ),
+    },
+    {
+      field: "themeCode",
+      header: "Mã theme",
+      width: 160,
+      align: "center",
+      body: (rowData: TemplateDto) => (
+        <>{getEnumName(enumData.THEME_CODE, rowData.themeCode) || rowData.themeCode}</>
+      ),
+    },
+    {
+      field: "kind",
+      header: "Loại mẫu",
+      width: 140,
+      align: "center",
+      body: (rowData: TemplateDto) => (
+        <>{getEnumName(enumData.TEMPLATE_KIND, rowData.kind || "") || rowData.kind || "—"}</>
       ),
     },
     {
@@ -390,7 +456,13 @@ export default function TemplateManagerPage() {
         data={data || []}
         columns={columns}
         loading={
-          isLoading || isLoadingIsDeleted || isLoadingIsShow || isLoadingPremium
+          isLoading ||
+          isLoadingIsDeleted ||
+          isLoadingIsShow ||
+          isLoadingPremium ||
+          isLoadingSample ||
+          isLoadingImport ||
+          isLoadingExport
         }
         enableSelection={true}
         selectedRows={selectedRows}
@@ -412,8 +484,25 @@ export default function TemplateManagerPage() {
           align: "between",
           leftContent: (
             <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                className="hidden"
+                onChange={handleFileChange}
+              />
               <RowActions
-                actions={[CommonActions.create(handleCreate)]}
+                actions={[
+                  CommonActions.create(handleCreate),
+                  CommonActions.download(
+                    () => onDownloadSampleExcel(),
+                    "Tải mẫu Excel",
+                  ),
+                  CommonActions.uploadExcel(handleImportExcel),
+                  CommonActions.exportExcel(() =>
+                    onExportExcel(pagination.where || {}),
+                  ),
+                ]}
                 justify="start"
                 gap="medium"
               />

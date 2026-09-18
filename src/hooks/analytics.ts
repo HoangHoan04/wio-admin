@@ -8,7 +8,7 @@ export interface OverviewStats {
     published: number;
     draft: number;
     archived: number;
-    byType: Array<{ cardType: string; name: string; total: number }>;
+    byType?: Array<{ code?: string; name: string; total: number }>;
   };
   guests?: { total: number; attending: number };
   wishes?: { pending: number };

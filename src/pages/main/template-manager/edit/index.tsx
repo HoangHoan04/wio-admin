@@ -9,7 +9,7 @@ function EditTemplatePage() {
   const { onUpdateTemplate, isLoading: isLoadingUpdate } = useUpdateTemplate();
 
   const handleUpdate = (values: any) => {
-    onUpdateTemplate({ ...values, id });
+    onUpdateTemplate({ ...values, id: id as string });
   };
 
   return (

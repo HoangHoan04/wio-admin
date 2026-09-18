@@ -90,18 +90,12 @@ export default function DetailInvitationPage() {
   const hosts = data.hosts || [];
   const events = data.events || [];
   const gifts = data.gifts || [];
-  let extraContentObj: Record<string, any> | null = null;
-  try {
-    if (typeof data.extraContent === "string") {
-      extraContentObj = JSON.parse(data.extraContent);
-    } else if (typeof data.extraContent === "object") {
-      extraContentObj = data.extraContent as any;
-    }
-  } catch {
-    extraContentObj = null;
-  }
-  const dressCodes: string[] = Array.isArray(extraContentObj?.dressCodes)
-    ? extraContentObj.dressCodes
+  const info = data.weddingInfo;
+  const hashtag = info?.hashtag;
+  const primaryEvent = events.find((event: any) => event.isPrimary) || events[0];
+  const dressCodeText = primaryEvent?.dressCode || "";
+  const dressCodes: string[] = dressCodeText
+    ? dressCodeText.split(/[,/]/).map((item: string) => item.trim()).filter(Boolean)
     : [];
   const milestones = events
     .filter((event: any) => event.startsAt)
@@ -121,12 +115,27 @@ export default function DetailInvitationPage() {
           <Card className="overflow-hidden border-none ">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center gap-6 md:flex-row md:justify-center md:gap-10">
-                {hosts.length > 0 ? (
+                {info ? (
+                  <>
+                    <PersonAvatar
+                      name={info.groomName}
+                      title="Chú rể"
+                      photoUrl={info.groomPhotoUrl}
+                      side="GROOM"
+                    />
+                    <PersonAvatar
+                      name={info.brideName}
+                      title="Cô dâu"
+                      photoUrl={info.bridePhotoUrl}
+                      side="BRIDE"
+                    />
+                  </>
+                ) : hosts.length > 0 ? (
                   hosts.map((host: any, index: number) => (
                     <PersonAvatar
                       key={host.id || `${host.role}-${index}`}
                       name={host.fullName}
-                      title={host.honorific || host.role}
+                      title={host.role}
                       photoUrl={host.photoUrl}
                       side={host.role}
                     />
@@ -138,9 +147,9 @@ export default function DetailInvitationPage() {
 
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 <StatusTag severity={status.severity} value={status.label} />
-                {data.hashtag && (
+                {hashtag && (
                   <span className="text-xs font-medium text-rose-500">
-                    #{data.hashtag}
+                    #{hashtag}
                   </span>
                 )}
                 {data.template?.themeCode && (
@@ -241,19 +250,26 @@ export default function DetailInvitationPage() {
             ))}
           </div>
 
-          {hosts.some((host: any) => host.family) && (
+          {(info?.groomFatherName ||
+            info?.groomMotherName ||
+            info?.brideFatherName ||
+            info?.brideMotherName) && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {hosts.map((host: any, index: number) =>
-                host.family ? (
-                  <FamilyCard
-                    key={host.id || `family-${index}`}
-                    label={host.role || host.fullName}
-                    name={host.fullName}
-                    address={host.family.address}
-                    father={host.family.fatherName || host.family.father}
-                    mother={host.family.motherName || host.family.mother}
-                  />
-                ) : null,
+              {(info?.groomFatherName || info?.groomMotherName) && (
+                <FamilyCard
+                  label="Gia đình nhà trai"
+                  name={info?.groomName || "Chú rể"}
+                  father={info?.groomFatherName}
+                  mother={info?.groomMotherName}
+                />
+              )}
+              {(info?.brideFatherName || info?.brideMotherName) && (
+                <FamilyCard
+                  label="Gia đình nhà gái"
+                  name={info?.brideName || "Cô dâu"}
+                  father={info?.brideFatherName}
+                  mother={info?.brideMotherName}
+                />
               )}
             </div>
           )}
@@ -288,7 +304,7 @@ export default function DetailInvitationPage() {
               </Card>
             )}
 
-            {(data.music?.audioUrl || (data.music as any)?.url) && (
+            {(data.music?.audioUrl || data.musicId) && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -299,15 +315,11 @@ export default function DetailInvitationPage() {
                 <CardContent className="flex flex-col gap-2">
                   <InfoItem
                     label="Tên nhạc"
-                    value={data.music?.title || (data.music as any)?.name || "N/A"}
+                    value={data.music?.name || "N/A"}
                   />
                   <InfoItem
                     label="Tự động phát"
-                    value={
-                      data.musicConfig?.autoplay || (data.music as any)?.autoplay
-                        ? "Có"
-                        : "Không"
-                    }
+                    value={data.musicConfig?.autoplay ? "Có" : "Không"}
                   />
                 </CardContent>
               </Card>

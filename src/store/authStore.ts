@@ -1,7 +1,18 @@
-import type { LoginReq, UserSessionDto } from "@/dto/auth.dto";
+import type { LoginReq, UserLogInResponseDto, UserSessionDto } from "@/dto/auth.dto";
 import { authService } from "@/services/auth.service";
+import { tokenCache } from "@/utils";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
+function unwrapLogin(res: UserLogInResponseDto | { data?: UserLogInResponseDto }) {
+  const nested = (res as { data?: UserLogInResponseDto }).data;
+  const payload = nested?.accessToken ? nested : (res as UserLogInResponseDto);
+  return {
+    user: payload.user,
+    accessToken: payload.accessToken,
+    refreshToken: payload.refreshToken,
+  };
+}
 
 /* ============================================================
  * STATE
@@ -33,10 +44,19 @@ export const useAuthStore = create<AuthState>()(
       /* ----------------- LOGIN ----------------- */
       login: async (data) => {
         const res = await authService.login(data);
+        const payload = unwrapLogin(res);
+        if (!payload.accessToken) {
+          throw new Error("Đăng nhập thất bại. Không nhận được token.");
+        }
+        tokenCache.setAuthData(
+          payload.accessToken,
+          payload.refreshToken,
+          payload.user,
+        );
         set({
-          user: res.user,
-          accessToken: res.accessToken,
-          refreshToken: res.refreshToken,
+          user: payload.user,
+          accessToken: payload.accessToken,
+          refreshToken: payload.refreshToken,
           isAuthenticated: true,
         });
       },
@@ -47,6 +67,7 @@ export const useAuthStore = create<AuthState>()(
           const refreshToken = get().refreshToken;
           await authService.logout(refreshToken ? { refreshToken } : undefined);
         } finally {
+          tokenCache.clear();
           set({
             user: null,
             accessToken: null,
@@ -62,9 +83,12 @@ export const useAuthStore = create<AuthState>()(
         if (!refreshToken) throw new Error("No refresh token");
 
         const res = await authService.refreshToken({ refreshToken });
+        const accessToken = res.accessToken;
+        const nextRefresh = res.refreshToken || refreshToken;
+        tokenCache.setAuthData(accessToken, nextRefresh, get().user);
         set({
-          accessToken: res.accessToken,
-          refreshToken: res.refreshToken,
+          accessToken,
+          refreshToken: nextRefresh,
         });
       },
 
@@ -79,6 +103,15 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.accessToken && state.refreshToken) {
+          tokenCache.setAuthData(
+            state.accessToken,
+            state.refreshToken,
+            state.user,
+          );
+        }
+      },
     },
   ),
 );

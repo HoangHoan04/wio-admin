@@ -58,6 +58,9 @@ export const API_ENDPOINTS = {
     SET_PREMIUM: `${ADMIN}/template/set-premium`,
     SET_IS_SHOW: `${ADMIN}/template/set-is-show`,
     SET_IS_DELETED: `${ADMIN}/template/set-is-deleted`,
+    DOWNLOAD_SAMPLE_EXCEL: `${ADMIN}/template/download-sample-excel`,
+    IMPORT_EXCEL: `${ADMIN}/template/import-excel`,
+    EXPORT_EXCEL: `${ADMIN}/template/export-excel`,
   },
 
   /* --------------------------------------------------------

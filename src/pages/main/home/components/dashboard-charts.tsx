@@ -133,13 +133,13 @@ export function InvitationStatusChart({
 }
 
 interface InvitationTypeChartProps {
-  byType?: Array<{ cardType: string; name: string; total: number }>;
+  byType?: Array<{ code?: string; name: string; total: number }>;
 }
 
 export function InvitationTypeChart({ byType }: InvitationTypeChartProps) {
   const chartData = useMemo(() => {
     const items = (byType ?? []) as Array<{
-      cardType: string;
+      code?: string;
       name: string;
       total: number;
     }>;
@@ -183,8 +183,8 @@ export function InvitationTypeChart({ byType }: InvitationTypeChartProps) {
           }
         />
         <Bar dataKey="total" radius={[6, 6, 0, 0]} maxBarSize={48}>
-          {chartData.map((entry) => (
-            <Cell key={entry.cardType} fill={entry.fill} />
+          {chartData.map((entry, index) => (
+            <Cell key={entry.code || entry.name || index} fill={entry.fill} />
           ))}
         </Bar>
       </BarChart>

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wio-admin
+  namespace: wio
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+    - hosts:
+        - admin.tiemcuoitanthoi.id.vn
+      secretName: wio-admin-tls
+  rules:
+    - host: admin.tiemcuoitanthoi.id.vn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wio-admin
+                port:
+                  number: 80

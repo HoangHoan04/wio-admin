@@ -1,10 +1,13 @@
+import { ROUTES } from '@/common/constants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/store/authStore';
 import { useToast } from '@/store/toastStore';
+import { tokenCache } from '@/utils';
 import { Eye, EyeOff, Loader2, Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 /* ============================================================
  * TYPES
@@ -27,9 +30,16 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<LoginFormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const login = useAuthStore((s) => s.login);
   const { showToast } = useToast();
+
+  useEffect(() => {
+    if (tokenCache.isAuthenticated()) {
+      navigate(ROUTES.MAIN.HOME.path, { replace: true });
+    }
+  }, [navigate]);
 
   /* --------------------------------------------------------
    * VALIDATE
@@ -67,7 +77,7 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       await login({ email: form.email.trim(), password: form.password });
-      // Điều hướng sau login do useAuthStore xử lý
+      navigate(ROUTES.MAIN.HOME.path, { replace: true });
     } catch (err: unknown) {
       const message =
         err instanceof Error

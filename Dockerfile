@@ -11,11 +11,16 @@ ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine AS production
+FROM nginx:1.27-alpine AS production
+
+RUN apk add --no-cache wget
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
+
+HEALTHCHECK --interval=20s --timeout=5s --retries=5 \
+  CMD wget -qO- http://127.0.0.1/healthz || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]

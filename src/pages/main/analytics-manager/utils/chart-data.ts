@@ -171,12 +171,7 @@ export function aggregateTemplatePremiumSplit(templates: TemplateDto[]) {
 }
 
 export function getWeddingTotal(stats?: OverviewStats) {
-  return (
-    stats?.invitations?.byType?.find(
-      (item) =>
-        item.cardType === "WEDDING" || item.name.toLowerCase().includes("cưới"),
-    )?.total ?? 0
-  );
+  return stats?.invitations?.total ?? 0;
 }
 
 export function buildConversionFunnel(subscriptions: SubscriptionDto[]) {

@@ -42,6 +42,8 @@ export interface InvitationGiftDto {
   accountOwner?: string | null;
   qrUrl?: string | null;
   side?: string | null;
+  bankBin?: string | null;
+  isVisible?: boolean;
   sortOrder?: number;
 }
 
@@ -71,6 +73,7 @@ export interface InvitationDto extends BaseDto {
   userId: string;
   templateId?: string | null;
   designMode: string; // enumData.DESIGN_MODE
+  createdVia?: string;
   weddingTheme: string; // enumData.WEDDING_THEME
   title: string;
   slug: string;
@@ -79,7 +82,7 @@ export interface InvitationDto extends BaseDto {
   thankYouText?: string | null;
   heroImageUrl?: string | null;
   primaryEventAt?: string | null;
-  sectionConfig?: Record<string, boolean> | null;
+  sectionConfig?: Record<string, any> | null;
   musicId?: string | null;
   musicConfig?: {
     autoplay?: boolean;
@@ -87,6 +90,8 @@ export interface InvitationDto extends BaseDto {
     volume?: number;
   } | null;
   customDesign?: Record<string, unknown> | null;
+  designSchemaVersion?: number;
+  themeSnapshot?: Record<string, unknown> | null;
   aiGeneratedMeta?: Record<string, unknown> | null;
   shareUrl?: string | null;
   shareQrUrl?: string | null;
@@ -97,15 +102,14 @@ export interface InvitationDto extends BaseDto {
   publishedAt?: string | null;
   expiresAt?: string | null;
 
-  // Compatibility fields for detail & views
-  cardType?: string | null;
-  extraContent?: string | null;
-  hashtag?: string | null;
   music?: {
     id: string;
-    title: string;
-    artist?: string;
+    name: string;
+    author?: string;
     audioUrl?: string;
+    youtubeUrl?: string;
+    type?: string;
+    thumbnailUrl?: string;
   } | null;
 
   // Relations

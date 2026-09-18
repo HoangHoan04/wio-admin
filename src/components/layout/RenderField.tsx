@@ -701,7 +701,9 @@ const FieldItem = memo(
       case "custom":
         return field.render ? (
           <div>
-            <RequiredLabel label={field.label} required={field.required} />
+            {field.label ? (
+              <RequiredLabel label={field.label} required={field.required} />
+            ) : null}
             {field.render({
               value,
               onChange: (val: any) => onChange(field.name, val),

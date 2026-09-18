@@ -98,11 +98,56 @@ const request = async <T>(
   return Promise.race([fetchPromise, handleTimeout(timeout)]);
 };
 
+const requestBlob = async (
+  url: string,
+  method: HttpMethod,
+  options: RequestOptions = {},
+): Promise<Blob> => {
+  const { headers = {}, body, timeout = API_ROUTES.TIMEOUT } = options;
+  const token = tokenCache.getAccessToken();
+  const authHeaders: Record<string, string> = {};
+  if (token) {
+    authHeaders[EHttpHeaders.AUTHORIZATION] = `Bearer ${token}`;
+  }
+
+  const isFormData = body instanceof FormData;
+  const requestHeaders: Record<string, string> = {
+    ...authHeaders,
+    ...headers,
+  };
+  if (!isFormData) {
+    Object.assign(requestHeaders, API_ROUTES.HEADERS);
+  }
+
+  const fetchPromise = fetch(`${API_ROUTES.BASE_URL}${url}`, {
+    method,
+    headers: requestHeaders,
+    body: isFormData ? body : body ? JSON.stringify(body) : undefined,
+  }).then(async (res) => {
+    if (res.status === 401) {
+      handleUnauthorized();
+      throw new Error("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
+    }
+    if (!res.ok) {
+      const errorBody = await res.json().catch(async () => {
+        const text = await res.text();
+        return { message: text || res.statusText };
+      });
+      throw new Error(errorBody?.message || res.statusText);
+    }
+    return res.blob();
+  });
+
+  return Promise.race([fetchPromise, handleTimeout(timeout)]);
+};
+
 const rootApiService = {
   get: <T>(url: string, headers?: Record<string, string>) =>
     request<T>(url, "GET", { headers }),
   post: <T>(url: string, body?: any, headers?: Record<string, string>) =>
     request<T>(url, "POST", { body, headers }),
+  postBlob: (url: string, body?: any, headers?: Record<string, string>) =>
+    requestBlob(url, "POST", { body, headers }),
   put: <T>(url: string, body?: any, headers?: Record<string, string>) =>
     request<T>(url, "PUT", { body, headers }),
   delete: <T>(url: string, headers?: Record<string, string>) =>

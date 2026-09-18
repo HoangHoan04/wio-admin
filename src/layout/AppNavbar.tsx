@@ -19,8 +19,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ROUTES } from "@/common/constants";
 import { menuItems } from "@/config/menu";
 import { authService } from "@/services";
+import { useAuthStore } from "@/store/authStore";
 import useDashboardStore from "@/store/dashboardStore";
 import { useToast } from "@/store/toastStore";
 import { getAllRoutes, tokenCache } from "@/utils";
@@ -196,9 +198,16 @@ export const AppNavbar: React.FC = () => {
       console.error("Lỗi khi gọi API logout:", error);
     }
     tokenCache.clear();
+    useAuthStore.getState().setUser(null);
+    useAuthStore.setState({
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
+    });
     clearTabs();
     resetSettings();
-    window.location.reload();
+    window.location.href = ROUTES.AUTH.LOGIN.path;
   };
 
   const handleChangePassword = async (e: React.FormEvent) => {

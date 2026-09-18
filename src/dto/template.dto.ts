@@ -11,12 +11,15 @@ export interface TemplateDto extends BaseDto {
   weddingTheme: string; // enumData.WEDDING_THEME
   tags?: string[];
   colorMood?: string | null;
-  features?: Record<string, boolean> | null;
+  features?: Record<string, any> | null;
   themeLayout?: Record<string, unknown> | null;
   presetTokens?: Record<string, unknown> | null;
   thumbnailUrl?: string | null;
   previewUrl?: string | null;
   themeCode: string;
+  kind?: string;
+  canvasPreset?: Record<string, unknown> | null;
+  version?: number;
   isShow: boolean;
   isPremium: boolean;
   minPlanId?: string | null;
@@ -35,12 +38,15 @@ export interface CreateTemplateDto {
   weddingTheme: string;
   tags?: string[];
   colorMood?: string | null;
-  features?: Record<string, boolean> | null;
+  features?: Record<string, any> | string[] | null;
   themeLayout?: Record<string, unknown> | null;
   presetTokens?: Record<string, unknown> | null;
   thumbnailUrl?: string | null;
   previewUrl?: string | null;
   themeCode: string;
+  kind?: string;
+  canvasPreset?: Record<string, unknown> | null;
+  version?: number;
   isShow?: boolean;
   isPremium?: boolean;
   minPlanId?: string | null;
@@ -76,6 +82,7 @@ export interface FilterTemplateDto {
   isPremium?: boolean;
   isDeleted?: boolean;
   minPlanId?: string;
+  kind?: string;
 }
 
 import type {

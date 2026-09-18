@@ -88,6 +88,17 @@ export const CommonActions = {
       "border-sky-500 text-sky-600 bg-sky-50 hover:bg-sky-100 hover:text-sky-700",
   }),
 
+  download: (onClick?: () => void, label = "Tải mẫu"): ActionItem => ({
+    key: "download-sample",
+    label,
+    icon: <FileSpreadsheet className="size-3.5" />,
+    onClick,
+    variant: "outline",
+    size: "sm",
+    className:
+      "border-sky-500 text-sky-600 bg-sky-50 hover:bg-sky-100 hover:text-sky-700",
+  }),
+
   uploadExcel: (
     onClick?: () => void,
     label = "Nhập Excel",

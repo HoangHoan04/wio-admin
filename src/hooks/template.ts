@@ -237,3 +237,110 @@ export const useSetIsDeletedTemplate = () => {
 
   return { onSetIsDeletedTemplate, isLoading };
 };
+
+const triggerFileDownload = (blob: Blob, filename: string) => {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+};
+
+export const useDownloadTemplateSampleExcel = () => {
+  const { showToast } = useToast();
+
+  const { mutateAsync: onDownloadSampleExcel, isPending: isLoading } =
+    useMutation({
+      mutationFn: () =>
+        rootApiService.postBlob(
+          API_ENDPOINTS.TEMPLATE.DOWNLOAD_SAMPLE_EXCEL,
+          {},
+        ),
+      onSuccess: (blob) => {
+        triggerFileDownload(blob, "mau-thiep-sample.xlsx");
+        showToast({
+          type: "success",
+          message: "Đã tải file Excel mẫu",
+          title: "Thành công",
+          timeout: 3000,
+        });
+      },
+      onError: (error: Error) => {
+        showToast({
+          type: "error",
+          message: error?.message || "Không tải được file mẫu",
+          title: "Lỗi",
+          timeout: 3000,
+        });
+      },
+    });
+
+  return { onDownloadSampleExcel, isLoading };
+};
+
+export const useImportTemplateExcel = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  const { mutateAsync: onImportExcel, isPending: isLoading } = useMutation({
+    mutationFn: (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      return rootApiService.post(API_ENDPOINTS.TEMPLATE.IMPORT_EXCEL, formData) as Promise<
+        SuccessResponse<{ created: number; failed: number; errors: Array<{ row: number; message: string }> }>
+      >;
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: [API_ENDPOINTS.TEMPLATE.PAGINATION],
+      });
+      showToast({
+        type: "success",
+        message: res.message || "Nhập Excel thành công",
+        title: "Thành công",
+        timeout: 4000,
+      });
+    },
+    onError: (error: Error) => {
+      showToast({
+        type: "error",
+        message: error?.message || "Nhập Excel thất bại",
+        title: "Lỗi",
+        timeout: 3000,
+      });
+    },
+  });
+
+  return { onImportExcel, isLoading };
+};
+
+export const useExportTemplateExcel = () => {
+  const { showToast } = useToast();
+
+  const { mutateAsync: onExportExcel, isPending: isLoading } = useMutation({
+    mutationFn: (filter: FilterTemplateDto) =>
+      rootApiService.postBlob(API_ENDPOINTS.TEMPLATE.EXPORT_EXCEL, filter),
+    onSuccess: (blob) => {
+      triggerFileDownload(blob, "mau-thiep.xlsx");
+      showToast({
+        type: "success",
+        message: "Đã xuất Excel mẫu thiệp",
+        title: "Thành công",
+        timeout: 3000,
+      });
+    },
+    onError: (error: Error) => {
+      showToast({
+        type: "error",
+        message: error?.message || "Xuất Excel thất bại",
+        title: "Lỗi",
+        timeout: 3000,
+      });
+    },
+  });
+
+  return { onExportExcel, isLoading };
+};

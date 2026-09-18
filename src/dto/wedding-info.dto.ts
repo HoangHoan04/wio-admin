@@ -18,19 +18,16 @@ export interface WeddingInfoDto extends BaseDto {
   groomBio?: string;
   groomSocial?: Record<string, string>;
 
-  storyTitle?: string;
-  storyContent?: string;
-
-  weddingDate?: string;
-  weddingLocation?: string;
-  weddingAddress?: string;
-  weddingMapUrl?: string;
+  loveStartedAt?: string;
+  loveStory?: string;
+  hashtag?: string;
 }
 
 export interface FilterWeddingInfoDto {
   invitationId?: string;
   brideName?: string;
   groomName?: string;
+  hashtag?: string;
 }
 
 export interface CreateWeddingInfoDto {
@@ -49,6 +46,9 @@ export interface CreateWeddingInfoDto {
   groomMotherName?: string;
   groomBio?: string;
   groomSocial?: Record<string, string>;
+  loveStartedAt?: string;
+  loveStory?: string;
+  hashtag?: string;
 }
 
 export interface UpdateWeddingInfoDto extends Partial<CreateWeddingInfoDto> {

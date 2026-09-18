@@ -281,7 +281,7 @@ export function QuickActions() {
 }
 
 interface TypeBreakdownProps {
-  byType: Array<{ cardType: string; name: string; total: number }>;
+  byType: Array<{ code?: string; name: string; total: number }>;
   grandTotal: number;
 }
 
@@ -294,7 +294,7 @@ export function TypeBreakdown({ byType, grandTotal }: TypeBreakdownProps) {
         const pct =
           grandTotal > 0 ? Math.round((item.total / grandTotal) * 100) : 0;
         return (
-          <div key={item.cardType} className="flex items-center gap-3">
+          <div key={item.code || item.name || index} className="flex items-center gap-3">
             <span className="w-5 text-xs text-muted-foreground tabular-nums">
               {index + 1}
             </span>
