@@ -7,6 +7,10 @@ const PrivateRoute = () => {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const hasToken = tokenCache.isAuthenticated();
 
+  if (tokenCache.isSessionExpired()) {
+    return <Navigate to={ROUTES.AUTH.LOGIN.path} replace />;
+  }
+
   return isAuthenticated || hasToken ? (
     <Outlet />
   ) : (

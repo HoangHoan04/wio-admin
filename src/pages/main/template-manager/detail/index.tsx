@@ -70,10 +70,10 @@ export default function DetailTemplatePage() {
   const features: string[] = Array.isArray(data.features)
     ? data.features
     : typeof data.features === "string"
-      ? ((data.features as unknown as string)
+      ? (data.features as unknown as string)
           .split(/\r?\n/)
           .map((s: string) => s.trim())
-          .filter(Boolean))
+          .filter(Boolean)
       : Array.isArray((data.features as any)?.list)
         ? (data.features as any).list
         : data.features && typeof data.features === "object"
@@ -113,20 +113,24 @@ export default function DetailTemplatePage() {
                 />
                 <InfoItem
                   label="Mã theme"
-                  value={getEnumName(enumData.THEME_CODE, data.themeCode) || data.themeCode}
+                  value={
+                    getEnumName(enumData.THEME_CODE, data.themeCode) ||
+                    data.themeCode
+                  }
                 />
                 <InfoItem
                   label="Loại mẫu"
-                  value={getEnumName(enumData.TEMPLATE_KIND, data.kind || "") || data.kind || "N/A"}
+                  value={
+                    getEnumName(enumData.TEMPLATE_KIND, data.kind || "") ||
+                    data.kind ||
+                    "N/A"
+                  }
                 />
                 <InfoItem
                   label="Version"
                   value={data.version != null ? String(data.version) : "N/A"}
                 />
-                <InfoItem
-                  label="Tông màu"
-                  value={data.colorMood || "N/A"}
-                />
+                <InfoItem label="Tông màu" value={data.colorMood || "N/A"} />
                 <InfoItem
                   label="Mô tả"
                   value={data.description || "N/A"}
@@ -134,11 +138,7 @@ export default function DetailTemplatePage() {
                 />
                 <InfoItem
                   label="Gói tối thiểu"
-                  value={
-                    data.minPlan?.name ||
-                    data.minPlanId ||
-                    "N/A"
-                  }
+                  value={data.minPlan?.name || data.minPlanId || "N/A"}
                 />
                 <InfoItem
                   label="Số ngày dùng thử"
@@ -148,7 +148,9 @@ export default function DetailTemplatePage() {
                 />
                 <InfoItem
                   label="Thứ tự hiển thị"
-                  value={data.sortOrder != null ? String(data.sortOrder) : "N/A"}
+                  value={
+                    data.sortOrder != null ? String(data.sortOrder) : "N/A"
+                  }
                 />
                 <InfoItem
                   label="Lượt xem"
@@ -191,7 +193,9 @@ export default function DetailTemplatePage() {
                 />
                 <InfoItem
                   label="Ngày tạo"
-                  value={data.createdAt ? formatDateTime(data.createdAt) : "N/A"}
+                  value={
+                    data.createdAt ? formatDateTime(data.createdAt) : "N/A"
+                  }
                 />
               </div>
             </CardContent>
@@ -239,7 +243,8 @@ export default function DetailTemplatePage() {
                       key={category}
                       className="inline-flex items-center rounded-md bg-muted px-2.5 py-0.5 text-xs font-medium text-[#c9a98a]"
                     >
-                      {getEnumName(enumData.WEDDING_THEME, category) || category}
+                      {getEnumName(enumData.WEDDING_THEME, category) ||
+                        category}
                     </span>
                   ))
                 ) : (
@@ -263,7 +268,9 @@ export default function DetailTemplatePage() {
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {data.thumbnailUrl && (
                     <div className="flex flex-col gap-2">
-                      <span className="text-sm text-muted-foreground">Thumbnail</span>
+                      <span className="text-sm text-muted-foreground">
+                        Thumbnail
+                      </span>
                       <img
                         src={data.thumbnailUrl}
                         alt={data.name}
@@ -273,7 +280,9 @@ export default function DetailTemplatePage() {
                   )}
                   {data.previewUrl && (
                     <div className="flex flex-col gap-2">
-                      <span className="text-sm text-muted-foreground">Xem trước</span>
+                      <span className="text-sm text-muted-foreground">
+                        Xem trước
+                      </span>
                       <img
                         src={data.previewUrl}
                         alt={`${data.name} preview`}
@@ -317,7 +326,8 @@ export default function DetailTemplatePage() {
                                 key={id}
                                 className="inline-flex items-center rounded-md bg-muted px-2.5 py-0.5 text-xs font-medium"
                               >
-                                {index + 1}. {SECTION_LABELS[id as SectionId] || id}
+                                {index + 1}.{" "}
+                                {SECTION_LABELS[id as SectionId] || id}
                               </span>
                             ))
                           ) : (
@@ -366,7 +376,10 @@ export default function DetailTemplatePage() {
                     </div>
                     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                       {COLOR_FIELDS.map((field) => (
-                        <div key={field.key} className="flex items-center gap-2">
+                        <div
+                          key={field.key}
+                          className="flex items-center gap-2"
+                        >
                           <span
                             className="size-6 rounded-md border"
                             style={{ background: tokens.colors[field.key] }}

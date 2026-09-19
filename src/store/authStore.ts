@@ -1,6 +1,6 @@
 import type { LoginReq, UserLogInResponseDto, UserSessionDto } from "@/dto/auth.dto";
 import { authService } from "@/services/auth.service";
-import { tokenCache } from "@/utils";
+import { AUTH_PERSIST_KEY, tokenCache } from "@/utils";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -28,6 +28,7 @@ interface AuthState {
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
   setUser: (user: UserSessionDto | null) => void;
+  clearSession: () => void;
 }
 
 /* ============================================================
@@ -48,6 +49,7 @@ export const useAuthStore = create<AuthState>()(
         if (!payload.accessToken) {
           throw new Error("Đăng nhập thất bại. Không nhận được token.");
         }
+        tokenCache.clearSessionExpired();
         tokenCache.setAuthData(
           payload.accessToken,
           payload.refreshToken,
@@ -94,9 +96,20 @@ export const useAuthStore = create<AuthState>()(
 
       /* ----------------- SET USER ----------------- */
       setUser: (user) => set({ user }),
+
+      /* ----------------- CLEAR LOCAL SESSION (no API) ----------------- */
+      clearSession: () => {
+        tokenCache.clear();
+        set({
+          user: null,
+          accessToken: null,
+          refreshToken: null,
+          isAuthenticated: false,
+        });
+      },
     }),
     {
-      name: "invigo-admin-auth",
+      name: AUTH_PERSIST_KEY,
       partialize: (state) => ({
         user: state.user,
         accessToken: state.accessToken,
@@ -104,6 +117,16 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: state.isAuthenticated,
       }),
       onRehydrateStorage: () => (state) => {
+        if (tokenCache.isSessionExpired()) {
+          tokenCache.clear();
+          useAuthStore.setState({
+            user: null,
+            accessToken: null,
+            refreshToken: null,
+            isAuthenticated: false,
+          });
+          return;
+        }
         if (state?.accessToken && state.refreshToken) {
           tokenCache.setAuthData(
             state.accessToken,
@@ -150,4 +173,5 @@ export const useAuthActions = () =>
     logout: s.logout,
     refresh: s.refresh,
     setUser: s.setUser,
+    clearSession: s.clearSession,
   }));

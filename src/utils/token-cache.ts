@@ -1,5 +1,8 @@
 import Cookies from "js-cookie";
 
+export const AUTH_PERSIST_KEY = "invigo-admin-auth";
+export const SESSION_EXPIRED_KEY = "invigo-admin-session-expired";
+
 interface TokenData {
   accessToken: string | null;
   refreshToken: string | null;
@@ -85,11 +88,27 @@ class TokenCache {
   }
 
   isAuthenticated(): boolean {
+    if (this.isSessionExpired()) return false;
     return !!this.cache.accessToken;
   }
 
   hasRefreshToken(): boolean {
     return !!this.cache.refreshToken;
+  }
+
+  markSessionExpired(): void {
+    if (typeof window === "undefined") return;
+    sessionStorage.setItem(SESSION_EXPIRED_KEY, "1");
+  }
+
+  isSessionExpired(): boolean {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem(SESSION_EXPIRED_KEY) === "1";
+  }
+
+  clearSessionExpired(): void {
+    if (typeof window === "undefined") return;
+    sessionStorage.removeItem(SESSION_EXPIRED_KEY);
   }
 }
 

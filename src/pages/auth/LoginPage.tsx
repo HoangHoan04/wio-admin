@@ -33,13 +33,18 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const login = useAuthStore((s) => s.login);
+  const clearSession = useAuthStore((s) => s.clearSession);
   const { showToast } = useToast();
 
   useEffect(() => {
+    if (tokenCache.isSessionExpired()) {
+      clearSession();
+      return;
+    }
     if (tokenCache.isAuthenticated()) {
       navigate(ROUTES.MAIN.HOME.path, { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, clearSession]);
 
   /* --------------------------------------------------------
    * VALIDATE

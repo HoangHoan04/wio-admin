@@ -193,21 +193,14 @@ export const AppNavbar: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await authService.logout();
+      await useAuthStore.getState().logout();
     } catch (error) {
       console.error("Lỗi khi gọi API logout:", error);
+      useAuthStore.getState().clearSession();
     }
-    tokenCache.clear();
-    useAuthStore.getState().setUser(null);
-    useAuthStore.setState({
-      user: null,
-      accessToken: null,
-      refreshToken: null,
-      isAuthenticated: false,
-    });
     clearTabs();
     resetSettings();
-    window.location.href = ROUTES.AUTH.LOGIN.path;
+    window.location.replace(ROUTES.AUTH.LOGIN.path);
   };
 
   const handleChangePassword = async (e: React.FormEvent) => {

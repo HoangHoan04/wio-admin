@@ -1,5 +1,6 @@
 import { EHttpHeaders } from "@/common/constants";
-import { tokenCache } from "@/utils";
+import { ROUTES } from "@/common/constants/routes";
+import { AUTH_PERSIST_KEY, tokenCache } from "@/utils";
 import { API_ENDPOINTS, API_ROUTES } from "./endpoint";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
@@ -14,38 +15,153 @@ const handleTimeout = (timeout: number) =>
     setTimeout(() => reject(new Error("Request timed out")), timeout),
   );
 
-let isHandlingUnauthorized = false;
+const AUTH_SKIP_URLS = new Set([
+  API_ENDPOINTS.AUTH.LOGIN,
+  API_ENDPOINTS.AUTH.REFRESH_TOKEN,
+  API_ENDPOINTS.AUTH.LOGOUT,
+]);
 
-const handleUnauthorized = async () => {
-  if (isHandlingUnauthorized) return;
-  isHandlingUnauthorized = true;
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (reason: unknown) => void;
+}> = [];
+
+const processQueue = (error: unknown, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error || !token) {
+      prom.reject(error ?? new Error("Phiên đăng nhập đã hết hạn"));
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+const unwrapTokens = (payload: any) => {
+  const nested = payload?.data && typeof payload.data === "object" ? payload.data : payload;
+  return {
+    accessToken: nested?.accessToken as string | undefined,
+    refreshToken: nested?.refreshToken as string | undefined,
+  };
+};
+
+const expireSession = () => {
+  if (tokenCache.isSessionExpired()) {
+    if (
+      typeof window !== "undefined" &&
+      window.location.pathname !== ROUTES.AUTH.LOGIN.path
+    ) {
+      window.location.replace(ROUTES.AUTH.LOGIN.path);
+    }
+    return;
+  }
+
+  tokenCache.markSessionExpired();
+  tokenCache.clear();
 
   try {
-    const token = tokenCache.getAccessToken();
-    await fetch(`${API_ROUTES.BASE_URL}${API_ENDPOINTS.AUTH.LOGOUT}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        [EHttpHeaders.AUTHORIZATION]: `Bearer ${token}`,
-      },
-    });
+    localStorage.removeItem(AUTH_PERSIST_KEY);
   } catch {
-    console.warn(
-      "Đăng xuất không thành công, có thể do mạng hoặc token đã hết hạn",
-    );
-  } finally {
-    isHandlingUnauthorized = false;
-    tokenCache.clear();
-    window.location.href = "/login";
+    /* ignore */
   }
+
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("unauthorized-event"));
+    if (window.location.pathname !== ROUTES.AUTH.LOGIN.path) {
+      window.location.replace(ROUTES.AUTH.LOGIN.path);
+    }
+  }
+};
+
+const refreshAccessToken = async (): Promise<string> => {
+  const refreshToken = tokenCache.getRefreshToken();
+  if (!refreshToken) {
+    throw new Error("No refresh token");
+  }
+
+  const res = await fetch(
+    `${API_ROUTES.BASE_URL}${API_ENDPOINTS.AUTH.REFRESH_TOKEN}`,
+    {
+      method: "POST",
+      headers: API_ROUTES.HEADERS,
+      body: JSON.stringify({ refreshToken }),
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error("Refresh token không hợp lệ hoặc đã hết hạn");
+  }
+
+  const payload = await res.json().catch(() => ({}));
+  const tokens = unwrapTokens(payload);
+  if (!tokens.accessToken) {
+    throw new Error("Refresh token không trả về access token");
+  }
+
+  const nextRefresh = tokens.refreshToken || refreshToken;
+  tokenCache.setAuthData(tokens.accessToken, nextRefresh, tokenCache.getUser());
+
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(
+      new CustomEvent("token-refreshed", {
+        detail: {
+          accessToken: tokens.accessToken,
+          refreshToken: nextRefresh,
+        },
+      }),
+    );
+  }
+
+  return tokens.accessToken;
+};
+
+const resolveNewAccessToken = (): Promise<string> => {
+  if (tokenCache.isSessionExpired()) {
+    return Promise.reject(new Error("Phiên đăng nhập đã hết hạn"));
+  }
+
+  if (isRefreshing) {
+    return new Promise((resolve, reject) => {
+      failedQueue.push({ resolve, reject });
+    });
+  }
+
+  isRefreshing = true;
+  return refreshAccessToken()
+    .then((token) => {
+      processQueue(null, token);
+      return token;
+    })
+    .catch((error) => {
+      processQueue(error, null);
+      expireSession();
+      throw error;
+    })
+    .finally(() => {
+      isRefreshing = false;
+    });
+};
+
+const parseErrorMessage = async (res: Response, fallback: string) => {
+  const errorBody = await res.json().catch(async () => {
+    const text = await res.text().catch(() => "");
+    return { message: text || res.statusText };
+  });
+  return errorBody?.message || fallback;
 };
 
 const request = async <T>(
   url: string,
   method: HttpMethod,
   options: RequestOptions = {},
+  didRetry = false,
 ): Promise<T> => {
   const { headers = {}, body, timeout = API_ROUTES.TIMEOUT } = options;
+
+  if (tokenCache.isSessionExpired() && !AUTH_SKIP_URLS.has(url)) {
+    throw new Error("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
+  }
 
   const token = tokenCache.getAccessToken();
   const authHeaders: Record<string, string> = {};
@@ -64,32 +180,41 @@ const request = async <T>(
     Object.assign(requestHeaders, API_ROUTES.HEADERS);
   }
 
-  const isAuthEndpoint =
-    url === API_ENDPOINTS.AUTH.LOGIN ||
-    url === API_ENDPOINTS.AUTH.REFRESH_TOKEN;
-
   const fetchPromise = fetch(`${API_ROUTES.BASE_URL}${url}`, {
     method,
     headers: requestHeaders,
     body: isFormData ? body : body ? JSON.stringify(body) : undefined,
   }).then(async (res) => {
     if (res.status === 401) {
-      if (!isAuthEndpoint) {
-        handleUnauthorized();
+      const skipAuthRecovery = AUTH_SKIP_URLS.has(url);
+
+      if (!skipAuthRecovery && !didRetry && !tokenCache.isSessionExpired()) {
+        try {
+          await resolveNewAccessToken();
+          return request<T>(url, method, options, true);
+        } catch {
+          throw new Error(
+            "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
+          );
+        }
       }
-      const errorBody = await res.json().catch(() => ({}));
+
+      if (!skipAuthRecovery) {
+        expireSession();
+      }
+
       throw new Error(
-        errorBody?.message ||
+        (await parseErrorMessage(
+          res,
           "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
+        )) as string,
       );
     }
 
     if (!res.ok) {
-      const errorBody = await res.json().catch(async () => {
-        const text = await res.text();
-        return { message: text || res.statusText };
-      });
-      throw new Error(errorBody?.message || res.statusText);
+      throw new Error(
+        (await parseErrorMessage(res, res.statusText)) as string,
+      );
     }
 
     return res.json() as Promise<T>;
@@ -102,8 +227,14 @@ const requestBlob = async (
   url: string,
   method: HttpMethod,
   options: RequestOptions = {},
+  didRetry = false,
 ): Promise<Blob> => {
   const { headers = {}, body, timeout = API_ROUTES.TIMEOUT } = options;
+
+  if (tokenCache.isSessionExpired()) {
+    throw new Error("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
+  }
+
   const token = tokenCache.getAccessToken();
   const authHeaders: Record<string, string> = {};
   if (token) {
@@ -125,15 +256,23 @@ const requestBlob = async (
     body: isFormData ? body : body ? JSON.stringify(body) : undefined,
   }).then(async (res) => {
     if (res.status === 401) {
-      handleUnauthorized();
+      if (!didRetry && !tokenCache.isSessionExpired()) {
+        try {
+          await resolveNewAccessToken();
+          return requestBlob(url, method, options, true);
+        } catch {
+          throw new Error(
+            "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
+          );
+        }
+      }
+      expireSession();
       throw new Error("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
     }
     if (!res.ok) {
-      const errorBody = await res.json().catch(async () => {
-        const text = await res.text();
-        return { message: text || res.statusText };
-      });
-      throw new Error(errorBody?.message || res.statusText);
+      throw new Error(
+        (await parseErrorMessage(res, res.statusText)) as string,
+      );
     }
     return res.blob();
   });
